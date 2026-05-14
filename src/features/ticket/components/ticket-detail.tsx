@@ -13,7 +13,7 @@ const TicketDetail = async ({ params }: TicketDetailProps) => {
   if (!ticket) return notFound();
 
   return (
-    <div className="flex flex-col flex-1 items-center gap-y-4 animate-fade-from-top">
+    <div className="flex flex-col flex-1 items-center animate-fade-from-top">
       <TicketItem ticket={ticket} isDetail />
     </div>
   );
