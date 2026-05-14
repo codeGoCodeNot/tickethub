@@ -4,18 +4,34 @@ import prisma from "@/lib/prisma";
 import { ticketPath, ticketsPath } from "@/path";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
-const upsertTicket = async (id: string, formData: FormData) => {
-  const data = {
-    title: formData.get("title") as string,
-    content: formData.get("content") as string,
-  };
+const upsertTicketSchema = z.object({
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .max(191, "Title must be less than 191 characters"),
+  content: z.string().min(1, "Content is required"),
+});
 
-  await prisma.ticket.upsert({
-    where: { id },
-    update: data,
-    create: data,
-  });
+const upsertTicket = async (
+  id: string,
+  _actionState: { message: string },
+  formData: FormData,
+) => {
+  try {
+    const { title, content } = upsertTicketSchema.parse(
+      Object.fromEntries(formData.entries()),
+    );
+
+    await prisma.ticket.upsert({
+      where: { id },
+      update: { title, content },
+      create: { title, content },
+    });
+  } catch (error) {
+    return { message: "Something went wrong" };
+  }
 
   revalidateTag("tickets", { expire: 0 });
 
@@ -26,6 +42,12 @@ const upsertTicket = async (id: string, formData: FormData) => {
   } else {
     revalidatePath(ticketsPath());
   }
+
+  return {
+    message: id
+      ? "Ticket updated successfully!"
+      : "Ticket created successfully!",
+  };
 };
 
 export default upsertTicket;
