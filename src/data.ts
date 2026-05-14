@@ -17,4 +17,4 @@ export const initialTickets = [
     content: "This is a third sample ticket.",
     status: "IN_PROGRESS",
   },
-] as const;
+];
