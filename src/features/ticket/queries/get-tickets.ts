@@ -1,11 +1,9 @@
-import { initialTickets } from "@/data";
-import { Ticket } from "../type";
+import prisma from "@/lib/prisma";
 
-const getTickets = async (): Promise<readonly Ticket[]> => {
-  await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate network delay
-  // throw new Error("Failed to fetch tickets"); // Simulate an error
-
-  return new Promise((resolve) => resolve(initialTickets));
+const getTickets = async () => {
+  return await prisma.ticket.findMany({
+    orderBy: { createdAt: "desc" },
+  });
 };
 
 export default getTickets;

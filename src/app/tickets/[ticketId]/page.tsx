@@ -17,7 +17,7 @@ const TicketPage = async ({ params }: TicketPageProps) => {
         description="Details of the selected ticket."
       />
       <Suspense fallback={<Spinner />}>
-        <TicketDetail ticketId={ticketId} />
+        <TicketDetail id={ticketId} />
       </Suspense>
     </div>
   );

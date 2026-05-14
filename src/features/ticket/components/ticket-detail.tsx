@@ -1,17 +1,13 @@
-import Placeholder from "@/components/placeholder";
-import { Button } from "@/components/ui/button";
-import { homePath } from "@/path";
-import Link from "next/link";
+import { notFound } from "next/navigation";
 import getTicket from "../queries/get-ticket";
 import TicketItem from "./ticket-item";
-import { notFound } from "next/navigation";
 
 type TicketDetailProps = {
-  ticketId: string;
+  id: string;
 };
 
-const TicketDetail = async ({ ticketId }: TicketDetailProps) => {
-  const ticket = await getTicket(ticketId);
+const TicketDetail = async ({ id }: TicketDetailProps) => {
+  const ticket = await getTicket(id);
 
   if (!ticket) return notFound();
 
