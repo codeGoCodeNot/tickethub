@@ -1,12 +1,6 @@
 import Heading from "@/components/heading";
-import Placeholder from "@/components/placeholder";
 import Spinner from "@/components/spinner";
-import { Button } from "@/components/ui/button";
 import TicketDetail from "@/features/ticket/components/ticket-detail";
-import TicketItem from "@/features/ticket/components/ticket-item";
-import getTicket from "@/features/ticket/queries/get-ticket";
-import { homePath } from "@/path";
-import Link from "next/link";
 import { Suspense } from "react";
 
 type TicketPageProps = {
