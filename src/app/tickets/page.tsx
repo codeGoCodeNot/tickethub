@@ -1,8 +1,8 @@
 import CardCompact from "@/components/card-compact";
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
-import TicketCreateForm from "@/features/ticket/components/ticket-create-form";
 import TicketList from "@/features/ticket/components/ticket-list";
+import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
 import { Suspense } from "react";
 
 const TicketsPage = () => {
@@ -16,7 +16,7 @@ const TicketsPage = () => {
       <CardCompact
         title="Create Ticket"
         description="Fill out the form below to create a new ticket."
-        content={<TicketCreateForm />}
+        content={<TicketUpsertForm />}
       />
 
       <Suspense fallback={<Spinner />}>
