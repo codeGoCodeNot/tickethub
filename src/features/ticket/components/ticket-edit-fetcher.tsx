@@ -7,7 +7,7 @@ type TicketEditPageProps = {
   params: Promise<{ ticketId: string }>;
 };
 
-const TicketEditContent = async ({ params }: TicketEditPageProps) => {
+const TicketEditFetcher = async ({ params }: TicketEditPageProps) => {
   const { ticketId } = await params;
   const ticket = await getTicket(ticketId);
 
@@ -26,4 +26,4 @@ const TicketEditContent = async ({ params }: TicketEditPageProps) => {
   );
 };
 
-export default TicketEditContent;
+export default TicketEditFetcher;

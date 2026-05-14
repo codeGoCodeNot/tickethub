@@ -30,7 +30,7 @@ const upsertTicket = async (
       create: { title, content },
     });
   } catch (error) {
-    return { message: "Something went wrong" };
+    return { message: "Something went wrong", payload: formData };
   }
 
   revalidateTag("tickets", { expire: 0 });

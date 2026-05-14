@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import deleteTicket from "../actions/delete-ticket";
-import { TICKET_ICONS } from "../constant";
+import { TICKET_ICONS } from "../constants";
 
 type TicketItemProps = {
   ticket: Ticket;

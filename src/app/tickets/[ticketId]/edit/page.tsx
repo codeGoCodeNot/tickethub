@@ -1,6 +1,6 @@
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
-import TicketEditContent from "@/features/ticket/components/ticket-edit-content";
+import TicketEditFetcher from "@/features/ticket/components/ticket-edit-fetcher";
 import { Suspense } from "react";
 
 type TicketEditPageProps = {
@@ -15,7 +15,7 @@ const TicketEditPage = ({ params }: TicketEditPageProps) => {
         description="Modify the details of your ticket."
       />
       <Suspense fallback={<Spinner />}>
-        <TicketEditContent params={params} />
+        <TicketEditFetcher params={params} />
       </Suspense>
     </div>
   );
