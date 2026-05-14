@@ -1,6 +1,5 @@
 import CardCompact from "@/components/card-compact";
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
 import getTicket from "../queries/get-ticket";
 import TicketUpsertForm from "./ticket-upsert-form";
 
@@ -9,7 +8,6 @@ type TicketEditPageProps = {
 };
 
 const TicketEditContent = async ({ params }: TicketEditPageProps) => {
-  await connection();
   const { ticketId } = await params;
   const ticket = await getTicket(ticketId);
 
