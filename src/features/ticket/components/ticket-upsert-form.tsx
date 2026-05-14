@@ -1,14 +1,15 @@
 "use client";
 
+import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state.ts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Ticket } from "@/generated/prisma/client";
 import { LucideLoader2 } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import upsertTicket from "../actions/upsert-ticket";
-import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state.ts";
 
 type TicketUpsertProps = {
   ticket?: Ticket;
@@ -19,6 +20,19 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
     upsertTicket.bind(null, ticket?.id ?? ""),
     EMPTY_ACTION_STATE,
   );
+
+  const prevTimestamp = useRef(actionState.timestamp);
+  const isUpdate = prevTimestamp.current !== actionState.timestamp;
+
+  useEffect(() => {
+    if (!isUpdate) return;
+    if (actionState.status === "SUCCESS") {
+      toast.success(actionState.message);
+    } else if (actionState.status === "ERROR" && actionState.message) {
+      toast.error(actionState.message);
+    }
+    prevTimestamp.current = actionState.timestamp;
+  }, [actionState, actionState.timestamp, isUpdate]);
 
   return (
     <form action={action} className="flex flex-col gap-y-5">
@@ -51,10 +65,6 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
           {actionState.fieldErrors?.["content"]?.[0] as string}
         </p>
       </div>
-
-      {actionState.status === "ERROR" && actionState.message && (
-        <p className="text-sm text-red-500">{actionState.message}</p>
-      )}
 
       <Button type="submit" disabled={isPending}>
         {isPending && <LucideLoader2 className="animate-spin" />}

@@ -48,7 +48,11 @@ const upsertTicket = async (
     revalidatePath(ticketsPath());
   }
 
-  return toActionState("SUCCESS", "Ticket created");
+  return toActionState(
+    "SUCCESS",
+    id ? "Ticket updated" : "Ticket created",
+    formData,
+  );
 };
 
 export default upsertTicket;
