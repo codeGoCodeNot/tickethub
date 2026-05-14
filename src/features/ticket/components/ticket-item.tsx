@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Ticket } from "@/generated/prisma/client";
 import { ticketPath } from "@/path";
 import clsx from "clsx";
 import { LucideSquareArrowOutUpRight, LucideTrash2 } from "lucide-react";
 import Link from "next/link";
 import deleteTicket from "../actions/delete-ticket";
 import { TICKET_ICONS } from "../constant";
-import { Ticket } from "@/generated/prisma/client";
 
 type TicketItemProps = {
   ticket: Ticket;

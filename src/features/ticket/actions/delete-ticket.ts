@@ -6,15 +6,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 const deleteTicket = async (id: string) => {
-  console.log("Deleting ticket:", id);
+  await prisma.ticket.delete({ where: { id } });
 
-  try {
-    await prisma.ticket.delete({ where: { id } });
-    console.log("Deleted successfully");
-  } catch (error) {
-    console.error("Delete error:", error);
-    throw error;
-  }
   revalidatePath(ticketsPath());
   redirect(ticketsPath());
 };

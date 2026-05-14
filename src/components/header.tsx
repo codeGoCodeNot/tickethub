@@ -16,12 +16,12 @@ const Header = () => {
         </Button>
       </div>
       <div className="flex items-center gap-x-2">
+        <ThemeSwitcher />
         <Button asChild variant="outline">
           <Link href={ticketsPath()} className="text-sm">
             <h1>Tickets</h1>
           </Link>
         </Button>
-        <ThemeSwitcher />
       </div>
     </nav>
   );

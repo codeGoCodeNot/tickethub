@@ -12,7 +12,7 @@ const Placeholder = ({
   button = null,
 }: PlaceholderProps) => {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center mt-50">
+    <div className="flex flex-col flex-1 items-center justify-center">
       <div className="flex flex-col items-center gap-y-4">
         <div>{icon}</div>
         <div className="flex flex-col gap-y-2">
