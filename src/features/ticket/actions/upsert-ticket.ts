@@ -1,5 +1,9 @@
 "use server";
 
+import fromErrorToActionState, {
+  toActionState,
+  type ActionState,
+} from "@/components/form/utils/to-action-state.ts";
 import prisma from "@/lib/prisma";
 import { ticketPath, ticketsPath } from "@/path";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -9,14 +13,15 @@ import { z } from "zod";
 const upsertTicketSchema = z.object({
   title: z
     .string()
+    .trim()
     .min(1, "Title is required")
     .max(191, "Title must be less than 191 characters"),
-  content: z.string().min(1, "Content is required"),
+  content: z.string().trim().min(1, "Content is required"),
 });
 
 const upsertTicket = async (
-  id: string,
-  _actionState: { message: string },
+  id: string | undefined,
+  _actionState: ActionState,
   formData: FormData,
 ) => {
   try {
@@ -30,7 +35,7 @@ const upsertTicket = async (
       create: { title, content },
     });
   } catch (error) {
-    return { message: "Something went wrong", payload: formData };
+    return fromErrorToActionState(error, formData);
   }
 
   revalidateTag("tickets", { expire: 0 });
@@ -43,11 +48,7 @@ const upsertTicket = async (
     revalidatePath(ticketsPath());
   }
 
-  return {
-    message: id
-      ? "Ticket updated successfully!"
-      : "Ticket created successfully!",
-  };
+  return toActionState("SUCCESS", "Ticket created");
 };
 
 export default upsertTicket;

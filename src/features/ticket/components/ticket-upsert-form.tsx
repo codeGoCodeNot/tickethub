@@ -8,6 +8,7 @@ import { Ticket } from "@/generated/prisma/client";
 import { LucideLoader2 } from "lucide-react";
 import { useActionState } from "react";
 import upsertTicket from "../actions/upsert-ticket";
+import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state.ts";
 
 type TicketUpsertProps = {
   ticket?: Ticket;
@@ -16,7 +17,7 @@ type TicketUpsertProps = {
 const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
   const [actionState, action, isPending] = useActionState(
     upsertTicket.bind(null, ticket?.id ?? ""),
-    { message: "" },
+    EMPTY_ACTION_STATE,
   );
 
   return (
@@ -30,6 +31,11 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
             (actionState.payload?.get("title") as string) ?? ticket?.title
           }
         />
+        {
+          <p className="text-sm text-red-500">
+            {actionState.fieldErrors?.["title"]?.[0]}
+          </p>
+        }
       </div>
 
       <div className="flex flex-col gap-y-1">
@@ -41,15 +47,19 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
             (actionState.payload?.get("content") as string) ?? ticket?.content
           }
         />
+        <p className="text-sm text-red-500">
+          {actionState.fieldErrors?.["content"]?.[0] as string}
+        </p>
       </div>
+
+      {actionState.status === "ERROR" && actionState.message && (
+        <p className="text-sm text-red-500">{actionState.message}</p>
+      )}
 
       <Button type="submit" disabled={isPending}>
         {isPending && <LucideLoader2 className="animate-spin" />}
         {ticket ? "Update" : "Create"}
       </Button>
-      {actionState.message && (
-        <p className="text-sm text-green-500">{actionState.message}</p>
-      )}
     </form>
   );
 };
