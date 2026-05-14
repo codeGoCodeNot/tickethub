@@ -28,7 +28,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         "max-w-[500px]": !isDetail,
       })}
     >
-      <Card className="w-full hover:shadow-lg transition-shadow">
+      <Card className="w-full border hover:border-primary hover:shadow-lg hover:bg-accent/50 transition-all">
         <CardHeader>
           <CardTitle>
             <div className="flex gap-x-1 items-center">

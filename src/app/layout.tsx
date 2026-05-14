@@ -1,13 +1,9 @@
+import Header from "@/components/header";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
-import { homePath, ticketsPath } from "@/path";
-import { Button } from "@/components/ui/button";
-import { LucideKanban } from "lucide-react";
-import Header from "@/components/header";
-import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -36,7 +32,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/30 flex flex-col">
+          <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/60 flex flex-col">
             {children}
           </main>
         </ThemeProvider>

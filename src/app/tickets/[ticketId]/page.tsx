@@ -1,10 +1,13 @@
 import Heading from "@/components/heading";
 import Placeholder from "@/components/placeholder";
+import Spinner from "@/components/spinner";
 import { Button } from "@/components/ui/button";
-import { initialTickets } from "@/data";
+import TicketDetail from "@/features/ticket/components/ticket-detail";
 import TicketItem from "@/features/ticket/components/ticket-item";
+import getTicket from "@/features/ticket/queries/get-ticket";
 import { homePath } from "@/path";
 import Link from "next/link";
+import { Suspense } from "react";
 
 type TicketPageProps = {
   params: Promise<{ ticketId: string }>;
@@ -13,29 +16,15 @@ type TicketPageProps = {
 const TicketPage = async ({ params }: TicketPageProps) => {
   const { ticketId } = await params;
 
-  const ticket = initialTickets.find((ticket) => ticket.id === ticketId);
-  if (!ticket) {
-    return (
-      <Placeholder
-        label="Ticket not found"
-        button={
-          <Button asChild variant="outline">
-            <Link href={homePath()}>Go back to tickets</Link>
-          </Button>
-        }
-      />
-    );
-  }
-
   return (
     <div className="flex flex-col flex-1 gap-y-8">
       <Heading
         title="Ticket Details"
         description="Details of the selected ticket."
       />
-      <div className="flex flex-col flex-1 items-center gap-y-4 animate-fade-from-top">
-        <TicketItem ticket={ticket} isDetail />
-      </div>
+      <Suspense fallback={<Spinner />}>
+        <TicketDetail ticketId={ticketId} />
+      </Suspense>
     </div>
   );
 };
