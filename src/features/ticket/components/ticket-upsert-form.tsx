@@ -1,5 +1,6 @@
 "use client";
 
+import Form from "@/components/form/utils/form";
 import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state.ts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,8 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Ticket } from "@/generated/prisma/client";
 import { LucideLoader2 } from "lucide-react";
-import { useActionState, useEffect, useRef } from "react";
-import { toast } from "sonner";
+import { useActionState } from "react";
 import upsertTicket from "../actions/upsert-ticket";
 
 type TicketUpsertProps = {
@@ -21,21 +21,8 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
     EMPTY_ACTION_STATE,
   );
 
-  const prevTimestamp = useRef(actionState.timestamp);
-  const isUpdate = prevTimestamp.current !== actionState.timestamp;
-
-  useEffect(() => {
-    if (!isUpdate) return;
-    if (actionState.status === "SUCCESS") {
-      toast.success(actionState.message);
-    } else if (actionState.status === "ERROR" && actionState.message) {
-      toast.error(actionState.message);
-    }
-    prevTimestamp.current = actionState.timestamp;
-  }, [actionState, actionState.timestamp, isUpdate]);
-
   return (
-    <form action={action} className="flex flex-col gap-y-5">
+    <Form action={action} actionState={actionState}>
       <div className="flex flex-col gap-y-1">
         <Label htmlFor="title">Title</Label>
         <Input
@@ -70,7 +57,7 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
         {isPending && <LucideLoader2 className="animate-spin" />}
         {ticket ? "Update" : "Create"}
       </Button>
-    </form>
+    </Form>
   );
 };
 
