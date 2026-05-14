@@ -2,11 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  cacheComponents: true,
   reactCompiler: true,
   typedRoutes: true,
   experimental: {
     staleTimes: {
-      dynamic: 30,
+      dynamic: 60 * 5,
       static: 3600,
     },
   },

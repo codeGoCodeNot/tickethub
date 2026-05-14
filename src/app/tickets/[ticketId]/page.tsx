@@ -7,9 +7,7 @@ type TicketPageProps = {
   params: Promise<{ ticketId: string }>;
 };
 
-const TicketPage = async ({ params }: TicketPageProps) => {
-  const { ticketId } = await params;
-
+const TicketPage = ({ params }: TicketPageProps) => {
   return (
     <div className="flex flex-col flex-1 gap-y-8">
       <Heading
@@ -17,7 +15,7 @@ const TicketPage = async ({ params }: TicketPageProps) => {
         description="Details of the selected ticket."
       />
       <Suspense fallback={<Spinner />}>
-        <TicketDetail id={ticketId} />
+        <TicketDetail params={params} />
       </Suspense>
     </div>
   );
