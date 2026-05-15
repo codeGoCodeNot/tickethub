@@ -9,15 +9,16 @@ const RedirectToast = () => {
   const pathname = usePathname();
 
   useEffect(() => {
-    const showCookie = async () => {
+    const showCookieToast = async () => {
       const message = await getCookieByKey("toast");
+
       if (message) {
         toast.success(message);
         await deleteCookie("toast");
       }
     };
 
-    showCookie();
+    showCookieToast();
   }, [pathname]);
 
   return null;
