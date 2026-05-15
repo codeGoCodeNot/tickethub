@@ -1,5 +1,4 @@
 import Header from "@/components/header";
-import RedirectToast from "@/components/redirect-toast";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -38,7 +37,6 @@ export default function RootLayout({
             {children}
           </main>
           <Toaster expand />
-          <RedirectToast />
         </ThemeProvider>
       </body>
     </html>
