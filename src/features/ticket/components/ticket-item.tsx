@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,11 +15,13 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import {
   LucideFileEdit,
+  LucideLoaderCircle,
   LucideMenu,
   LucideSquareArrowOutUpRight,
   LucideTrash2,
 } from "lucide-react";
 import Link from "next/link";
+import { useOptimistic, useTransition } from "react";
 import deleteTicket from "../actions/delete-ticket";
 import { TICKET_ICONS } from "../constants";
 import TicketMoreMenu from "./ticket-more-menu";
@@ -28,6 +32,9 @@ type TicketItemProps = {
 };
 
 const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
+  const [optimisticStatus, setOptimisticStatus] = useOptimistic(ticket.status);
+  const [isPending, startTransition] = useTransition();
+
   const detailButton = (
     <Button variant="outline" size="icon" asChild>
       <Link href={ticketPath(ticket.id)} className="text-sm underline">
@@ -55,6 +62,9 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
   const moreMenu = (
     <TicketMoreMenu
       ticket={ticket}
+      optimisticStatus={optimisticStatus}
+      onOptimisticStatusChange={setOptimisticStatus}
+      onStartTransition={startTransition}
       trigger={
         <Button variant="outline" size="icon">
           <LucideMenu />
@@ -74,7 +84,14 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         <CardHeader>
           <CardTitle>
             <div className="flex gap-x-2 items-center">
-              <span> {TICKET_ICONS[ticket.status]}</span>
+              <span>
+                {" "}
+                {isPending ? (
+                  <LucideLoaderCircle className="animate-spin" />
+                ) : (
+                  TICKET_ICONS[optimisticStatus]
+                )}
+              </span>
               <h2 className="text-lg">{ticket.title}</h2>
             </div>
           </CardTitle>

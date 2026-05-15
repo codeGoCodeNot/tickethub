@@ -11,22 +11,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Ticket, TicketStatus } from "@/generated/prisma/client";
-import { TICKET_STATUS_LABEL } from "../constants";
-import updateTicketStatus from "../actions/update-ticket-status";
 import { toast } from "sonner";
-import { startTransition, useOptimistic } from "react";
+import updateTicketStatus from "../actions/update-ticket-status";
+import { TICKET_STATUS_LABEL } from "../constants";
 
 type TicketMoreMenuProps = {
+  optimisticStatus: TicketStatus;
+  onOptimisticStatusChange: (action: TicketStatus) => void;
+  onStartTransition: React.TransitionStartFunction;
   ticket: Ticket;
   trigger: React.ReactNode;
 };
 
-const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
-  const [optimisticStatus, setOptimisticStatus] = useOptimistic(ticket.status);
-
+const TicketMoreMenu = ({
+  ticket,
+  trigger,
+  optimisticStatus,
+  onOptimisticStatusChange,
+  onStartTransition,
+}: TicketMoreMenuProps) => {
   const handleUpdateTicketStatus = async (value: string) => {
-    startTransition(async () => {
-      setOptimisticStatus(value as TicketStatus);
+    onStartTransition(async () => {
+      onOptimisticStatusChange(value as TicketStatus);
       const state = await updateTicketStatus(ticket.id, value as TicketStatus);
       if (state.status === "ERROR" && state.message) toast.error(state.message);
       if (state.status === "SUCCESS") toast.success(state.message);
