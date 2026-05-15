@@ -10,18 +10,28 @@ type FormProps = {
   children: React.ReactNode;
 };
 
+// Module-level guard: useActionState restores the last SUCCESS/ERROR state across
+// remounts (Next.js progressive enhancement), which causes prevTimestamp to
+// re-initialize to the stale empty value while actionState already holds the
+// restored timestamp — making isUpdate true and re-firing the toast. Tracking
+// shown timestamps at module scope (survives remounts) prevents duplicates.
+
+const shownTimestamps = new Set<number>();
+
 const Form = ({ action, actionState, children }: FormProps) => {
   const prevTimestamp = useRef(actionState.timestamp);
   const isUpdate = prevTimestamp.current !== actionState.timestamp;
 
   useEffect(() => {
     if (!isUpdate) return;
+    prevTimestamp.current = actionState.timestamp;
+    if (shownTimestamps.has(actionState.timestamp)) return;
+    shownTimestamps.add(actionState.timestamp);
     if (actionState.status === "SUCCESS") {
       toast.success(actionState.message);
     } else if (actionState.status === "ERROR" && actionState.message) {
       toast.error(actionState.message);
     }
-    prevTimestamp.current = actionState.timestamp;
   }, [isUpdate, actionState.status, actionState.timestamp]);
 
   return (
