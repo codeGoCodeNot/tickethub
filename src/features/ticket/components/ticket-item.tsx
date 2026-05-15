@@ -23,8 +23,10 @@ import {
 import Link from "next/link";
 import { useOptimistic, useTransition } from "react";
 import deleteTicket from "../actions/delete-ticket";
-import { TICKET_ICONS } from "../constants";
+import { STATUS_CLASSES, TICKET_ICONS } from "../constants";
 import TicketMoreMenu from "./ticket-more-menu";
+import { TICKET_STATUS_LABEL } from "../constants";
+import { Badge } from "@/components/ui/badge";
 
 type TicketItemProps = {
   ticket: Ticket;
@@ -83,15 +85,23 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
       <Card className="w-full border hover:border-primary hover:shadow-lg hover:bg-accent/50 transition-all">
         <CardHeader>
           <CardTitle>
-            <div className="flex gap-x-2 items-center">
-              <span>
-                {" "}
+            <div className="flex items-center gap-x-1 shrink-0">
+              <Badge
+                variant="secondary"
+                className={clsx(
+                  "gap-x-1 rounded-sm border-0 text-xs font-medium",
+                  STATUS_CLASSES[optimisticStatus],
+                )}
+              >
                 {isPending ? (
                   <LucideLoaderCircle className="animate-spin" />
                 ) : (
-                  TICKET_ICONS[optimisticStatus]
+                  <>
+                    {TICKET_ICONS[optimisticStatus]}
+                    {TICKET_STATUS_LABEL[optimisticStatus]}
+                  </>
                 )}
-              </span>
+              </Badge>
               <h2 className="text-lg">{ticket.title}</h2>
             </div>
           </CardTitle>

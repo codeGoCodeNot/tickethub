@@ -11,3 +11,10 @@ export const TICKET_STATUS_LABEL = {
   IN_PROGRESS: "In Progress",
   DONE: "Done",
 };
+
+export const STATUS_CLASSES: Record<string, string> = {
+  OPEN: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
+  IN_PROGRESS:
+    "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  DONE: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+};
