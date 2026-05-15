@@ -14,6 +14,7 @@ import { toCurrencyFromCents } from "@/utils/currency";
 import clsx from "clsx";
 import { format } from "date-fns";
 import {
+  LucideCalendar,
   LucideFileEdit,
   LucideLoaderCircle,
   LucideMenu,
@@ -74,19 +75,21 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         "max-w-[500px]": !isDetail,
       })}
     >
-      <Card className="w-full border hover:border-primary hover:shadow-lg hover:bg-accent/50 transition-all">
-        <CardHeader>
+      <Card className="w-full border-0 bg-card shadow-sm hover:shadow-md ring-1 ring-border hover:ring-primary/50 transition-all duration-200">
+        <CardHeader className="pb-2">
           <CardTitle>
-            <div className="flex items-center gap-x-1 shrink-0">
+            <div className="flex items-start justify-between gap-x-2">
+              <h2 className="text-sm font-semibold leading-snug text-foreground">
+                {ticket.title}
+              </h2>
               <Badge
-                variant="secondary"
                 className={clsx(
-                  "gap-x-1 rounded-sm border-0 text-xs font-medium",
+                  "shrink-0 gap-x-1 rounded-full border-0 text-xs font-medium px-2.5",
                   STATUS_CLASSES[optimisticStatus],
                 )}
               >
                 {isPending ? (
-                  <LucideLoaderCircle className="animate-spin" />
+                  <LucideLoaderCircle className="animate-spin size-3" />
                 ) : (
                   <>
                     {TICKET_ICONS[optimisticStatus]}
@@ -94,26 +97,26 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
                   </>
                 )}
               </Badge>
-              <h2 className="text-lg">{ticket.title}</h2>
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <span
-            className={clsx("whitespace-break-spaces", {
-              "line-clamp-3": !isDetail,
+        <CardContent className="pb-3">
+          <p
+            className={clsx("text-xs text-muted-foreground leading-relaxed", {
+              "line-clamp-2": !isDetail,
             })}
           >
             {ticket.content}
-          </span>
+          </p>
         </CardContent>
-        <CardFooter className="flex items-center justify-between">
-          <span className="text-muted-foreground">
+        <CardFooter className="pt-0 flex items-center justify-between border-t border-border/50 mt-2">
+          <span className="text-xs text-muted-foreground flex items-center gap-x-1">
+            <LucideCalendar className="size-3" />
             {ticket.deadline
               ? format(new Date(ticket.deadline), "MMM d, yyyy")
-              : ""}
+              : "—"}
           </span>
-          <span className="text-muted-foreground font-medium">
+          <span className="text-xs font-semibold text-foreground">
             {toCurrencyFromCents(ticket.bounty)}
           </span>
         </CardFooter>
