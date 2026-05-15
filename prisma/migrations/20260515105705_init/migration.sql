@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Ticket" ALTER COLUMN "bounty" DROP DEFAULT,
+ALTER COLUMN "deadline" DROP DEFAULT;

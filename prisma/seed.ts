@@ -16,18 +16,24 @@ const tickets = [
     title: "Sample Ticket 1",
     content: "This is a first sample ticket.",
     status: "OPEN" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 199,
   },
   {
     id: "2",
     title: "Sample Ticket 2",
     content: "This is a second sample ticket.",
     status: "DONE" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 299,
   },
   {
     id: "3",
     title: "Sample Ticket 3",
     content: "This is a third sample ticket.",
     status: "IN_PROGRESS" as const,
+    deadline: new Date().toISOString().split("T")[0],
+    bounty: 399,
   },
 ];
 

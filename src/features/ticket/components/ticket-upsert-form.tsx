@@ -10,6 +10,7 @@ import { Ticket } from "@/generated/prisma/client";
 import { LucideLoader2 } from "lucide-react";
 import { useActionState } from "react";
 import upsertTicket from "../actions/upsert-ticket";
+import { fromCent } from "@/utils/currency";
 
 type TicketUpsertProps = {
   ticket?: Ticket;
@@ -51,6 +52,47 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
         <p className="text-sm text-red-500">
           {actionState.fieldErrors?.["content"]?.[0] as string}
         </p>
+      </div>
+
+      <div className="flex justify-between items-center gap-x-1">
+        {/* Date */}
+        <div className="flex flex-col gap-y-1 w-1/2">
+          <Label htmlFor="deadline">Deadline</Label>
+          <Input
+            id="deadline"
+            name="deadline"
+            type="date"
+            defaultValue={
+              (actionState.payload?.get("deadline") as string) ??
+              ticket?.deadline
+            }
+          />
+          {
+            <p className="text-sm text-red-500">
+              {actionState.fieldErrors?.["deadline"]?.[0]}
+            </p>
+          }
+        </div>
+
+        {/* Bounty */}
+        <div className="flex flex-col gap-y-1 w-1/2">
+          <Label htmlFor="bounty">Bounty ($)</Label>
+          <Input
+            id="bounty"
+            name="bounty"
+            type="number"
+            step="0.1"
+            defaultValue={
+              (actionState.payload?.get("bounty") as string) ??
+              (ticket?.bounty ? fromCent(ticket.bounty) : "")
+            }
+          />
+          {
+            <p className="text-sm text-red-500">
+              {actionState.fieldErrors?.["bounty"]?.[0]}
+            </p>
+          }
+        </div>
       </div>
 
       <Button type="submit" disabled={isPending}>

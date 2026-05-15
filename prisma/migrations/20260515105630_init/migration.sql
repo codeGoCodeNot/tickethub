@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Ticket" ADD COLUMN     "bounty" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "deadline" TEXT NOT NULL DEFAULT '';
