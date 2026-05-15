@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Ticket } from "@/generated/prisma/client";
 import { LucideLoader2 } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, Suspense } from "react";
 import upsertTicket from "../actions/upsert-ticket";
 import { fromCent } from "@/utils/currency";
+import DatePicker from "@/components/date-picker";
 
 type TicketUpsertProps = {
   ticket?: Ticket;
@@ -58,15 +59,17 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
         {/* Date */}
         <div className="flex flex-col gap-y-1 w-1/2">
           <Label htmlFor="deadline">Deadline</Label>
-          <Input
-            id="deadline"
-            name="deadline"
-            type="date"
-            defaultValue={
-              (actionState.payload?.get("deadline") as string) ??
-              ticket?.deadline
-            }
-          />
+          <Suspense>
+            <DatePicker
+              id="deadline"
+              name="deadline"
+              key={actionState.timestamp}
+              defaultValue={
+                (actionState.payload?.get("deadline") as string) ??
+                ticket?.deadline
+              }
+            />
+          </Suspense>
           {
             <p className="text-sm text-red-500">
               {actionState.fieldErrors?.["deadline"]?.[0]}
