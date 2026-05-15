@@ -1,5 +1,6 @@
 "use server";
 
+import { setCookieByKey } from "@/actions/cookies";
 import fromErrorToActionState, {
   toActionState,
   type ActionState,
@@ -43,6 +44,7 @@ const upsertTicket = async (
   if (id) {
     revalidateTag(`ticket-${id}`, { expire: 0 });
     revalidatePath(ticketPath(id));
+    await setCookieByKey("toast", "Ticket updated");
     redirect(ticketPath(id));
   } else {
     revalidatePath(ticketsPath());
