@@ -25,7 +25,9 @@ const useConfirmDialog = ({
 }: UseConfirmDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const dialogTrigger = <span onClick={() => setIsOpen(true)}>{trigger}</span>;
+  const dialogTrigger = (
+    <span onClick={() => setIsOpen((prev) => !prev)}>{trigger}</span>
+  );
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
@@ -37,7 +39,9 @@ const useConfirmDialog = ({
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
             <form action={action}>
-              <button type="submit">Continue</button>
+              <button type="submit" className="w-full">
+                Continue
+              </button>
             </form>
           </AlertDialogAction>
         </AlertDialogFooter>
