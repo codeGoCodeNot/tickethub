@@ -14,6 +14,7 @@ import { Ticket, TicketStatus } from "@/generated/prisma/client";
 import { TICKET_STATUS_LABEL } from "../constants";
 import updateTicketStatus from "../actions/update-ticket-status";
 import { toast } from "sonner";
+import { startTransition, useOptimistic } from "react";
 
 type TicketMoreMenuProps = {
   ticket: Ticket;
@@ -21,11 +22,15 @@ type TicketMoreMenuProps = {
 };
 
 const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
+  const [optimisticStatus, setOptimisticStatus] = useOptimistic(ticket.status);
+
   const handleUpdateTicketStatus = async (value: string) => {
-    const state = await updateTicketStatus(ticket.id, value as TicketStatus);
-    if (state.status === "SUCCESS") toast.success(state.message);
-    else if (state.status === "ERROR" && state.message)
-      toast.error(state.message);
+    startTransition(async () => {
+      setOptimisticStatus(value as TicketStatus);
+      const state = await updateTicketStatus(ticket.id, value as TicketStatus);
+      if (state.status === "ERROR" && state.message) toast.error(state.message);
+      if (state.status === "SUCCESS") toast.success(state.message);
+    });
   };
 
   return (
@@ -35,7 +40,7 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
         <DropdownMenuGroup>
           <DropdownMenuLabel>Ticket Status</DropdownMenuLabel>
           <DropdownMenuRadioGroup
-            value={ticket.status}
+            value={optimisticStatus}
             onValueChange={handleUpdateTicketStatus}
           >
             {(Object.keys(TICKET_STATUS_LABEL) as TicketStatus[]).map(
