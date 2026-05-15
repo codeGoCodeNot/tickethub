@@ -8,17 +8,19 @@ import {
 } from "@/components/ui/card";
 import { Ticket } from "@/generated/prisma/client";
 import { ticketEditPath, ticketPath } from "@/path";
+import { toCurrencyFromCents } from "@/utils/currency";
 import clsx from "clsx";
+import { format } from "date-fns";
 import {
-  LucideCurrency,
   LucideFileEdit,
+  LucideMenu,
   LucideSquareArrowOutUpRight,
   LucideTrash2,
 } from "lucide-react";
 import Link from "next/link";
 import deleteTicket from "../actions/delete-ticket";
 import { TICKET_ICONS } from "../constants";
-import { toCurrencyFromCents } from "@/utils/currency";
+import TicketMoreMenu from "./ticket-more-menu";
 
 type TicketItemProps = {
   ticket: Ticket;
@@ -50,6 +52,17 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   );
 
+  const moreMenu = (
+    <TicketMoreMenu
+      ticket={ticket}
+      trigger={
+        <Button variant="outline" size="icon">
+          <LucideMenu />
+        </Button>
+      }
+    />
+  );
+
   return (
     <div
       className={clsx("w-full flex gap-x-1", {
@@ -60,7 +73,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
       <Card className="w-full border hover:border-primary hover:shadow-lg hover:bg-accent/50 transition-all">
         <CardHeader>
           <CardTitle>
-            <div className="flex gap-x-1 items-center">
+            <div className="flex gap-x-2 items-center">
               <span> {TICKET_ICONS[ticket.status]}</span>
               <h2 className="text-lg">{ticket.title}</h2>
             </div>
@@ -76,7 +89,11 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
           </span>
         </CardContent>
         <CardFooter className="flex items-center justify-between">
-          <span className="text-muted-foreground">{ticket.deadline}</span>
+          <span className="text-muted-foreground">
+            {ticket.deadline
+              ? format(new Date(ticket.deadline), "MMM d, yyyy")
+              : ""}
+          </span>
           <span className="text-muted-foreground font-medium">
             {toCurrencyFromCents(ticket.bounty)}
           </span>
@@ -86,8 +103,9 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
       <div className="flex flex-col gap-y-1">
         {isDetail ? (
           <>
-            {deleteButton}
+            {moreMenu}
             {editButton}
+            {deleteButton}
           </>
         ) : (
           <>
