@@ -44,8 +44,14 @@ const TicketMoreMenu = ({
     });
   };
 
+  const deleteWithToast = () =>
+    toast.promise(deleteTicket(ticket.id), {
+      loading: "Deleting ticket...",
+      error: "Failed to delete ticket.",
+    });
+
   const [deleteDialogTrigger, deleteDialog] = useConfirmDialog({
-    action: deleteTicket.bind(null, ticket.id),
+    action: deleteWithToast,
     trigger: (
       <DropdownMenuItem>
         <LucideTrash2 className="h-4 w-4 text-destructive" />
