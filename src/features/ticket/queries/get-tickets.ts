@@ -10,6 +10,7 @@ const getTickets = async () => {
       user: {
         select: {
           name: true,
+          image: true,
         },
       },
     },
