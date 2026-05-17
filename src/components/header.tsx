@@ -7,6 +7,7 @@ import { LucideKanban } from "lucide-react";
 import Link from "next/link";
 import ThemeSwitcher from "./theme/theme-switcher";
 import { Button } from "./ui/button";
+import AccountDropdown from "./account-dropdown";
 
 const Header = () => {
   const { data: session } = useSession();
@@ -16,22 +17,22 @@ const Header = () => {
     <>
       <Button asChild variant="outline">
         <Link href={ticketsPath()} className="text-sm">
-          <h1>Tickets</h1>
+          <span>Tickets</span>
         </Link>
       </Button>
 
-      <SignOutItem />
+      <AccountDropdown user={user} />
     </>
   ) : (
     <>
       <Button asChild variant="outline">
         <Link href={signUpPath()} className="text-sm">
-          <h1>Sign Up</h1>
+          <span>Sign Up</span>
         </Link>
       </Button>
       <Button asChild variant="outline">
         <Link href={signInPath()} className="text-sm">
-          <h1>Sign In</h1>
+          <span>Sign In</span>
         </Link>
       </Button>
     </>
@@ -43,7 +44,7 @@ const Header = () => {
         <Button asChild variant="ghost">
           <Link href={homePath()} className="text-lg font-bold">
             <LucideKanban />
-            <h1 className="text-lg font-semibold">TicketHub</h1>
+            <span className="text-lg font-semibold">TicketHub</span>
           </Link>
         </Button>
       </div>

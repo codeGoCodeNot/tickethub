@@ -14,19 +14,25 @@ const SignOutItem = () => {
 
   const handleLogout = async () => {
     setLoading(true);
-    const { error } = await signOut();
-    setLoading(false);
-
-    if (error) {
-      return toast.error("Failed to sign out. Please try again.");
-    } else {
-      toast.success("Signed out successfully.");
-      router.push(signInPath());
+    try {
+      const { error } = await signOut();
+      if (error) {
+        toast.error("Failed to sign out. Please try again.");
+      } else {
+        toast.success("Signed out successfully.");
+        router.push(signInPath());
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Button onClick={handleLogout} disabled={loading}>
+    <button
+      onClick={handleLogout}
+      disabled={loading}
+      className="flex items-center gap-x-2 w-full"
+    >
       {loading ? (
         <>
           <span>Sign Out</span>
@@ -34,11 +40,11 @@ const SignOutItem = () => {
         </>
       ) : (
         <>
-          <span>Sign Out</span>
+          <span className="text-xs text-muted-foreground">Sign Out</span>
           <LucideLogOut />
         </>
       )}
-    </Button>
+    </button>
   );
 };
 
