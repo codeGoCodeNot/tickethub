@@ -31,5 +31,3 @@ export const proxy = async (request: NextRequest) => {
 export const config = {
   matcher: ["/api/auth/sign-in/email", "/tickets/:path*"],
 };
-
-export const runtime = "nodejs";
