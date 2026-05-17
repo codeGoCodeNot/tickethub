@@ -1,4 +1,3 @@
-import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import { PasswordInput } from "@/components/password-input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,15 +7,32 @@ import { Separator } from "@/components/ui/separator";
 import { signUpPath } from "@/path";
 import { LucideLoaderCircle, LucideTicket } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
-import signUp from "../actions/sign-up";
+import { useState } from "react";
+import signInAction from "../actions/sign-in";
 import SignInProviderForm from "./sign-in-provider-form";
 
 const SignInForm = () => {
-  const [actionState, action, isPending] = useActionState(
-    signUp,
-    EMPTY_ACTION_STATE,
-  );
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    setIsPending(true);
+    setError(null);
+    const { error } = await signInAction(
+      formData.get("email") as string,
+      formData.get("password") as string,
+    );
+    setIsPending(false);
+    if (error) {
+      setError(
+        error.status === 429
+          ? "Too many login attempts. Please try again later."
+          : error.message || "Something went wrong.",
+      );
+    }
+  };
 
   return (
     <div className="w-full max-w-sm space-y-6">
@@ -34,7 +50,7 @@ const SignInForm = () => {
 
       <Card className="border-0 shadow-md">
         <CardContent className="pt-6">
-          <form action={action}>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
               <div className="grid gap-1.5">
                 <Label htmlFor="email">Email</Label>
@@ -43,12 +59,8 @@ const SignInForm = () => {
                   name="email"
                   type="email"
                   placeholder="you@example.com"
-                  defaultValue={actionState.payload?.get("email") as string}
                   required
                 />
-                <p className="text-sm text-red-500">
-                  {actionState.fieldErrors?.["email"]?.[0]}
-                </p>
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="password">Password</Label>
@@ -56,21 +68,17 @@ const SignInForm = () => {
                   id="password"
                   name="password"
                   placeholder="••••••••"
-                  defaultValue={actionState.payload?.get("password") as string}
                   required
                 />
-                <p className="text-sm text-red-500">
-                  {actionState.fieldErrors?.["password"]?.[0]}
-                </p>
               </div>
-
+              {error && <p className="text-sm text-red-500">{error}</p>}
               <Button
                 type="submit"
                 className="w-full mt-2"
                 disabled={isPending}
               >
                 {isPending && <LucideLoaderCircle className="animate-spin" />}
-                Create account
+                Sign In
               </Button>
             </div>
           </form>
@@ -81,11 +89,9 @@ const SignInForm = () => {
               or
             </span>
           </div>
-
           <SignInProviderForm />
         </CardContent>
       </Card>
-
       <p className="text-center text-sm text-muted-foreground">
         Don't have an account?
         <Link
