@@ -6,6 +6,13 @@ const getTickets = async () => {
   cacheTag("tickets");
   return await prisma.ticket.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 };
 

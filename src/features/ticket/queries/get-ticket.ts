@@ -6,6 +6,14 @@ const getTicket = async (id: string) => {
   cacheTag("tickets", `ticket-${id}`);
   return await prisma.ticket.findUnique({
     where: { id },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
   });
 };
 

@@ -248,7 +248,7 @@ export type TicketWhereInput = {
   deadline?: Prisma.StringFilter<"Ticket"> | string
   bounty?: Prisma.IntFilter<"Ticket"> | number
   userId?: Prisma.StringFilter<"Ticket"> | string
-  User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type TicketOrderByWithRelationInput = {
@@ -261,7 +261,7 @@ export type TicketOrderByWithRelationInput = {
   deadline?: Prisma.SortOrder
   bounty?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  User?: Prisma.UserOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type TicketWhereUniqueInput = Prisma.AtLeast<{
@@ -277,7 +277,7 @@ export type TicketWhereUniqueInput = Prisma.AtLeast<{
   deadline?: Prisma.StringFilter<"Ticket"> | string
   bounty?: Prisma.IntFilter<"Ticket"> | number
   userId?: Prisma.StringFilter<"Ticket"> | string
-  User?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type TicketOrderByWithAggregationInput = {
@@ -321,7 +321,7 @@ export type TicketCreateInput = {
   status?: $Enums.TicketStatus
   deadline: string
   bounty: number
-  User: Prisma.UserCreateNestedOneWithoutTicketsInput
+  user: Prisma.UserCreateNestedOneWithoutTicketsInput
 }
 
 export type TicketUncheckedCreateInput = {
@@ -345,7 +345,7 @@ export type TicketUpdateInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   deadline?: Prisma.StringFieldUpdateOperationsInput | string
   bounty?: Prisma.IntFieldUpdateOperationsInput | number
-  User?: Prisma.UserUpdateOneRequiredWithoutTicketsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTicketsNestedInput
 }
 
 export type TicketUncheckedUpdateInput = {
@@ -630,7 +630,7 @@ export type TicketSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   deadline?: boolean
   bounty?: boolean
   userId?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ticket"]>
 
 export type TicketSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -643,7 +643,7 @@ export type TicketSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   deadline?: boolean
   bounty?: boolean
   userId?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ticket"]>
 
 export type TicketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -656,7 +656,7 @@ export type TicketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   deadline?: boolean
   bounty?: boolean
   userId?: boolean
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ticket"]>
 
 export type TicketSelectScalar = {
@@ -673,19 +673,19 @@ export type TicketSelectScalar = {
 
 export type TicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "title" | "content" | "status" | "deadline" | "bounty" | "userId", ExtArgs["result"]["ticket"]>
 export type TicketInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type TicketIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type TicketIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  User?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $TicketPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Ticket"
   objects: {
-    User: Prisma.$UserPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1091,7 +1091,7 @@ readonly fields: TicketFieldRefs;
  */
 export interface Prisma__TicketClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  User<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

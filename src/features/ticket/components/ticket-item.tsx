@@ -1,14 +1,16 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import { Ticket } from "@/generated/prisma/client";
+import { Separator } from "@/components/ui/separator";
+import { Prisma } from "@/generated/prisma/client";
 import { ticketEditPath, ticketPath } from "@/path";
 import { toCurrencyFromCents } from "@/utils/currency";
 import clsx from "clsx";
@@ -19,18 +21,20 @@ import {
   LucideLoaderCircle,
   LucideMenu,
   LucideSquareArrowOutUpRight,
-  LucideTrash2,
 } from "lucide-react";
 import Link from "next/link";
 import { useOptimistic, useTransition } from "react";
-import deleteTicket from "../actions/delete-ticket";
-import { STATUS_CLASSES, TICKET_ICONS } from "../constants";
+import {
+  STATUS_CLASSES,
+  TICKET_ICONS,
+  TICKET_STATUS_LABEL,
+} from "../constants";
 import TicketMoreMenu from "./ticket-more-menu";
-import { TICKET_STATUS_LABEL } from "../constants";
-import { Badge } from "@/components/ui/badge";
 
 type TicketItemProps = {
-  ticket: Ticket;
+  ticket: Prisma.TicketGetPayload<{
+    include: { user: { select: { name: true; image: true } } };
+  }>;
   isDetail?: boolean;
 };
 
@@ -77,28 +81,37 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
     >
       <Card className="w-full border-0 bg-card shadow-sm hover:shadow-md ring-1 ring-border hover:ring-primary/50 transition-all duration-200">
         <CardHeader className="pb-2">
-          <CardTitle>
-            <div className="flex items-start justify-between gap-x-2">
-              <h2 className="text-sm font-semibold leading-snug text-foreground">
-                {ticket.title}
-              </h2>
-              <Badge
-                className={clsx(
-                  "shrink-0 gap-x-1 rounded-full border-0 text-xs font-medium px-2.5",
-                  STATUS_CLASSES[optimisticStatus],
-                )}
-              >
-                {isPending ? (
-                  <LucideLoaderCircle className="animate-spin size-3" />
-                ) : (
-                  <>
-                    {TICKET_ICONS[optimisticStatus]}
-                    {TICKET_STATUS_LABEL[optimisticStatus]}
-                  </>
-                )}
-              </Badge>
-            </div>
-          </CardTitle>
+          <div className="flex items-center gap-x-2">
+            <Avatar className="size-6 shrink-0">
+              <AvatarImage
+                src={ticket.user.image ?? undefined}
+                alt={ticket.user.name || "User Avatar"}
+              />
+              <AvatarFallback className="text-xs">
+                {ticket.user.name?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm font-medium">{ticket.user.name}</span>
+            <Badge
+              className={clsx(
+                "ml-auto shrink-0 gap-x-1 rounded-full border-0 text-xs font-medium px-2.5",
+                STATUS_CLASSES[optimisticStatus],
+              )}
+            >
+              {isPending ? (
+                <LucideLoaderCircle className="animate-spin size-3" />
+              ) : (
+                <>
+                  {TICKET_ICONS[optimisticStatus]}
+                  {TICKET_STATUS_LABEL[optimisticStatus]}
+                </>
+              )}
+            </Badge>
+          </div>
+          <Separator />
+          <h2 className="text-sm font-semibold leading-snug text-foreground pt-1">
+            {ticket.title}
+          </h2>
         </CardHeader>
         <CardContent className="pb-3">
           <p
