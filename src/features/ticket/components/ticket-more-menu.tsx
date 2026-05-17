@@ -19,6 +19,7 @@ import { TICKET_STATUS_LABEL } from "../constants";
 import useConfirmDialog from "@/features/hook/use-confirm-dialog";
 import deleteTicket from "../actions/delete-ticket";
 import { LucideTrash2 } from "lucide-react";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 type TicketMoreMenuProps = {
   optimisticStatus: TicketStatus;
@@ -44,11 +45,19 @@ const TicketMoreMenu = ({
     });
   };
 
-  const deleteWithToast = () =>
-    toast.promise(deleteTicket(ticket.id), {
-      loading: "Deleting ticket...",
-      error: "Failed to delete ticket.",
-    });
+  const deleteWithToast = async () => {
+    const id = toast.loading("Deleting ticket...");
+    try {
+      await deleteTicket(ticket.id);
+      toast.dismiss(id);
+    } catch (err) {
+      if (isRedirectError(err)) {
+        toast.dismiss(id);
+        return;
+      }
+      toast.error("Failed to delete ticket.", { id });
+    }
+  };
 
   const [deleteDialogTrigger, deleteDialog] = useConfirmDialog({
     action: deleteWithToast,
