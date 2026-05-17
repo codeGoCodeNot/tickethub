@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "./password";
 
 export const auth = betterAuth({
+  trustedOrigins: ["https://tickethub.johnsenb.dev"],
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
