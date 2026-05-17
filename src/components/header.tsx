@@ -1,13 +1,12 @@
 "use client";
 
-import SignOutItem from "@/features/auth/components/sign-out-item";
 import { useSession } from "@/lib/auth-client";
 import { homePath, signInPath, signUpPath, ticketsPath } from "@/path";
 import { LucideKanban } from "lucide-react";
 import Link from "next/link";
+import AccountDropdown from "./account-dropdown";
 import ThemeSwitcher from "./theme/theme-switcher";
 import { Button } from "./ui/button";
-import AccountDropdown from "./account-dropdown";
 
 const Header = () => {
   const { data: session } = useSession();

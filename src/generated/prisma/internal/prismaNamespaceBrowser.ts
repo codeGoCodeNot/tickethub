@@ -82,7 +82,8 @@ export const TicketScalarFieldEnum = {
   content: 'content',
   status: 'status',
   deadline: 'deadline',
-  bounty: 'bounty'
+  bounty: 'bounty',
+  userId: 'userId'
 } as const
 
 export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
