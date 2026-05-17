@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loginRateLimit } from "./lib/rate-limit";
 
-export const middleware = async (request: NextRequest) => {
+export const proxy = async (request: NextRequest) => {
   if (request.nextUrl.pathname === "/api/auth/sign-in/email") {
     const ip = request.headers.get("x-forwarded-for") ?? "anonymous";
     const { success } = await loginRateLimit.limit(ip);
