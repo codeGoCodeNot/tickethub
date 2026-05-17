@@ -1,5 +1,6 @@
 "use client";
 
+import { avatarGradient } from "@/utils/avatar-fallback-style";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -87,7 +88,10 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
                 src={ticket.user.image ?? undefined}
                 alt={ticket.user.name || "User Avatar"}
               />
-              <AvatarFallback className="text-xs">
+              <AvatarFallback
+                style={{ background: avatarGradient(ticket.user.name ?? "") }}
+                className="text-xs"
+              >
                 {ticket.user.name?.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>

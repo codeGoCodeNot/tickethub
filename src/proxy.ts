@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "./lib/auth";
 import { loginRateLimit } from "./lib/rate-limit";
+import { signInPath } from "./path";
 
 export const proxy = async (request: NextRequest) => {
-  if (request.nextUrl.pathname === "/api/auth/sign-in/email") {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/api/auth/sign-in/email") {
     const ip = request.headers.get("x-forwarded-for") ?? "anonymous";
     const { success } = await loginRateLimit.limit(ip);
 
@@ -14,9 +18,16 @@ export const proxy = async (request: NextRequest) => {
     }
   }
 
+  if (pathname.startsWith("/tickets")) {
+    const session = await auth.api.getSession({ headers: request.headers });
+    if (!session) {
+      return NextResponse.redirect(new URL(signInPath(), request.url));
+    }
+  }
+
   return NextResponse.next();
 };
 
 export const config = {
-  matcher: ["/api/auth/sign-in/email"],
+  matcher: ["/api/auth/sign-in/email", "/tickets/:path*"],
 };
