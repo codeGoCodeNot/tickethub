@@ -30,7 +30,7 @@ const Header = () => {
           <span>Sign Up</span>
         </Link>
       </Button>
-      <Button asChild variant="outline">
+      <Button asChild>
         <Link href={signInPath()} className="text-sm">
           <span>Sign In</span>
         </Link>

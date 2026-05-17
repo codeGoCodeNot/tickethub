@@ -1,0 +1,71 @@
+<h2>Avatar Style Options</h2>
+<p class="subtitle">Your current avatar ("J") blends into the dark header. Pick a style that stands out.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f0f0f;padding:24px;display:flex;align-items:center;justify-content:center;gap:16px;">
+      <!-- Header simulation -->
+      <div style="background:#1a1a2e;border-bottom:1px solid #2a2a3e;padding:10px 20px;border-radius:8px;display:flex;align-items:center;gap:12px;width:100%;">
+        <span style="color:#888;font-size:13px;">🔲 TicketHub</span>
+        <div style="flex:1"></div>
+        <span style="color:#888;font-size:12px;border:1px solid #444;padding:4px 10px;border-radius:6px;">Tickets</span>
+        <!-- Avatar A: Gradient circle -->
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:sans-serif;">J</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Gradient</h3>
+      <p>Purple-to-indigo gradient background with white letter. Vibrant, modern feel.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f0f0f;padding:24px;display:flex;align-items:center;justify-content:center;gap:16px;">
+      <div style="background:#1a1a2e;border-bottom:1px solid #2a2a3e;padding:10px 20px;border-radius:8px;display:flex;align-items:center;gap:12px;width:100%;">
+        <span style="color:#888;font-size:13px;">🔲 TicketHub</span>
+        <div style="flex:1"></div>
+        <span style="color:#888;font-size:12px;border:1px solid #444;padding:4px 10px;border-radius:6px;">Tickets</span>
+        <!-- Avatar B: Solid color + ring -->
+        <div style="width:32px;height:32px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:sans-serif;outline:2px solid #818cf8;outline-offset:2px;">J</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Solid + Ring</h3>
+      <p>Solid indigo with a lighter ring around it. Clean and easy to spot.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f0f0f;padding:24px;display:flex;align-items:center;justify-content:center;gap:16px;">
+      <div style="background:#1a1a2e;border-bottom:1px solid #2a2a3e;padding:10px 20px;border-radius:8px;display:flex;align-items:center;gap:12px;width:100%;">
+        <span style="color:#888;font-size:13px;">🔲 TicketHub</span>
+        <div style="flex:1"></div>
+        <span style="color:#888;font-size:12px;border:1px solid #444;padding:4px 10px;border-radius:6px;">Tickets</span>
+        <!-- Avatar C: Outlined / ghost -->
+        <div style="width:32px;height:32px;border-radius:50%;background:transparent;border:2px solid #6366f1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#818cf8;font-family:sans-serif;">J</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Outlined</h3>
+      <p>No fill, just an indigo border with matching text. Subtle but visible.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0f0f0f;padding:24px;display:flex;align-items:center;justify-content:center;gap:16px;">
+      <div style="background:#1a1a2e;border-bottom:1px solid #2a2a3e;padding:10px 20px;border-radius:8px;display:flex;align-items:center;gap:12px;width:100%;">
+        <span style="color:#888;font-size:13px;">🔲 TicketHub</span>
+        <div style="flex:1"></div>
+        <span style="color:#888;font-size:12px;border:1px solid #444;padding:4px 10px;border-radius:6px;">Tickets</span>
+        <!-- Avatar D: Dynamic color from name hash -->
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:sans-serif;">J</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D — Dynamic Color</h3>
+      <p>Color generated from the user's name hash. Every user gets a unique avatar color automatically.</p>
+    </div>
+  </div>
+
+</div>

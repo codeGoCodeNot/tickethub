@@ -1,0 +1,53 @@
+<h2>Option D — Dynamic Color Avatar</h2>
+<p class="subtitle">Color is generated from the user's name, so every user always gets the same unique color.</p>
+
+<div class="section">
+  <p class="label">Live Preview — different users, different colors</p>
+  <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+
+    <!-- User: John -->
+    <div style="background:#1a1a2e;border:1px solid #2a2a3e;padding:10px 20px;border-radius:8px;display:flex;align-items:center;gap:12px;">
+      <span style="color:#888;font-size:13px;font-family:sans-serif;">🔲 TicketHub</span>
+      <div style="flex:1"></div>
+      <span style="color:#888;font-size:12px;border:1px solid #444;padding:4px 10px;border-radius:6px;font-family:sans-serif;">Tickets</span>
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;font-family:sans-serif;flex-shrink:0;">J</div>
+    </div>
+
+    <!-- User: Maria -->
+    <div style="background:#1a1a2e;border:1px solid #2a2a3e;padding:10px 20px;border-radius:8px;display:flex;align-items:center;gap:12px;">
+      <span style="color:#888;font-size:13px;font-family:sans-serif;">🔲 TicketHub</span>
+      <div style="flex:1"></div>
+      <span style="color:#888;font-size:12px;border:1px solid #444;padding:4px 10px;border-radius:6px;font-family:sans-serif;">Tickets</span>
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#06b6d4,#6366f1);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;font-family:sans-serif;flex-shrink:0;">M</div>
+    </div>
+
+    <!-- User: Alex -->
+    <div style="background:#1a1a2e;border:1px solid #2a2a3e;padding:10px 20px;border-radius:8px;display:flex;align-items:center;gap:12px;">
+      <span style="color:#888;font-size:13px;font-family:sans-serif;">🔲 TicketHub</span>
+      <div style="flex:1"></div>
+      <span style="color:#888;font-size:12px;border:1px solid #444;padding:4px 10px;border-radius:6px;font-family:sans-serif;">Tickets</span>
+      <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#10b981,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;font-family:sans-serif;flex-shrink:0;">A</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <p class="label">What changes in your code</p>
+  <div style="background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:16px;font-family:monospace;font-size:13px;color:#e6edf3;line-height:1.7;">
+    <span style="color:#8b949e;">// 1. Add this helper anywhere (e.g. top of account-dropdown.tsx)</span><br>
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">avatarGradient</span> = (name: <span style="color:#79c0ff;">string</span>) => {<br>
+    &nbsp;&nbsp;<span style="color:#ff7b72;">const</span> colors = [<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#a5d6ff;">"135deg,#f59e0b,#ef4444"</span>, <span style="color:#a5d6ff;">"135deg,#06b6d4,#6366f1"</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#a5d6ff;">"135deg,#10b981,#3b82f6"</span>, <span style="color:#a5d6ff;">"135deg,#8b5cf6,#ec4899"</span>,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#a5d6ff;">"135deg,#f97316,#eab308"</span>, <span style="color:#a5d6ff;">"135deg,#14b8a6,#6366f1"</span>,<br>
+    &nbsp;&nbsp;];<br>
+    &nbsp;&nbsp;<span style="color:#ff7b72;">const</span> i = [...name].reduce((acc, c) => acc + c.charCodeAt(0), 0) % colors.length;<br>
+    &nbsp;&nbsp;<span style="color:#ff7b72;">return</span> <span style="color:#a5d6ff;">`linear-gradient(<span style="color:#79c0ff;">${colors[i]}</span>)`</span>;<br>
+    };<br><br>
+    <span style="color:#8b949e;">// 2. Use it on AvatarFallback</span><br>
+    &lt;<span style="color:#7ee787;">AvatarFallback</span> style={{ background: avatarGradient(user.name ?? <span style="color:#a5d6ff;">""</span>), color: <span style="color:#a5d6ff;">"white"</span>, fontWeight: <span style="color:#a5d6ff;">"700"</span> }}&gt;<br>
+    &nbsp;&nbsp;{user.name?.charAt(0).toUpperCase()}<br>
+    &lt;/<span style="color:#7ee787;">AvatarFallback</span>&gt;
+  </div>
+</div>
