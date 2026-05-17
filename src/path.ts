@@ -11,3 +11,7 @@ export const ticketPath = (ticketId: string): Route =>
   `/tickets/${ticketId}` as Route;
 export const ticketEditPath = (ticketId: string): Route =>
   `/tickets/${ticketId}/edit` as Route;
+
+// auth
+export const signUpPath = (): Route => "/sign-up" as Route;
+export const signInPath = (): Route => "/sign-in" as Route;
