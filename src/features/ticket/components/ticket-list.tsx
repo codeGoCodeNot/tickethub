@@ -1,10 +1,9 @@
 import Placeholder from "@/components/placeholder";
 import getTickets from "../queries/get-tickets";
 import TicketItem from "./ticket-item";
-import { connection } from "next/server";
 
 const TicketList = async () => {
-  await connection();
+  // await connection();
   const tickets = await getTickets();
 
   if (!tickets.length)
