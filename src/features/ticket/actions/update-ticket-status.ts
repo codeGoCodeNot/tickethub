@@ -2,7 +2,7 @@
 
 import fromErrorToActionState, {
   toActionState,
-} from "@/components/form/utils/to-action-state.ts";
+} from "@/components/form/utils/to-action-state";
 import { TicketStatus } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { ticketsPath } from "@/path";

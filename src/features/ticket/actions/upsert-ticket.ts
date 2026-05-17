@@ -4,7 +4,7 @@ import { setCookieByKey } from "@/actions/cookies";
 import fromErrorToActionState, {
   toActionState,
   type ActionState,
-} from "@/components/form/utils/to-action-state.ts";
+} from "@/components/form/utils/to-action-state";
 import prisma from "@/lib/prisma";
 import { ticketPath, ticketsPath } from "@/path";
 import { toCent } from "@/utils/currency";

@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import { toast } from "sonner";
-import { ActionState } from "./to-action-state.ts";
+import { ActionState } from "./to-action-state.js";
 
 type FormProps = {
   action: (payload: FormData) => void;

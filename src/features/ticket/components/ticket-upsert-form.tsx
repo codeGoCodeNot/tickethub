@@ -1,7 +1,7 @@
 "use client";
 
 import Form from "@/components/form/utils/form";
-import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state.ts";
+import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
