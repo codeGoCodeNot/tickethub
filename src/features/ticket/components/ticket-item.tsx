@@ -31,6 +31,8 @@ import {
   TICKET_STATUS_LABEL,
 } from "../constants";
 import TicketMoreMenu from "./ticket-more-menu";
+import { useSession } from "@/lib/auth-client";
+import isOwner from "@/features/auth/utils/is-owner";
 
 type TicketItemProps = {
   ticket: Prisma.TicketGetPayload<{
@@ -42,6 +44,10 @@ type TicketItemProps = {
 const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
   const [optimisticStatus, setOptimisticStatus] = useOptimistic(ticket.status);
   const [isPending, startTransition] = useTransition();
+
+  const { data: session } = useSession();
+  const user = session?.user;
+  const isTicketOwner = isOwner(user, ticket);
 
   const detailButton = (
     <Button variant="outline" size="icon" asChild>
@@ -142,12 +148,15 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
       <div className="flex flex-col gap-y-1">
         {isDetail ? (
           <>
-            {moreMenu}
-            {editButton}
+            {isTicketOwner && (
+              <>
+                {moreMenu} {editButton}
+              </>
+            )}
           </>
         ) : (
           <>
-            {editButton}
+            {isTicketOwner && editButton}
             {detailButton}
           </>
         )}
