@@ -6,6 +6,8 @@ const getAuthOrRedirect = async () => {
   const user = await getAuth();
 
   if (!user) redirect(signInPath());
+
+  return user;
 };
 
 export default getAuthOrRedirect;

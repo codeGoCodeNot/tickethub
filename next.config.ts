@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   typedRoutes: true,
   experimental: {
+    authInterrupts: true,
     staleTimes: {
       dynamic: 60 * 5,
       static: 3600,

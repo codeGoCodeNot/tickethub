@@ -48,12 +48,16 @@ const TicketMoreMenu = ({
   const deleteWithToast = async () => {
     const id = toast.loading("Deleting ticket...");
     try {
-      await deleteTicket(ticket.id);
+      const actionState = await deleteTicket(ticket.id);
+      if (actionState?.status === "ERROR") {
+        toast.error(actionState.message, { id });
+        return;
+      }
       toast.dismiss(id);
     } catch (err) {
       if (isRedirectError(err)) {
         toast.dismiss(id);
-        return;
+        throw err;
       }
       toast.error("Failed to delete ticket.", { id });
     }
