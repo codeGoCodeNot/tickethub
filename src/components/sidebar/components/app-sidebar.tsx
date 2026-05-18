@@ -29,7 +29,7 @@ const AppSidebar = () => {
         />
       )}
       <Sidebar>
-        <SidebarContent className="px-2 py-4 mt-10">
+        <SidebarContent className="px-2 mt-20">
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -55,7 +55,7 @@ const AppSidebar = () => {
         </SidebarContent>
 
         <SidebarFooter className="border-t p-4">
-          <p className="text-xs text-muted-foreground">TicketHub v1.0</p>
+          <p className="text-xs text-muted-foreground">TicketHub v3.0</p>
         </SidebarFooter>
       </Sidebar>
     </>

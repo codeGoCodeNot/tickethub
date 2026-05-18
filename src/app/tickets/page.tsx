@@ -1,9 +1,11 @@
+import Breadcrumbs from "@/components/breadcrumbs";
 import CardCompact from "@/components/card-compact";
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import TicketList from "@/features/ticket/components/ticket-list";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
+import { homePath, ticketsPath } from "@/path";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
@@ -16,7 +18,18 @@ const AuthenticatedTicketList = async () => {
 const TicketsPage = () => {
   return (
     <div className="flex flex-col flex-1 gap-y-8">
-      <Heading title="My tickets" description="All your tickets in one place" />
+      <Heading
+        title="My tickets"
+        description="All your tickets in one place"
+        breadcrumbs={
+          <Breadcrumbs
+            breadcrumbs={[
+              { title: "Home", href: homePath() },
+              { title: "My Tickets" },
+            ]}
+          />
+        }
+      />
 
       <CardCompact
         title="Create Ticket"
