@@ -13,13 +13,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import UserAvatar from "@/components/user-avatar";
 import { useSession } from "@/lib/auth-client";
-import { LucideBuilding2, LucideChevronUp } from "lucide-react";
+import { LucideBuilding2, LucideChevronsUpDown } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { accountNavItems, ticketNavItems } from "./constants";
-import UserAvatar from "@/components/user-avatar";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -49,7 +49,7 @@ const AppSidebar = () => {
                     Personal
                   </span>
                 </div>
-                <LucideChevronUp className="ml-auto size-4 opacity-50" />
+                <LucideChevronsUpDown className="ml-auto size-4 opacity-50" />
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -110,7 +110,7 @@ const AppSidebar = () => {
                     {user?.email}
                   </span>
                 </div>
-                <LucideChevronUp className="ml-auto size-4 opacity-50" />
+                <LucideChevronsUpDown className="ml-auto size-4 opacity-50" />
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
