@@ -19,8 +19,8 @@ const AuthenticatedTicketList = async ({
 }: AuthenticatedTicketListProps) => {
   await connection();
   const user = await getAuth();
-  const { search } = await searchParams;
-  return <TicketList userId={user?.id} search={search} />;
+  const { search, sort } = await searchParams;
+  return <TicketList userId={user?.id} search={search} sort={sort} />;
 };
 
 type TicketsPageProps = {

@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { cacheTag } from "next/cache";
 
-const getTickets = async (userId?: string, search?: string) => {
+const getTickets = async (userId?: string, search?: string, sort?: string) => {
   "use cache";
   cacheTag("tickets");
   return await prisma.ticket.findMany({
@@ -9,7 +9,7 @@ const getTickets = async (userId?: string, search?: string) => {
       userId,
       ...(search && { title: { contains: search, mode: "insensitive" } }),
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: sort === "bounty" ? { bounty: "desc" } : { createdAt: "desc" },
     include: {
       user: {
         select: {

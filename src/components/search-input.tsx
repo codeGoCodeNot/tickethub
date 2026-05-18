@@ -34,7 +34,7 @@ const SearchInput = ({ placeholder }: SearchInputProps) => {
   );
 
   return (
-    <div className="relative">
+    <div className="relative flex-1">
       <LucideSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4 pointer-events-none" />
       <Input
         placeholder={placeholder}

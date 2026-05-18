@@ -9,8 +9,8 @@ type HomePageProps = {
 };
 
 const TicketListWrapper = async ({ searchParams }: HomePageProps) => {
-  const { search } = await searchParams;
-  return <TicketList search={search} />;
+  const { search, sort } = await searchParams;
+  return <TicketList search={search} sort={sort} />;
 };
 
 const HomePage = ({ searchParams }: HomePageProps) => {
