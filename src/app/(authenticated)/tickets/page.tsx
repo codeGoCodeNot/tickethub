@@ -5,12 +5,13 @@ import Spinner from "@/components/spinner";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import TicketList from "@/features/ticket/components/ticket-list";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
+import { SearchParams } from "@/features/ticket/search-params";
 import { homePath } from "@/path";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
 type AuthenticatedTicketListProps = {
-  searchParams: Promise<{ search: string }>;
+  searchParams: SearchParams;
 };
 
 const AuthenticatedTicketList = async ({
@@ -23,7 +24,7 @@ const AuthenticatedTicketList = async ({
 };
 
 type TicketsPageProps = {
-  searchParams: Promise<{ search: string }>;
+  searchParams: SearchParams;
 };
 
 const TicketsPage = ({ searchParams }: TicketsPageProps) => {
