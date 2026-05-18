@@ -1,4 +1,3 @@
-import Header from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -6,8 +5,9 @@ import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/sidebar/components/app-sidebar";
+import AppSidebar from "@/app/_navigation/sidebar/components/app-sidebar";
 import { Suspense } from "react";
+import Header from "./_navigation/header";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 

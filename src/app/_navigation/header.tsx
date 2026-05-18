@@ -1,13 +1,13 @@
 "use client";
 
+import AccountDropdown from "@/components/account-dropdown";
+import ThemeSwitcher from "@/components/theme/theme-switcher";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useSession } from "@/lib/auth-client";
 import { homePath, signInPath, signUpPath, ticketsPath } from "@/path";
 import { LucideKanban } from "lucide-react";
 import Link from "next/link";
-import AccountDropdown from "./account-dropdown";
-import ThemeSwitcher from "./theme/theme-switcher";
-import { Button } from "./ui/button";
-import { SidebarTrigger } from "./ui/sidebar";
 
 const Header = () => {
   const { data: session } = useSession();

@@ -18,7 +18,7 @@ export const proxy = async (request: NextRequest) => {
     }
   }
 
-  if (pathname.startsWith("/tickets")) {
+  if (pathname.startsWith("/tickets") || pathname.startsWith("/account")) {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session) {
       return NextResponse.redirect(new URL(signInPath(), request.url));
@@ -29,5 +29,5 @@ export const proxy = async (request: NextRequest) => {
 };
 
 export const config = {
-  matcher: ["/api/auth/sign-in/email", "/tickets/:path*"],
+  matcher: ["/api/auth/sign-in/email", "/tickets/:path*", "/account/:path*"],
 };
