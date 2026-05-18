@@ -8,10 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SignOutItem from "@/features/auth/components/sign-out-item";
-
 import { User } from "better-auth/types";
-
 import UserAvatar from "./user-avatar";
+import Link from "next/link";
+import { passwordPath, profilePath } from "@/path";
+import { LucideLock, LucideUser } from "lucide-react";
 
 type AccountDropdownProps = {
   user: User;
@@ -33,6 +34,28 @@ const AccountDropdown = ({ user }: AccountDropdownProps) => {
           <DropdownMenuLabel className="truncate">
             {user.email}
           </DropdownMenuLabel>
+        </DropdownMenuGroup>
+
+        {/* Profile */}
+        <DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href={profilePath()}>
+              <LucideUser />
+              <span className="text-xs text-muted-foreground">Profile</span>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        {/* Password */}
+        <DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href={passwordPath()}>
+              <LucideLock />
+              <span className="text-xs text-muted-foreground">Password</span>
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
 
         {/* Sign out */}

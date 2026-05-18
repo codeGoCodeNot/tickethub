@@ -35,13 +35,13 @@ const SignOutItem = () => {
     >
       {loading ? (
         <>
-          <span>Sign Out</span>
           <LucideLoaderCircle className="animate-spin" />
+          <span>Sign Out</span>
         </>
       ) : (
         <>
-          <span className="text-xs text-muted-foreground">Sign Out</span>
           <LucideLogOut />
+          <span className="text-xs text-muted-foreground">Sign Out</span>
         </>
       )}
     </button>
