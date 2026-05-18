@@ -39,6 +39,7 @@ const TicketList = async ({
             { label: "Newest", value: "newest" },
             { label: "Oldest", value: "oldest" },
             { label: "Bounty", value: "bounty" },
+            { label: "Deadline", value: "deadline" },
           ]}
         />
       </div>

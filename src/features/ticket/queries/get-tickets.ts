@@ -30,7 +30,9 @@ const getTickets = async (
           ? { bounty: "desc" }
           : sort === "oldest"
             ? { createdAt: "asc" }
-            : { createdAt: "desc" },
+            : sort === "deadline"
+              ? { deadline: "asc" }
+              : { createdAt: "desc" },
       include: {
         user: {
           select: {

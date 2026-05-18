@@ -126,6 +126,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         </CardContent>
         <CardFooter className="pt-0 flex items-center justify-between border-t border-border/50 mt-2">
           <span className="text-xs text-muted-foreground flex items-center gap-x-1">
+            Deadline:
             <LucideCalendar className="size-3" />
             {ticket.deadline
               ? format(new Date(ticket.deadline), "MMM d, yyyy")
