@@ -9,7 +9,12 @@ const getTickets = async (userId?: string, search?: string, sort?: string) => {
       userId,
       ...(search && { title: { contains: search, mode: "insensitive" } }),
     },
-    orderBy: sort === "bounty" ? { bounty: "desc" } : { createdAt: "desc" },
+    orderBy:
+      sort === "bounty"
+        ? { bounty: "desc" }
+        : sort === "oldest"
+          ? { createdAt: "asc" }
+          : { createdAt: "desc" },
     include: {
       user: {
         select: {

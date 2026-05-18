@@ -22,6 +22,7 @@ const TicketList = async ({ userId, search, sort }: TicketListProps) => {
         <SortSelect
           options={[
             { label: "Newest", value: "newest" },
+            { label: "Oldest", value: "oldest" },
             { label: "Bounty", value: "bounty" },
           ]}
         />
