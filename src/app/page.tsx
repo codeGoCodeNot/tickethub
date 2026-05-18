@@ -1,17 +1,18 @@
 import Heading from "@/components/heading";
-import { ticketsPath } from "@/path";
-import Link from "next/link";
+import Spinner from "@/components/spinner";
+import TicketList from "@/features/ticket/components/ticket-list";
+import { Suspense } from "react";
 
 const HomePage = () => {
   return (
     <div className="flex flex-col flex-1 gap-y-8">
-      <Heading title="Home Page" description="Your home place to to start" />
-
-      <div className="flex flex-1 flex-col items-center">
-        <Link href={ticketsPath()} className="underline">
-          Go Tickets
-        </Link>
-      </div>
+      <Heading
+        title="All tickets in one place"
+        description="Tickets by everyone at one place"
+      />
+      <Suspense fallback={<Spinner />}>
+        <TicketList />
+      </Suspense>
     </div>
   );
 };
