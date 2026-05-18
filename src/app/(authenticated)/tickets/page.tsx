@@ -20,8 +20,18 @@ const AuthenticatedTicketList = async ({
 }: AuthenticatedTicketListProps) => {
   await connection();
   const user = await getAuth();
-  const { search, sort } = searchParamsCache.parse(await searchParams);
-  return <TicketList userId={user?.id} search={search} sort={sort} />;
+  const { search, sort, page, size } = searchParamsCache.parse(
+    await searchParams,
+  );
+  return (
+    <TicketList
+      userId={user?.id}
+      search={search}
+      sort={sort}
+      page={page}
+      size={size}
+    />
+  );
 };
 
 const TicketsPage = ({ searchParams }: AuthenticatedTicketListProps) => {

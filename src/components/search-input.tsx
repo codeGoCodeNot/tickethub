@@ -2,7 +2,7 @@
 
 import { searchParser } from "@/features/ticket/search-params";
 import { LucideSearch } from "lucide-react";
-import { useQueryState } from "nuqs";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { useDebouncedCallback } from "use-debounce";
 import { Input } from "./ui/input";
 
@@ -12,10 +12,12 @@ type SearchInputProps = {
 
 const SearchInput = ({ placeholder }: SearchInputProps) => {
   const [search, setSearch] = useQueryState("search", searchParser);
+  const [_page, setPage] = useQueryState("page", parseAsInteger.withDefault(0));
 
   const handleSearch = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearch(e.target.value);
+      setPage(0);
     },
     250,
   );
