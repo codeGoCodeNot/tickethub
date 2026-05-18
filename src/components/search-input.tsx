@@ -1,34 +1,21 @@
 "use client";
 
+import { searchParser } from "@/features/ticket/search-params";
 import { LucideSearch } from "lucide-react";
-import { Input } from "./ui/input";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Route } from "next";
+import { useQueryState } from "nuqs";
 import { useDebouncedCallback } from "use-debounce";
+import { Input } from "./ui/input";
 
 type SearchInputProps = {
   placeholder: string;
 };
 
 const SearchInput = ({ placeholder }: SearchInputProps) => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+  const [search, setSearch] = useQueryState("search", searchParser);
 
   const handleSearch = useDebouncedCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      const params = new URLSearchParams(searchParams);
-
-      if (value) {
-        params.set("search", value);
-      } else {
-        params.delete("search");
-      }
-
-      replace(`${pathname}?${params.toString()}` as Route, {
-        scroll: false,
-      });
+      setSearch(e.target.value);
     },
     250,
   );
@@ -39,7 +26,7 @@ const SearchInput = ({ placeholder }: SearchInputProps) => {
       <Input
         placeholder={placeholder}
         className="pl-9"
-        defaultValue={searchParams.get("search") ?? ""}
+        defaultValue={search}
         onChange={handleSearch}
       />
     </div>

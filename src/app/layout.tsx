@@ -8,6 +8,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/app/_navigation/sidebar/components/app-sidebar";
 import { Suspense } from "react";
 import Header from "./_navigation/header";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -29,23 +30,25 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SidebarProvider>
-            <Suspense fallback={null}>
-              <AppSidebar />
-            </Suspense>
-            <Header />
-            <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/60 flex flex-col">
-              {children}
-            </main>
-          </SidebarProvider>
-          <Toaster expand />
-        </ThemeProvider>
+        <NuqsAdapter>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SidebarProvider>
+              <Suspense fallback={null}>
+                <AppSidebar />
+              </Suspense>
+              <Header />
+              <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/60 flex flex-col">
+                {children}
+              </main>
+            </SidebarProvider>
+            <Toaster expand />
+          </ThemeProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );

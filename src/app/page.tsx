@@ -1,15 +1,16 @@
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
 import TicketList from "@/features/ticket/components/ticket-list";
-import { SearchParams } from "@/features/ticket/search-params";
+import { searchParamsCache } from "@/features/ticket/search-params";
+import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 
 type HomePageProps = {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 };
 
 const TicketListWrapper = async ({ searchParams }: HomePageProps) => {
-  const { search, sort } = await searchParams;
+  const { search, sort } = searchParamsCache.parse(await searchParams);
   return <TicketList search={search} sort={sort} />;
 };
 

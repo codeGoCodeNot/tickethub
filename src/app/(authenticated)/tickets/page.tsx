@@ -5,13 +5,14 @@ import Spinner from "@/components/spinner";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import TicketList from "@/features/ticket/components/ticket-list";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
-import { SearchParams } from "@/features/ticket/search-params";
+import { searchParamsCache } from "@/features/ticket/search-params";
 import { homePath } from "@/path";
 import { connection } from "next/server";
+import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 
 type AuthenticatedTicketListProps = {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 };
 
 const AuthenticatedTicketList = async ({
@@ -19,15 +20,11 @@ const AuthenticatedTicketList = async ({
 }: AuthenticatedTicketListProps) => {
   await connection();
   const user = await getAuth();
-  const { search, sort } = await searchParams;
+  const { search, sort } = searchParamsCache.parse(await searchParams);
   return <TicketList userId={user?.id} search={search} sort={sort} />;
 };
 
-type TicketsPageProps = {
-  searchParams: SearchParams;
-};
-
-const TicketsPage = ({ searchParams }: TicketsPageProps) => {
+const TicketsPage = ({ searchParams }: AuthenticatedTicketListProps) => {
   return (
     <div className="flex flex-col flex-1 gap-y-8">
       <Heading
