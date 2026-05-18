@@ -1,5 +1,6 @@
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
+import SuspenseWithKey from "@/components/suspense-with-key";
 import TicketList from "@/features/ticket/components/ticket-list";
 import { searchParamsCache } from "@/features/ticket/search-params";
 import { SearchParams } from "nuqs/server";
@@ -24,7 +25,9 @@ const HomePage = ({ searchParams }: HomePageProps) => {
         description="Tickets by everyone at one place"
       />
       <Suspense fallback={<Spinner />}>
-        <TicketListWrapper searchParams={searchParams} />
+        <SuspenseWithKey fallback={<Spinner />}>
+          <TicketListWrapper searchParams={searchParams} />
+        </SuspenseWithKey>
       </Suspense>
     </div>
   );
