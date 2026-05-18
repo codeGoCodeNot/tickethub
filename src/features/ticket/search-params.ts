@@ -21,6 +21,7 @@ export const paginationParser = {
 export const paginationOptions = {
   shallow: false,
   clearOnDefault: true,
+  scroll: false,
 };
 
 export const searchParamsCache = createSearchParamsCache({
