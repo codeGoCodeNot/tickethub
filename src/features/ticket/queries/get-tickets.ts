@@ -6,7 +6,7 @@ const getTickets = async (
   search?: string,
   sort?: string,
   page = 0,
-  size = 2,
+  size = 5,
 ) => {
   "use cache";
   cacheTag("tickets");
