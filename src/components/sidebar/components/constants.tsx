@@ -1,18 +1,29 @@
-import { homePath, ticketsPath } from "@/path";
-import { LucideBook, LucideLibrary } from "lucide-react";
+import { homePath, passwordPath, profilePath, ticketsPath } from "@/path";
+import { LucideBook, LucideKeyRound, LucideLibrary, LucideUser } from "lucide-react";
 import { NavItem } from "../types";
 
-const navItems: NavItem[] = [
+export const ticketNavItems: NavItem[] = [
   {
-    title: "All tickets",
+    title: "All Tickets",
     icon: <LucideLibrary />,
     href: homePath(),
   },
   {
-    title: "My tickets",
+    title: "My Tickets",
     icon: <LucideBook />,
     href: ticketsPath(),
   },
 ];
 
-export default navItems;
+export const accountNavItems: NavItem[] = [
+  {
+    title: "Profile",
+    icon: <LucideUser />,
+    href: profilePath(),
+  },
+  {
+    title: "Password",
+    icon: <LucideKeyRound />,
+    href: passwordPath(),
+  },
+];

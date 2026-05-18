@@ -11,8 +11,7 @@ import SignOutItem from "@/features/auth/components/sign-out-item";
 
 import { User } from "better-auth/types";
 
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { avatarGradient } from "../utils/avatar-fallback-style";
+import UserAvatar from "./user-avatar";
 
 type AccountDropdownProps = {
   user: User;
@@ -22,17 +21,7 @@ const AccountDropdown = ({ user }: AccountDropdownProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        <Avatar>
-          <AvatarImage
-            src={user.image ?? undefined}
-            alt={user.name || "User Avatar"}
-          />
-          <AvatarFallback
-            style={{ background: avatarGradient(user.name ?? "") }}
-          >
-            {user.name?.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar name={user.name} image={user.image} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="center"

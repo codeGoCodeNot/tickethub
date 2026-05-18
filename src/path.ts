@@ -16,3 +16,7 @@ export const ticketEditPath = (ticketId: string): Route =>
 export const signUpPath = (): Route => "/sign-up" as Route;
 export const signInPath = (): Route => "/sign-in" as Route;
 export const forgotPasswordPath = (): Route => "/forgot-password" as Route;
+
+// account
+export const profilePath = (): Route => "/account/profile" as Route;
+export const passwordPath = (): Route => "/account/password" as Route;

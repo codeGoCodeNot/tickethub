@@ -1,7 +1,6 @@
 "use client";
 
-import { avatarGradient } from "@/utils/avatar-fallback-style";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UserAvatar from "@/components/user-avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,18 +88,11 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
       <Card className="w-full border-0 bg-card shadow-sm hover:shadow-md ring-1 ring-border hover:ring-primary/50 transition-all duration-200">
         <CardHeader className="pb-2">
           <div className="flex items-center gap-x-2">
-            <Avatar className="size-6 shrink-0">
-              <AvatarImage
-                src={ticket.user.image ?? undefined}
-                alt={ticket.user.name || "User Avatar"}
-              />
-              <AvatarFallback
-                style={{ background: avatarGradient(ticket.user.name ?? "") }}
-                className="text-xs"
-              >
-                {ticket.user.name?.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar
+              name={ticket.user.name}
+              image={ticket.user.image}
+              className="size-6 shrink-0 text-xs"
+            />
             <span className="text-sm font-medium">{ticket.user.name}</span>
             <Badge
               className={clsx(
