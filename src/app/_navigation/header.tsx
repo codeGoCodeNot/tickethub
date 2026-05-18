@@ -1,6 +1,6 @@
 "use client";
 
-import AccountDropdown from "@/components/account-dropdown";
+import AccountDropdown from "@/app/_navigation/account-dropdown";
 import ThemeSwitcher from "@/components/theme/theme-switcher";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";

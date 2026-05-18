@@ -9,13 +9,24 @@ import { homePath } from "@/path";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
-const AuthenticatedTicketList = async () => {
-  await connection();
-  const user = await getAuth();
-  return <TicketList userId={user?.id} />;
+type AuthenticatedTicketListProps = {
+  searchParams: Promise<{ search: string }>;
 };
 
-const TicketsPage = () => {
+const AuthenticatedTicketList = async ({
+  searchParams,
+}: AuthenticatedTicketListProps) => {
+  await connection();
+  const user = await getAuth();
+  const { search } = await searchParams;
+  return <TicketList userId={user?.id} search={search} />;
+};
+
+type TicketsPageProps = {
+  searchParams: Promise<{ search: string }>;
+};
+
+const TicketsPage = ({ searchParams }: TicketsPageProps) => {
   return (
     <div className="flex flex-col flex-1 gap-y-8">
       <Heading
@@ -38,7 +49,7 @@ const TicketsPage = () => {
       />
 
       <Suspense fallback={<Spinner />}>
-        <AuthenticatedTicketList />
+        <AuthenticatedTicketList searchParams={searchParams} />
       </Suspense>
     </div>
   );

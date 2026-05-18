@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SignOutItem from "@/features/auth/components/sign-out-item";
 import { User } from "better-auth/types";
-import UserAvatar from "./user-avatar";
+import UserAvatar from "../../components/user-avatar";
 import Link from "next/link";
 import { passwordPath, profilePath } from "@/path";
 import { LucideLock, LucideUser } from "lucide-react";

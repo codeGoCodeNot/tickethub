@@ -1,11 +1,14 @@
 import prisma from "@/lib/prisma";
 import { cacheTag } from "next/cache";
 
-const getTickets = async (userId: string | undefined) => {
+const getTickets = async (userId?: string, search?: string) => {
   "use cache";
   cacheTag("tickets");
   return await prisma.ticket.findMany({
-    where: { userId },
+    where: {
+      userId,
+      ...(search && { title: { contains: search, mode: "insensitive" } }),
+    },
     orderBy: { createdAt: "desc" },
     include: {
       user: {

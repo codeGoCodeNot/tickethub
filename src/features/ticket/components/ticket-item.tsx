@@ -87,7 +87,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
     >
       <Card className="w-full border-0 bg-card shadow-sm hover:shadow-md ring-1 ring-border hover:ring-primary/50 transition-all duration-200">
         <CardHeader className="pb-2">
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-x-2 mb-2">
             <UserAvatar
               name={ticket.user.name}
               image={ticket.user.image}
