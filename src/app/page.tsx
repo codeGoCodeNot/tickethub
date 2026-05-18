@@ -1,6 +1,5 @@
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
-import { Separator } from "@/components/ui/separator";
 import TicketList from "@/features/ticket/components/ticket-list";
 import { Suspense } from "react";
 

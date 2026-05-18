@@ -5,7 +5,7 @@ import Spinner from "@/components/spinner";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import TicketList from "@/features/ticket/components/ticket-list";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
-import { homePath, ticketsPath } from "@/path";
+import { homePath } from "@/path";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
