@@ -7,7 +7,6 @@ import TicketList from "@/features/ticket/components/ticket-list";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
 import { searchParamsCache } from "@/features/ticket/search-params";
 import { homePath } from "@/path";
-import SuspenseWithKey from "@/components/suspense-with-key";
 import { connection } from "next/server";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
@@ -58,9 +57,7 @@ const TicketsPage = ({ searchParams }: AuthenticatedTicketListProps) => {
       />
 
       <Suspense fallback={<Spinner />}>
-        <SuspenseWithKey fallback={<Spinner />}>
-          <AuthenticatedTicketList searchParams={searchParams} />
-        </SuspenseWithKey>
+        <AuthenticatedTicketList searchParams={searchParams} />
       </Suspense>
     </div>
   );
