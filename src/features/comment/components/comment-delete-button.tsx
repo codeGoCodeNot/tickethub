@@ -33,6 +33,7 @@ const CommentDeleteButton = ({ id }: CommentDeleteButtonProps) => {
       </Button>
     ),
     title: "Are you sure you want to delete this comment?",
+    description: "This action cannot be undone.",
   });
 
   return (
