@@ -1,6 +1,7 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
+import Comments from "@/features/comment/components/comments";
 import TicketItem from "@/features/ticket/components/ticket-item";
 import getTicket from "@/features/ticket/queries/get-ticket";
 import { homePath, ticketsPath } from "@/path";
@@ -33,7 +34,11 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
         }
       />
       <div className="flex flex-col flex-1 items-center animate-fade-from-top">
-        <TicketItem ticket={ticket} isDetail />
+        <TicketItem
+          ticket={ticket}
+          isDetail
+          comments={<Comments ticketId={ticketId} />}
+        />
       </div>
     </div>
   );
