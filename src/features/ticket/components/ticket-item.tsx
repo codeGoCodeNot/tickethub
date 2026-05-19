@@ -12,13 +12,12 @@ import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
 import isOwner from "@/features/auth/utils/is-owner";
 import { useSession } from "@/lib/auth-client";
-import { ticketEditPath, ticketPath } from "@/path";
+import { ticketPath } from "@/path";
 import { toCurrencyFromCents } from "@/utils/currency";
 import clsx from "clsx";
 import { format } from "date-fns";
 import {
   LucideCalendar,
-  LucideFileEdit,
   LucideLoaderCircle,
   LucideMenu,
   LucideSquareArrowOutUpRight,
@@ -51,14 +50,6 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
     <Button variant="outline" size="icon" asChild>
       <Link href={ticketPath(ticket.id)} className="text-sm underline">
         <LucideSquareArrowOutUpRight />
-      </Link>
-    </Button>
-  );
-
-  const editButton = (
-    <Button variant="outline" size="icon" asChild>
-      <Link href={ticketEditPath(ticket.id)} className="text-sm underline">
-        <LucideFileEdit className="h-4 w-4" />
       </Link>
     </Button>
   );
@@ -139,20 +130,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
         </Card>
 
         <div className="flex flex-col gap-y-1">
-          {isDetail ? (
-            <>
-              {isTicketOwner && (
-                <>
-                  {moreMenu} {editButton}
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              {isTicketOwner && editButton}
-              {detailButton}
-            </>
-          )}
+          {isDetail ? isTicketOwner && moreMenu : detailButton}
         </div>
       </div>
       {isDetail && comments}

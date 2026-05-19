@@ -12,14 +12,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import useConfirmDialog from "@/features/hook/use-confirm-dialog";
 import { Ticket, TicketStatus } from "@/generated/prisma/client";
+import { ticketEditPath } from "@/path";
+import { LucideFileEdit, LucideTrash2 } from "lucide-react";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+import Link from "next/link";
 import { toast } from "sonner";
+import deleteTicket from "../actions/delete-ticket";
 import updateTicketStatus from "../actions/update-ticket-status";
 import { TICKET_STATUS_LABEL } from "../constants";
-import useConfirmDialog from "@/features/hook/use-confirm-dialog";
-import deleteTicket from "../actions/delete-ticket";
-import { LucideTrash2 } from "lucide-react";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 type TicketMoreMenuProps = {
   optimisticStatus: TicketStatus;
@@ -74,6 +76,15 @@ const TicketMoreMenu = ({
     title: "Are you sure you want to delete this ticket?",
   });
 
+  const editButton = (
+    <DropdownMenuItem asChild>
+      <Link href={ticketEditPath(ticket.id)}>
+        <LucideFileEdit className="h-4 w-4" />
+        <span>Edit ticket</span>
+      </Link>
+    </DropdownMenuItem>
+  );
+
   return (
     <>
       {deleteDialog}
@@ -94,6 +105,8 @@ const TicketMoreMenu = ({
                 ),
               )}
             </DropdownMenuRadioGroup>
+            <DropdownMenuSeparator />
+            {editButton}
             <DropdownMenuSeparator />
             {deleteDialogTrigger}
           </DropdownMenuGroup>
