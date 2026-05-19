@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type Ticket = Prisma.TicketModel
 /**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
+/**
  * Model User
  * 
  */

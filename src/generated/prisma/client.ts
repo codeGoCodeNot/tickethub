@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Ticket = Prisma.TicketModel
 /**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
+/**
  * Model User
  * 
  */

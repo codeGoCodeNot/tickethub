@@ -45,15 +45,23 @@ const tickets = [
   },
 ];
 
+const comments = [
+  { content: "First comment from DB" },
+  { content: "Second comment from DB" },
+  { content: "Third comment from DB" },
+];
+
 const seed = async () => {
   const t0 = performance.now();
   console.log("Db seeding started...");
   await prisma.user.deleteMany();
   await prisma.ticket.deleteMany();
+  await prisma.comment.deleteMany();
 
   await prisma.user.createMany({ data: users });
 
   const hashedPassword = await hashPassword("password123");
+
   await prisma.account.create({
     data: {
       id: "acc-1",
@@ -63,12 +71,22 @@ const seed = async () => {
       password: hashedPassword,
     },
   });
-  await prisma.ticket.createMany({
+
+  const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket) => ({
       ...ticket,
       userId: users[0].id,
     })),
   });
+
+  await prisma.comment.createMany({
+    data: comments.map((comment) => ({
+      ...comment,
+      userId: users[0].id,
+      ticketId: dbTickets[0].id,
+    })),
+  });
+
   const t1 = performance.now();
   console.log(`Db seeding finished in ${(t1 - t0).toFixed(2)} ms.`);
 
