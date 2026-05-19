@@ -1,14 +1,15 @@
-import getComments from "../queries/get-comments";
-import Image from "next/image";
-import CommentItem from "./comment-item";
 import CardCompact from "@/components/card-compact";
+import { User } from "@/generated/prisma/client";
+import getComments from "../queries/get-comments";
 import CommentCreateForm from "./comment-create-form";
+import CommentItem from "./comment-item";
 
 type CommentsProps = {
   ticketId: string;
+  user: User | null;
 };
 
-const Comments = async ({ ticketId }: CommentsProps) => {
+const Comments = async ({ ticketId, user }: CommentsProps) => {
   const comments = await getComments(ticketId);
 
   return (
@@ -20,7 +21,7 @@ const Comments = async ({ ticketId }: CommentsProps) => {
       />
       <div className="flex flex-col flex-1 gap-y-4">
         {comments.map((comment) => (
-          <CommentItem comment={comment} key={comment.id} />
+          <CommentItem comment={comment} key={comment.id} user={user} />
         ))}
       </div>
     </>

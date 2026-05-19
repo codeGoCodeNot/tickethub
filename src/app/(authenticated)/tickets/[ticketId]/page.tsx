@@ -1,6 +1,7 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
+import { getAuth } from "@/features/auth/queries/get-auth";
 import Comments from "@/features/comment/components/comments";
 import TicketItem from "@/features/ticket/components/ticket-item";
 import getTicket from "@/features/ticket/queries/get-ticket";
@@ -15,6 +16,8 @@ type TicketPageProps = {
 const TicketDetail = async ({ params }: TicketPageProps) => {
   const { ticketId } = await params;
   const ticket = await getTicket(ticketId);
+
+  const user = await getAuth();
 
   if (!ticket) return notFound();
 
@@ -37,7 +40,12 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
         <TicketItem
           ticket={ticket}
           isDetail
-          comments={<Comments ticketId={ticketId} />}
+          comments={
+            <Comments
+              ticketId={ticketId}
+              user={user ? { ...user, image: user.image ?? null } : null}
+            />
+          }
         />
       </div>
     </div>
