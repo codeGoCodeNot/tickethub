@@ -11,7 +11,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
 import isOwner from "@/features/auth/utils/is-owner";
-import { Prisma, Ticket } from "@/generated/prisma/client";
 import { useSession } from "@/lib/auth-client";
 import { ticketEditPath, ticketPath } from "@/path";
 import { toCurrencyFromCents } from "@/utils/currency";
@@ -31,8 +30,8 @@ import {
   TICKET_ICONS,
   TICKET_STATUS_LABEL,
 } from "../constants";
-import TicketMoreMenu from "./ticket-more-menu";
 import { TicketWithMetadata } from "../type";
+import TicketMoreMenu from "./ticket-more-menu";
 
 type TicketItemProps = {
   ticket: TicketWithMetadata;
