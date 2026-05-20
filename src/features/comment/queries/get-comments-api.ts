@@ -18,12 +18,7 @@ const getCommentsApi = async (
     prisma.comment.findMany({
       where,
       take: take + 1,
-      cursor: cursor
-        ? {
-            id: cursor.id,
-            createdAt: new Date(cursor.createdAt),
-          }
-        : undefined,
+      cursor: cursor ? { id: cursor.id } : undefined,
       skip: cursor ? 1 : undefined,
       include: {
         user: {
