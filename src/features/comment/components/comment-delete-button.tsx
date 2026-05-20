@@ -10,7 +10,10 @@ type CommentDeleteButtonProps = {
   id: string;
 };
 
-const CommentDeleteButton = ({ id }: CommentDeleteButtonProps) => {
+const CommentDeleteButton = ({
+  id,
+  onDelete,
+}: CommentDeleteButtonProps & { onDelete?: (id: string) => void }) => {
   const deleteWithToast = async () => {
     const toastId = toast.loading("Deleting comment...");
     try {
@@ -21,6 +24,7 @@ const CommentDeleteButton = ({ id }: CommentDeleteButtonProps) => {
       }
       toast.dismiss(toastId);
       toast.success("Comment deleted");
+      onDelete?.(id);
     } catch {
       toast.error("Failed to delete comment.", { id: toastId });
     }

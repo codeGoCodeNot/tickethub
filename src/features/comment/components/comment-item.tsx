@@ -13,9 +13,10 @@ import CommentEditInline from "./comment-edit-inline";
 type CommentItemProps = {
   comment: CommentWithMetadata;
   user: User | null;
+  onDelete?: (id: string) => void;
 };
 
-const CommentItem = ({ comment, user }: CommentItemProps) => {
+const CommentItem = ({ comment, user, onDelete }: CommentItemProps) => {
   const commentIsOwner = isOwner(user, comment);
 
   const isEdited = comment.createdAt.getTime() !== comment.updatedAt.getTime();
@@ -42,7 +43,7 @@ const CommentItem = ({ comment, user }: CommentItemProps) => {
           {commentIsOwner && (
             <div className="flex gap-x-1">
               <CommentTriggerButton commentId={comment.id} />
-              <CommentDeleteButton id={comment.id} />
+              <CommentDeleteButton id={comment.id} onDelete={onDelete} />
             </div>
           )}
         </div>

@@ -3,6 +3,7 @@ import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import Comments from "@/features/comment/components/comments";
+import getComments from "@/features/comment/queries/get-comments";
 import TicketItem from "@/features/ticket/components/ticket-item";
 import getTicket from "@/features/ticket/queries/get-ticket";
 import { homePath, ticketsPath } from "@/path";
@@ -15,9 +16,11 @@ type TicketPageProps = {
 
 const TicketDetail = async ({ params }: TicketPageProps) => {
   const { ticketId } = await params;
-  const ticket = await getTicket(ticketId);
-
-  const user = await getAuth();
+  const [ticket, comments, user] = await Promise.all([
+    getTicket(ticketId),
+    getComments(ticketId),
+    getAuth(),
+  ]);
 
   if (!ticket) return notFound();
 
@@ -30,6 +33,7 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
           <Comments
             ticketId={ticketId}
             user={user ? { ...user, image: user.image ?? null } : null}
+            comments={comments}
           />
         }
       />

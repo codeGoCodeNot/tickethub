@@ -7,6 +7,7 @@ const getComments = async (ticketId: string) => {
   cacheTag(`ticket-${ticketId}-comments`);
   return await prisma.comment.findMany({
     where: { ticketId },
+    take: 2,
     include: {
       user: {
         select: {
