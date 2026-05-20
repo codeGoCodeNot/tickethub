@@ -32,22 +32,24 @@ const CommentEditInline = ({ commentId, content }: CommentEditInlineProps) => {
 
   return (
     <Form action={action} actionState={actionState}>
-      <Textarea name="content" defaultValue={content} />
-      <p className="text-sm text-red-500">
-        {actionState.fieldErrors?.["content"]?.[0]}
-      </p>
-      <div className="flex gap-x-1">
-        <Button type="submit" size="sm">
-          Save
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          onClick={() => setEditingCommentId(null)}
-        >
-          Cancel
-        </Button>
+      <div className="flex flex-col gap-y-1">
+        <Textarea name="content" defaultValue={content} />
+        <p className="text-sm text-red-500">
+          {actionState.fieldErrors?.["content"]?.[0]}
+        </p>
+        <div className="flex gap-x-1">
+          <Button type="submit" size="sm">
+            Save
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => setEditingCommentId(null)}
+          >
+            Cancel
+          </Button>
+        </div>
       </div>
     </Form>
   );
