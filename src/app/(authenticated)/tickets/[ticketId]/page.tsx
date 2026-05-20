@@ -22,6 +22,23 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
   if (!ticket) return notFound();
 
   return (
+    <div className="flex flex-col flex-1 items-center animate-fade-from-top">
+      <TicketItem
+        ticket={ticket}
+        isDetail
+        comments={
+          <Comments
+            ticketId={ticketId}
+            user={user ? { ...user, image: user.image ?? null } : null}
+          />
+        }
+      />
+    </div>
+  );
+};
+
+const TicketPage = ({ params }: TicketPageProps) => {
+  return (
     <div className="flex flex-col flex-1 gap-y-8">
       <Heading
         title="Ticket Details"
@@ -31,30 +48,11 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
             breadcrumbs={[
               { title: "Home", href: homePath() },
               { title: "Tickets", href: ticketsPath() },
-              { title: ticket.title },
+              { title: "Ticket Details" },
             ]}
           />
         }
       />
-      <div className="flex flex-col flex-1 items-center animate-fade-from-top">
-        <TicketItem
-          ticket={ticket}
-          isDetail
-          comments={
-            <Comments
-              ticketId={ticketId}
-              user={user ? { ...user, image: user.image ?? null } : null}
-            />
-          }
-        />
-      </div>
-    </div>
-  );
-};
-
-const TicketPage = ({ params }: TicketPageProps) => {
-  return (
-    <div className="flex flex-col flex-1 gap-y-8">
       <Suspense fallback={<Spinner />}>
         <TicketDetail params={params} />
       </Suspense>

@@ -27,6 +27,20 @@ const TicketEditFetcher = async ({ params }: TicketEditPageProps) => {
   if (!isTicketOwner) return forbidden();
 
   return (
+    <div className="flex flex-col flex-1 items-center animate-fade-from-top">
+      <CardCompact
+        title="Edit Ticket"
+        description="Edit an existing ticket."
+        content={
+          <TicketUpsertForm ticket={ticket} key={ticket.updatedAt.toString()} />
+        }
+      />
+    </div>
+  );
+};
+
+const TicketEditPage = ({ params }: TicketEditPageProps) => {
+  return (
     <div className="flex flex-col flex-1 gap-y-8">
       <Heading
         title="Edit Ticket"
@@ -36,33 +50,16 @@ const TicketEditFetcher = async ({ params }: TicketEditPageProps) => {
             breadcrumbs={[
               { title: "Home", href: homePath() },
               { title: "Tickets", href: ticketsPath() },
-              { title: ticket.title, href: ticketPath(ticket.id) },
+              // { title: "Edit Ticket", href: ticketPath(ticket.id) },
               { title: "Edit" },
             ]}
           />
         }
       />
-      <div className="flex flex-col flex-1 items-center animate-fade-from-top">
-        <CardCompact
-          title="Edit Ticket"
-          description="Edit an existing ticket."
-          content={
-            <TicketUpsertForm
-              ticket={ticket}
-              key={ticket.updatedAt.toString()}
-            />
-          }
-        />
-      </div>
+      <Suspense fallback={<Spinner />}>
+        <TicketEditFetcher params={params} />
+      </Suspense>
     </div>
-  );
-};
-
-const TicketEditPage = ({ params }: TicketEditPageProps) => {
-  return (
-    <Suspense fallback={<Spinner />}>
-      <TicketEditFetcher params={params} />
-    </Suspense>
   );
 };
 
