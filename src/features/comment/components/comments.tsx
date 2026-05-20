@@ -7,7 +7,7 @@ import getCommentsApi from "../queries/get-comments-api";
 import { CommentWithMetadata } from "../type";
 import CommentCreateForm from "./comment-create-form";
 import CommentItem from "./comment-item";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 type CommentsProps = {
   comments: CommentWithMetadata[];
@@ -16,29 +16,30 @@ type CommentsProps = {
 };
 
 const Comments = ({ comments, ticketId, user }: CommentsProps) => {
-  useEffect(() => {
-    setPaginatedComments([]);
-    setHasMore(comments.length >= 2);
-  }, [comments]);
-
+  const [isPending, startTransition] = useTransition();
   const [paginatedComments, setPaginatedComments] = useState<
     CommentWithMetadata[]
   >([]);
-
   const [hasMore, setHasMore] = useState(comments.length >= 2);
 
-  const handleMore = async () => {
-    const lastComment = paginatedComments.at(-1) ?? comments.at(-1);
-    const cursor = lastComment
-      ? { id: lastComment.id, createdAt: lastComment.createdAt.valueOf() }
-      : undefined;
-    const { list: moreComments, metadata } = await getCommentsApi(
-      ticketId,
-      cursor,
-    );
+  useEffect(() => {
+    setHasMore(comments.length >= 2);
+  }, [comments]);
 
-    setPaginatedComments((prev) => [...prev, ...moreComments]);
-    setHasMore(metadata.hasNextPage);
+  const handleMore = async () => {
+    startTransition(async () => {
+      const lastComment = paginatedComments.at(-1) ?? comments.at(-1);
+      const cursor = lastComment
+        ? { id: lastComment.id, createdAt: lastComment.createdAt.valueOf() }
+        : undefined;
+      const { list: moreComments, metadata } = await getCommentsApi(
+        ticketId,
+        cursor,
+      );
+
+      setPaginatedComments((prev) => [...prev, ...moreComments]);
+      setHasMore(metadata.hasNextPage);
+    });
   };
 
   const handleDeleteComment = (id: string) => {
@@ -68,8 +69,8 @@ const Comments = ({ comments, ticketId, user }: CommentsProps) => {
       </div>
       {hasMore && (
         <div className="flex flex-col justify-center ml-8">
-          <Button variant="ghost" onClick={handleMore}>
-            More
+          <Button variant="ghost" onClick={handleMore} disabled={isPending}>
+            {isPending ? "Loading..." : "More"}
           </Button>
         </div>
       )}
