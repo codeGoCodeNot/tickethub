@@ -17,6 +17,7 @@ type CommentsProps = {
 
 const Comments = ({ comments, ticketId, user }: CommentsProps) => {
   useEffect(() => {
+    setPaginatedComments([]);
     setHasMore(comments.length >= 2);
   }, [comments]);
 
