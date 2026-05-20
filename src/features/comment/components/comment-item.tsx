@@ -18,6 +18,8 @@ type CommentItemProps = {
 const CommentItem = ({ comment, user }: CommentItemProps) => {
   const commentIsOwner = isOwner(user, comment);
 
+  const isEdited = comment.createdAt.getTime() !== comment.updatedAt.getTime();
+
   return (
     <div className="flex gap-x-1">
       <Card className="w-full border-0 bg-card/80 shadow-sm hover:shadow-md ring-1 ring-border hover:ring-primary/50 transition-all duration-200">
@@ -34,6 +36,7 @@ const CommentItem = ({ comment, user }: CommentItemProps) => {
               {comment.createdAt
                 ? format(new Date(comment.createdAt), "MMM d, yyyy")
                 : "—"}
+              {isEdited && " (edited)"}
             </span>
           </div>
           <Separator />
