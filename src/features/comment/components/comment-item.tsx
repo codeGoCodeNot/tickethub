@@ -7,15 +7,15 @@ import { format } from "date-fns/format";
 import { LucideCalendar } from "lucide-react";
 import { CommentWithMetadata } from "../type";
 import CommentDeleteButton from "./comment-delete-button";
+import CommentTriggerButton from "./comment-trigger-button";
+import CommentEditInline from "./comment-edit-inline";
 
 type CommentItemProps = {
   comment: CommentWithMetadata;
+  user: User | null;
 };
 
-const CommentItem = ({
-  comment,
-  user,
-}: CommentItemProps & { user: User | null }) => {
+const CommentItem = ({ comment, user }: CommentItemProps) => {
   const commentIsOwner = isOwner(user, comment);
 
   return (
@@ -39,13 +39,19 @@ const CommentItem = ({
           <Separator />
         </CardHeader>
         <CardContent className="pb-3">
-          <p className="text-xs text-muted-foreground leading-relaxed">
+          <p className="text-xs text-muted-foreground leading-relaxed mb-5">
             {comment.content}
           </p>
+          <CommentEditInline commentId={comment.id} content={comment.content} />
         </CardContent>
       </Card>
       <div className="flex flex-col gap-y-1">
-        {commentIsOwner && <CommentDeleteButton id={comment.id} />}
+        {commentIsOwner && (
+          <>
+            <CommentTriggerButton commentId={comment.id} />
+            <CommentDeleteButton id={comment.id} />
+          </>
+        )}
       </div>
     </div>
   );
