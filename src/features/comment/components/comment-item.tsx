@@ -30,7 +30,9 @@ const CommentItem = ({ comment, user }: CommentItemProps) => {
               image={comment.user.image}
               className="size-6 shrink-0 text-xs"
             />
-            <span className="text-sm font-medium">{comment.user.name}</span>
+            <span className="text-sm font-medium">
+              {comment.user.name.split(" ")[0]}
+            </span>
             <span className="ml-auto text-xs text-muted-foreground flex items-center gap-x-1">
               <LucideCalendar className="size-3" />
               {comment.createdAt

@@ -84,7 +84,9 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
                 image={ticket.user.image}
                 className="size-6 shrink-0 text-xs"
               />
-              <span className="text-sm font-medium">{ticket.user.name}</span>
+              <span className="text-sm font-medium">
+                {ticket.user.name.split(" ")[0]}
+              </span>
               <Badge
                 className={clsx(
                   "ml-auto shrink-0 gap-x-1 rounded-full border-0 text-xs font-medium px-2.5",

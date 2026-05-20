@@ -12,6 +12,7 @@ type CardCompactProps = {
   description: string;
   content: React.ReactNode;
   footer?: React.ReactNode;
+  className?: string;
 };
 
 const CardCompact = ({
@@ -19,9 +20,10 @@ const CardCompact = ({
   description,
   content,
   footer,
+  className = "w-full max-w-[500px] self-center",
 }: CardCompactProps) => {
   return (
-    <Card className="w-full max-w-[500px] self-center">
+    <Card className={className}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
