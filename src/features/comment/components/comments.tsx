@@ -16,21 +16,24 @@ type CommentsProps = {
 };
 
 const Comments = ({ comments, ticketId, user }: CommentsProps) => {
-  const [paginatedComments, setPaginatedComments] = useState<
-    CommentWithMetadata[]
-  >([]);
-
   useEffect(() => {
     setHasMore(comments.length >= 2);
   }, [comments]);
 
+  const [paginatedComments, setPaginatedComments] = useState<
+    CommentWithMetadata[]
+  >([]);
+
   const [hasMore, setHasMore] = useState(comments.length >= 2);
 
   const handleMore = async () => {
-    const offset = comments.length + paginatedComments.length;
+    const lastComment = paginatedComments.at(-1) ?? comments.at(-1);
+    const cursor = lastComment
+      ? { id: lastComment.id, createdAt: lastComment.createdAt.valueOf() }
+      : undefined;
     const { list: moreComments, metadata } = await getCommentsApi(
       ticketId,
-      offset,
+      cursor,
     );
 
     setPaginatedComments((prev) => [...prev, ...moreComments]);
