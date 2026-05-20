@@ -7,6 +7,7 @@ import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import { useActionState, useEffect } from "react";
 import updateComment from "../actions/update-comment";
 import { useCommentEditStore } from "../stores/comment-edit-store";
+import { LucideLoaderCircle } from "lucide-react";
 
 type CommentEditInlineProps = {
   commentId: string;
@@ -17,7 +18,7 @@ const CommentEditInline = ({ commentId, content }: CommentEditInlineProps) => {
   const { editingCommentId, setEditingCommentId } = useCommentEditStore();
   const isEditing = editingCommentId === commentId;
 
-  const [actionState, action] = useActionState(
+  const [actionState, action, isPending] = useActionState(
     updateComment.bind(null, commentId),
     EMPTY_ACTION_STATE,
   );
@@ -39,7 +40,14 @@ const CommentEditInline = ({ commentId, content }: CommentEditInlineProps) => {
         </p>
         <div className="flex gap-x-1">
           <Button type="submit" size="sm">
-            Save
+            {isPending ? (
+              <>
+                <LucideLoaderCircle className="animate-spin" />
+                <span>Saving...</span>
+              </>
+            ) : (
+              "Save"
+            )}
           </Button>
           <Button
             type="button"
