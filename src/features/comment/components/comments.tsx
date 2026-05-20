@@ -3,11 +3,11 @@
 import CardCompact from "@/components/card-compact";
 import { Button } from "@/components/ui/button";
 import { User } from "@/generated/prisma/client";
+import { useEffect, useState, useTransition } from "react";
 import getCommentsApi from "../queries/get-comments-api";
 import { CommentWithMetadata } from "../type";
 import CommentCreateForm from "./comment-create-form";
 import CommentItem from "./comment-item";
-import { useEffect, useState, useTransition } from "react";
 
 type CommentsProps = {
   comments: CommentWithMetadata[];
@@ -23,6 +23,7 @@ const Comments = ({ comments, ticketId, user }: CommentsProps) => {
   const [hasMore, setHasMore] = useState(comments.length >= 2);
 
   useEffect(() => {
+    setPaginatedComments([]);
     setHasMore(comments.length >= 2);
   }, [comments]);
 
@@ -42,10 +43,6 @@ const Comments = ({ comments, ticketId, user }: CommentsProps) => {
     });
   };
 
-  const handleDeleteComment = (id: string) => {
-    setPaginatedComments((prev) => prev.filter((comment) => comment.id !== id));
-  };
-
   return (
     <>
       <CardCompact
@@ -59,12 +56,7 @@ const Comments = ({ comments, ticketId, user }: CommentsProps) => {
           <CommentItem comment={comment} key={comment.id} user={user} />
         ))}
         {paginatedComments.map((comment) => (
-          <CommentItem
-            comment={comment}
-            key={comment.id}
-            user={user}
-            onDelete={handleDeleteComment}
-          />
+          <CommentItem comment={comment} key={comment.id} user={user} />
         ))}
       </div>
       {hasMore && (

@@ -42,6 +42,7 @@ model Comment {
 
   @@index([ticketId])
   @@index([userId])
+  @@unique([createdAt, id])
 }
 
 model User {
