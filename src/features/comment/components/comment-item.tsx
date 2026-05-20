@@ -21,44 +21,40 @@ const CommentItem = ({ comment, user }: CommentItemProps) => {
   const isEdited = comment.createdAt.getTime() !== comment.updatedAt.getTime();
 
   return (
-    <div className="flex gap-x-1">
-      <Card className="w-full border-0 bg-card/80 shadow-sm hover:shadow-md ring-1 ring-border hover:ring-primary/50 transition-all duration-200">
-        <CardHeader className="pb-2">
-          <div className="flex items-center gap-x-2 mb-2">
-            <UserAvatar
-              name={comment.user.name}
-              image={comment.user.image}
-              className="size-6 shrink-0 text-xs"
-            />
-            <span className="text-sm font-medium">
-              {comment.user.name.split(" ")[0]}
-            </span>
-            <span className="ml-auto text-xs text-muted-foreground flex items-center gap-x-1">
-              <LucideCalendar className="size-3" />
-              {comment.createdAt
-                ? format(new Date(comment.createdAt), "MMM d, yyyy")
-                : "—"}
-              {isEdited && " (edited)"}
-            </span>
-          </div>
-          <Separator />
-        </CardHeader>
-        <CardContent className="pb-3">
-          <p className="text-xs text-muted-foreground leading-relaxed mb-5">
-            {comment.content}
-          </p>
-          <CommentEditInline commentId={comment.id} content={comment.content} />
-        </CardContent>
-      </Card>
-      <div className="flex flex-col gap-y-1">
-        {commentIsOwner && (
-          <>
-            <CommentTriggerButton commentId={comment.id} />
-            <CommentDeleteButton id={comment.id} />
-          </>
-        )}
-      </div>
-    </div>
+    <Card className="w-full border-0 bg-card/80 shadow-sm hover:shadow-md ring-1 ring-border hover:ring-primary/50 transition-all duration-200">
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-x-2 mb-2">
+          <UserAvatar
+            name={comment.user.name}
+            image={comment.user.image}
+            className="size-6 shrink-0 text-xs"
+          />
+          <span className="text-sm font-medium">
+            {comment.user.name.split(" ")[0]}
+          </span>
+          <span className="ml-auto text-xs text-muted-foreground flex items-center gap-x-1">
+            <LucideCalendar className="size-3" />
+            {comment.createdAt
+              ? format(new Date(comment.createdAt), "MMM d, yyyy")
+              : "—"}
+            {isEdited && " (edited)"}
+          </span>
+          {commentIsOwner && (
+            <div className="flex gap-x-1">
+              <CommentTriggerButton commentId={comment.id} />
+              <CommentDeleteButton id={comment.id} />
+            </div>
+          )}
+        </div>
+        <Separator />
+      </CardHeader>
+      <CardContent className="pb-3">
+        <p className="text-xs text-muted-foreground leading-relaxed mb-5">
+          {comment.content}
+        </p>
+        <CommentEditInline commentId={comment.id} content={comment.content} />
+      </CardContent>
+    </Card>
   );
 };
 

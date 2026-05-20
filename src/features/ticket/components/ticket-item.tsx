@@ -47,7 +47,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
   const isTicketOwner = isOwner(user, ticket);
 
   const detailButton = (
-    <Button variant="outline" size="icon" asChild>
+    <Button variant="ghost" size="icon" asChild>
       <Link href={ticketPath(ticket.id)} className="text-sm underline">
         <LucideSquareArrowOutUpRight />
       </Link>
@@ -61,7 +61,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
       onOptimisticStatusChange={setOptimisticStatus}
       onStartTransition={startTransition}
       trigger={
-        <Button variant="outline" size="icon">
+        <Button variant="ghost" size="icon">
           <LucideMenu />
         </Button>
       }
@@ -89,7 +89,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
               </span>
               <Badge
                 className={clsx(
-                  "ml-auto shrink-0 gap-x-1 rounded-full border-0 text-xs font-medium px-2.5",
+                  "shrink-0 gap-x-1 rounded-full border-0 text-xs font-medium px-2.5",
                   STATUS_CLASSES[optimisticStatus],
                 )}
               >
@@ -102,6 +102,9 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
                   </>
                 )}
               </Badge>
+              <div className="ml-auto flex items-center gap-x-1">
+                {isDetail ? isTicketOwner && moreMenu : detailButton}
+              </div>
             </div>
             <Separator />
             <h2 className="text-sm font-semibold leading-snug text-foreground pt-1">
@@ -130,10 +133,6 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
             </span>
           </CardFooter>
         </Card>
-
-        <div className="flex flex-col gap-y-1">
-          {isDetail ? isTicketOwner && moreMenu : detailButton}
-        </div>
       </div>
       {isDetail && comments}
     </div>

@@ -15,8 +15,8 @@ const CommentTriggerButton = ({ commentId }: CommentTriggerButtonProps) => {
 
   return (
     <Button
-      variant="outline"
-      size="icon"
+      variant="ghost"
+      size="icon-sm"
       onClick={() => setEditingCommentId(commentId)}
     >
       <LucideFileEdit />

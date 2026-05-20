@@ -28,7 +28,7 @@ const CommentDeleteButton = ({ id }: CommentDeleteButtonProps) => {
   const [deleteDialogTrigger, deleteDialog] = useConfirmDialog({
     action: deleteWithToast,
     trigger: (
-      <Button variant="destructive" size="icon">
+      <Button variant="ghost" size="icon-sm" className="text-destructive">
         <LucideTrash2 />
       </Button>
     ),
