@@ -3,20 +3,27 @@
 import { Textarea } from "@/components/ui/textarea";
 import createComment from "../actions/create-comment";
 import { Button } from "@/components/ui/button";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 import Form from "@/components/form/utils/form";
 import { LucideLoaderCircle } from "lucide-react";
 
 type CommentCreateFormProps = {
   ticketId: string;
+  onSuccess: () => void;
 };
 
-const CommentCreateForm = ({ ticketId }: CommentCreateFormProps) => {
+const CommentCreateForm = ({ ticketId, onSuccess }: CommentCreateFormProps) => {
   const [actionState, action, isPending] = useActionState(
     createComment.bind(null, ticketId),
     EMPTY_ACTION_STATE,
   );
+
+  useEffect(() => {
+    if (actionState.status === "SUCCESS") {
+      onSuccess();
+    }
+  }, [actionState.status, actionState.timestamp]);
 
   return (
     <Form action={action} actionState={actionState}>

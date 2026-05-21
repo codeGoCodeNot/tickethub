@@ -16,10 +16,10 @@ type TicketPageProps = {
 
 const TicketDetail = async ({ params }: TicketPageProps) => {
   const { ticketId } = await params;
-  const [ticket, comments, user] = await Promise.all([
+  const [ticket, user, comments] = await Promise.all([
     getTicket(ticketId),
-    getComments(ticketId),
     getAuth(),
+    getComments(ticketId),
   ]);
 
   if (!ticket) return notFound();
@@ -33,7 +33,7 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
           <Comments
             ticketId={ticketId}
             user={user ? { ...user, image: user.image ?? null } : null}
-            comments={comments}
+            initialComments={comments}
           />
         }
       />

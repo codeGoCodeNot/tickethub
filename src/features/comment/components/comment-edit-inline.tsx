@@ -12,9 +12,14 @@ import { LucideLoaderCircle } from "lucide-react";
 type CommentEditInlineProps = {
   commentId: string;
   content: string;
+  onSuccess: () => void;
 };
 
-const CommentEditInline = ({ commentId, content }: CommentEditInlineProps) => {
+const CommentEditInline = ({
+  commentId,
+  content,
+  onSuccess,
+}: CommentEditInlineProps) => {
   const { editingCommentId, setEditingCommentId } = useCommentEditStore();
   const isEditing = editingCommentId === commentId;
 
@@ -26,6 +31,7 @@ const CommentEditInline = ({ commentId, content }: CommentEditInlineProps) => {
   useEffect(() => {
     if (actionState.status === "SUCCESS") {
       setEditingCommentId(null);
+      onSuccess();
     }
   }, [actionState.status, actionState.timestamp]);
 

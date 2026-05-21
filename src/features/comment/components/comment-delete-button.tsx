@@ -3,17 +3,16 @@
 import { Button } from "@/components/ui/button";
 import useConfirmDialog from "@/features/hook/use-confirm-dialog";
 import { LucideLoaderCircle, LucideTrash2 } from "lucide-react";
+import { useTransition } from "react";
 import { toast } from "sonner";
 import deleteComment from "../actions/delete-comment";
-import { useTransition } from "react";
 
 type CommentDeleteButtonProps = {
   id: string;
+  onSuccess: () => void;
 };
 
-const CommentDeleteButton = ({
-  id,
-}: CommentDeleteButtonProps & { onDelete?: (id: string) => void }) => {
+const CommentDeleteButton = ({ id, onSuccess }: CommentDeleteButtonProps) => {
   const [isPending, startTransition] = useTransition();
 
   const deleteWithToast = async () => {
@@ -27,6 +26,7 @@ const CommentDeleteButton = ({
         }
         toast.dismiss(toastId);
         toast.success("Comment deleted");
+        onSuccess();
       } catch {
         toast.error("Failed to delete comment.", { id: toastId });
       }

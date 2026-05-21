@@ -1,47 +1,43 @@
 "use client";
 
 import CardCompact from "@/components/card-compact";
-import { Button } from "@/components/ui/button";
 import { User } from "@/generated/prisma/client";
-import { useEffect, useState, useTransition } from "react";
-import getCommentsApi from "../queries/get-comments-api";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import useComments from "../hooks/use-comments";
 import { CommentWithMetadata } from "../type";
 import CommentCreateForm from "./comment-create-form";
 import CommentItem from "./comment-item";
 
 type CommentsProps = {
-  comments: CommentWithMetadata[];
   ticketId: string;
   user: User | null;
+  initialComments: CommentWithMetadata[];
 };
 
-const Comments = ({ comments, ticketId, user }: CommentsProps) => {
-  const [isPending, startTransition] = useTransition();
-  const [paginatedComments, setPaginatedComments] = useState<
-    CommentWithMetadata[]
-  >([]);
-  const [hasMore, setHasMore] = useState(comments.length >= 2);
+const Comments = ({ ticketId, user, initialComments }: CommentsProps) => {
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useComments(
+    ticketId,
+    initialComments,
+  );
+
+  const queryClient = useQueryClient();
+  const comments = data.pages.flatMap((page) => page.list);
+
+  const handleMore = async () => fetchNextPage();
+  const handleInvalidateComments = () =>
+    queryClient.invalidateQueries({ queryKey: ["comments", ticketId] });
+
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+  });
 
   useEffect(() => {
-    setPaginatedComments([]);
-    setHasMore(comments.length >= 2);
-  }, [comments]);
-
-  const handleMore = async () => {
-    startTransition(async () => {
-      const lastComment = paginatedComments.at(-1) ?? comments.at(-1);
-      const cursor = lastComment
-        ? { id: lastComment.id, createdAt: lastComment.createdAt.valueOf() }
-        : undefined;
-      const { list: moreComments, metadata } = await getCommentsApi(
-        ticketId,
-        cursor,
-      );
-
-      setPaginatedComments((prev) => [...prev, ...moreComments]);
-      setHasMore(metadata.hasNextPage);
-    });
-  };
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
     <>
@@ -49,23 +45,31 @@ const Comments = ({ comments, ticketId, user }: CommentsProps) => {
         className="max-w-[580px] w-full  self-center"
         title="Create Comment"
         description="A new comment will be created"
-        content={<CommentCreateForm ticketId={ticketId} />}
+        content={
+          <CommentCreateForm
+            ticketId={ticketId}
+            onSuccess={handleInvalidateComments}
+          />
+        }
       />
       <div className="flex flex-col flex-1 gap-y-4">
         {comments.map((comment) => (
-          <CommentItem comment={comment} key={comment.id} user={user} />
-        ))}
-        {paginatedComments.map((comment) => (
-          <CommentItem comment={comment} key={comment.id} user={user} />
+          <CommentItem
+            comment={comment}
+            key={comment.id}
+            user={user}
+            onSuccess={handleInvalidateComments}
+          />
         ))}
       </div>
-      {hasMore && (
-        <div className="flex flex-col justify-center ml-8">
-          <Button variant="ghost" onClick={handleMore} disabled={isPending}>
-            {isPending ? "Loading..." : "More"}
-          </Button>
-        </div>
-      )}
+      <div ref={ref}>
+        {isFetchingNextPage && (
+          <p className="text-right text-xs italic">Loading...</p>
+        )}
+        {!hasNextPage && (
+          <p className="text-right text-xs italic">No more comments to load.</p>
+        )}
+      </div>
     </>
   );
 };

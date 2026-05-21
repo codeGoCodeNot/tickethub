@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { COMMENTS_PAGE_SIZE } from "../constants";
 
 const getCommentsApi = async (
   ticketId: string,
@@ -12,7 +13,7 @@ const getCommentsApi = async (
   const where = {
     ticketId,
   };
-  const take = 2;
+  const take = COMMENTS_PAGE_SIZE;
 
   const [comments, count] = await Promise.all([
     prisma.comment.findMany({

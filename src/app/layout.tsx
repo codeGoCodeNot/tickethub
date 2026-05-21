@@ -1,14 +1,15 @@
+import AppSidebar from "@/app/_navigation/sidebar/components/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/app/_navigation/sidebar/components/app-sidebar";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 import Header from "./_navigation/header";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
+import Provider from "./_providers/provider";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -37,16 +38,18 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <SidebarProvider>
-              <Suspense fallback={null}>
-                <AppSidebar />
-              </Suspense>
-              <Header />
-              <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/60 flex flex-col">
-                {children}
-              </main>
-            </SidebarProvider>
-            <Toaster expand />
+            <Provider>
+              <SidebarProvider>
+                <Suspense fallback={null}>
+                  <AppSidebar />
+                </Suspense>
+                <Header />
+                <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/60 flex flex-col">
+                  {children}
+                </main>
+              </SidebarProvider>
+              <Toaster expand />
+            </Provider>
           </ThemeProvider>
         </NuqsAdapter>
       </body>

@@ -13,9 +13,10 @@ import CommentEditInline from "./comment-edit-inline";
 type CommentItemProps = {
   comment: CommentWithMetadata;
   user: User | null;
+  onSuccess: () => void;
 };
 
-const CommentItem = ({ comment, user }: CommentItemProps) => {
+const CommentItem = ({ comment, user, onSuccess }: CommentItemProps) => {
   const commentIsOwner = isOwner(user, comment);
 
   const isEdited = comment.createdAt.getTime() !== comment.updatedAt.getTime();
@@ -42,7 +43,7 @@ const CommentItem = ({ comment, user }: CommentItemProps) => {
           {commentIsOwner && (
             <div className="flex gap-x-1">
               <CommentTriggerButton commentId={comment.id} />
-              <CommentDeleteButton id={comment.id} />
+              <CommentDeleteButton id={comment.id} onSuccess={onSuccess} />
             </div>
           )}
         </div>
@@ -52,7 +53,11 @@ const CommentItem = ({ comment, user }: CommentItemProps) => {
         <p className="text-xs text-muted-foreground leading-relaxed mb-5">
           {comment.content}
         </p>
-        <CommentEditInline commentId={comment.id} content={comment.content} />
+        <CommentEditInline
+          commentId={comment.id}
+          content={comment.content}
+          onSuccess={onSuccess}
+        />
       </CardContent>
     </Card>
   );
