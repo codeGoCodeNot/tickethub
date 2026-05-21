@@ -17,15 +17,12 @@ type CommentsProps = {
 };
 
 const Comments = ({ ticketId, user, initialComments }: CommentsProps) => {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useComments(
-    ticketId,
-    initialComments,
-  );
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
+    useComments(ticketId, initialComments);
 
   const queryClient = useQueryClient();
   const comments = data.pages.flatMap((page) => page.list);
 
-  const handleMore = async () => fetchNextPage();
   const handleInvalidateComments = () =>
     queryClient.invalidateQueries({ queryKey: ["comments", ticketId] });
 
@@ -52,7 +49,9 @@ const Comments = ({ ticketId, user, initialComments }: CommentsProps) => {
           />
         }
       />
-      <div className="flex flex-col flex-1 gap-y-4">
+      <div
+        className={`flex flex-col flex-1 gap-y-4 transition-opacity duration-300 ${isFetching ? "opacity-50" : "opacity-100"}`}
+      >
         {comments.map((comment) => (
           <CommentItem
             comment={comment}
