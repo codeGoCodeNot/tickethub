@@ -8,7 +8,8 @@
       "Skill(superpowers:brainstorming)",
       "Skill(superpowers:brainstorming:*)",
       "Bash(bash \"C:\\\\Users\\\\johns\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.1.0\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh\" --project-dir \"d:\\\\code\\\\ticket-system\")",
-      "Bash(gh pr *)"
+      "Bash(gh pr *)",
+      "Bash(pnpm add *)"
     ]
   }
 }

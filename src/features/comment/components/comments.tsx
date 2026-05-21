@@ -3,6 +3,7 @@
 import CardCompact from "@/components/card-compact";
 import { User } from "@/generated/prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import useComments from "../hooks/use-comments";
@@ -50,16 +51,25 @@ const Comments = ({ ticketId, user, initialComments }: CommentsProps) => {
         }
       />
       <div
-        className={`flex flex-col flex-1 gap-y-4 transition-opacity duration-300 ${isFetching ? "opacity-50" : "opacity-100"}`}
+        className={`flex flex-col flex-1 gap-y-4 animate-fade-from-top transition-opacity duration-300 ${isFetching ? "opacity-50" : "opacity-100"}`}
       >
-        {comments.map((comment) => (
-          <CommentItem
-            comment={comment}
-            key={comment.id}
-            user={user}
-            onSuccess={handleInvalidateComments}
-          />
-        ))}
+        <AnimatePresence initial={false}>
+          {comments.map((comment) => (
+            <motion.div
+              key={comment.id}
+              initial={{ opacity: 0, y: -40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -60, scale: 0.95 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            >
+              <CommentItem
+                comment={comment}
+                user={user}
+                onSuccess={handleInvalidateComments}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
       <div ref={ref}>
         {isFetchingNextPage && (

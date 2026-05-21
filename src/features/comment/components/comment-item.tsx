@@ -5,6 +5,7 @@ import isOwner from "@/features/auth/utils/is-owner";
 import { User } from "@/generated/prisma/browser";
 import { format } from "date-fns/format";
 import { LucideCalendar } from "lucide-react";
+import { useCommentEditStore } from "../stores/comment-edit-store";
 import { CommentWithMetadata } from "../type";
 import CommentDeleteButton from "./comment-delete-button";
 import CommentTriggerButton from "./comment-trigger-button";
@@ -18,46 +19,52 @@ type CommentItemProps = {
 
 const CommentItem = ({ comment, user, onSuccess }: CommentItemProps) => {
   const commentIsOwner = isOwner(user, comment);
+  const { editingCommentId } = useCommentEditStore();
+  const isEditing = editingCommentId === comment.id;
 
   const isEdited = comment.createdAt.getTime() !== comment.updatedAt.getTime();
 
   return (
     <Card className="w-full border-0 bg-card/80 shadow-sm hover:shadow-md ring-1 ring-border hover:ring-primary/50 transition-all duration-200">
       <CardHeader className="pb-2">
-        <div className="flex items-center gap-x-2 mb-2">
+        <div className="flex items-center gap-x-2">
           <UserAvatar
             name={comment.user.name}
             image={comment.user.image}
-            className="size-6 shrink-0 text-xs"
+            className="size-7 shrink-0 text-xs"
           />
           <span className="text-sm font-medium">
             {comment.user.name.split(" ")[0]}
           </span>
-          <span className="ml-auto text-xs text-muted-foreground flex items-center gap-x-1">
-            <LucideCalendar className="size-3" />
-            {comment.createdAt
-              ? format(new Date(comment.createdAt), "MMM d, yyyy")
-              : "—"}
-            {isEdited && " (edited)"}
-          </span>
           {commentIsOwner && (
-            <div className="flex gap-x-1">
+            <div className="flex gap-x-1 ml-auto">
               <CommentTriggerButton commentId={comment.id} />
               <CommentDeleteButton id={comment.id} onSuccess={onSuccess} />
             </div>
           )}
         </div>
-        <Separator />
+        <Separator className="mt-2" />
       </CardHeader>
       <CardContent className="pb-3">
-        <p className="text-xs text-muted-foreground leading-relaxed mb-5">
-          {comment.content}
-        </p>
+        {!isEditing && (
+          <p className="text-sm text-foreground leading-relaxed">
+            {comment.content}
+          </p>
+        )}
         <CommentEditInline
           commentId={comment.id}
           content={comment.content}
           onSuccess={onSuccess}
         />
+        <div className="flex items-center justify-end gap-x-1 mt-3 text-[11px] text-muted-foreground">
+          {isEdited && <span className="italic">edited ·</span>}
+          <LucideCalendar className="size-3" />
+          <span>
+            {comment.createdAt
+              ? format(new Date(comment.createdAt), "MMM d, yyyy")
+              : "—"}
+          </span>
+        </div>
       </CardContent>
     </Card>
   );
