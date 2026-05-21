@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signInPath } from "@/path";
+import { forgotPasswordPath, signInPath } from "@/path";
 import { LucideLoaderCircle, LucideTicket } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
@@ -115,6 +115,14 @@ const SignUpForm = () => {
           className="font-medium text-foreground hover:underline underline-offset-4"
         >
           Sign in
+        </Link>
+      </p>
+      <p className="text-center text-sm text-muted-foreground">
+        <Link
+          href={forgotPasswordPath()}
+          className="hover:underline underline-offset-4"
+        >
+          Forgot password?
         </Link>
       </p>
     </div>

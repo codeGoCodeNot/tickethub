@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { signUpPath } from "@/path";
+import { forgotPasswordPath, signUpPath } from "@/path";
 import { LucideLoaderCircle, LucideTicket } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -65,7 +65,15 @@ const SignInForm = () => {
                 />
               </div>
               <div className="grid gap-1.5">
-                <Label htmlFor="password">Password</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  <Link
+                    href={forgotPasswordPath()}
+                    className="text-xs text-muted-foreground hover:underline underline-offset-4"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
                 <PasswordInput
                   id="password"
                   name="password"

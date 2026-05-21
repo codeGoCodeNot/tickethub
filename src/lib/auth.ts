@@ -1,7 +1,8 @@
+import prisma from "@/lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import prisma from "@/lib/prisma";
 import { hashPassword, verifyPassword } from "./password";
+import sendEmail from "@/features/resend/send-email";
 
 export const auth = betterAuth({
   trustedOrigins: ["https://tickethub.johnsenb.dev"],
@@ -10,6 +11,13 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user, url, token }, request) => {
+      void sendEmail({
+        to: user.email,
+        subject: "Reset your password",
+        text: `Click the link to reset your password: ${url}`,
+      });
+    },
     password: {
       hash: hashPassword,
       verify: verifyPassword,
