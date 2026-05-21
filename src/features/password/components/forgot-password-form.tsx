@@ -47,6 +47,9 @@ const ForgotPasswordForm = () => {
                 required
               />
             </div>
+            <p className="text-sm text-red-500">
+              {actionState.fieldErrors?.["email"]?.[0]}
+            </p>
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending && <LucideLoaderCircle className="animate-spin" />}
               Send reset link
