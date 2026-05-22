@@ -1,48 +1,46 @@
 "use client";
 
+import Form from "@/components/form/utils/form";
 import { PasswordInput } from "@/components/password-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { LucideLoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { useActionState } from "react";
+import passwordReset from "../actions/reset-password";
+import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
 
 const PasswordResetForm = ({ token }: { token: string }) => {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // TODO: wire up reset password action
-  };
+  const [actionState, action, isPending] = useActionState(
+    passwordReset,
+    EMPTY_ACTION_STATE,
+  );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="flex flex-col gap-4">
-        <div className="grid gap-1.5">
-          <Label htmlFor="password">New Password</Label>
-          <PasswordInput
-            id="password"
-            name="password"
-            placeholder="••••••••"
-            required
-          />
-        </div>
-        <div className="grid gap-1.5">
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
-          <PasswordInput
-            id="confirmPassword"
-            name="confirmPassword"
-            placeholder="••••••••"
-            required
-          />
-        </div>
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <Button type="submit" className="w-full mt-2" disabled={isPending}>
-          {isPending && <LucideLoaderCircle className="animate-spin" />}
-          Reset Password
-        </Button>
+    <Form action={action} actionState={actionState}>
+      <input type="hidden" name="token" value={token} />
+      <div className="grid gap-1.5">
+        <Label htmlFor="password">New Password</Label>
+        <PasswordInput
+          id="password"
+          name="newPassword"
+          placeholder="••••••••"
+          required
+        />
       </div>
-    </form>
+      <div className="grid gap-1.5">
+        <Label htmlFor="confirmPassword">Confirm Password</Label>
+        <PasswordInput
+          id="confirmPassword"
+          name="confirmPassword"
+          placeholder="••••••••"
+          required
+        />
+      </div>
+      <Button type="submit" className="w-full mt-2" disabled={isPending}>
+        {isPending && <LucideLoaderCircle className="animate-spin" />}
+        Reset Password
+      </Button>
+    </Form>
   );
 };
 
