@@ -4,12 +4,10 @@ import { setCookieByKey } from "@/actions/cookies";
 import fromErrorToActionState, {
   ActionState,
 } from "@/components/form/utils/to-action-state";
-import WelcomeEmail from "@/emails/welcome";
-import sendEmail from "@/features/resend/send-email";
 import { auth } from "@/lib/auth";
+import { inngest } from "@/lib/inngest";
 import { passwordSchema } from "@/lib/validation";
 import { signInPath } from "@/path";
-import { render } from "@react-email/components";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -39,15 +37,12 @@ const signUp = async (_actionState: ActionState, formData: FormData) => {
       },
     });
 
-    void sendEmail({
-      to: email,
-      subject: "Welcome to TicketHub!",
-      html: await render(
-        WelcomeEmail({
-          toName: name,
-          loginUrl: "https://tickethub.johnsenb.dev/sign-in",
-        }),
-      ),
+    void inngest.send({
+      name: "app/welcome",
+      data: {
+        email,
+        name,
+      },
     });
   } catch (error) {
     return fromErrorToActionState(error, formData);

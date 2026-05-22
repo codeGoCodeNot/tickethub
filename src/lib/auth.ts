@@ -1,9 +1,7 @@
-import PasswordResetEmail from "@/emails/password-reset";
-import sendEmail from "@/features/resend/send-email";
 import prisma from "@/lib/prisma";
-import { render } from "@react-email/components";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { inngest } from "./inngest";
 import { hashPassword, verifyPassword } from "./password";
 
 export const auth = betterAuth({
@@ -14,10 +12,9 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({ user, url }) => {
-      void sendEmail({
-        to: user.email,
-        subject: "Reset your password",
-        html: await render(PasswordResetEmail({ url })),
+      await inngest.send({
+        name: "app/reset-password",
+        data: { email: user.email, url },
       });
     },
     password: {
