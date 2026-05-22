@@ -31,6 +31,7 @@ const PasswordResetForm = ({ token }: PasswordResetFormProps) => {
           name="newPassword"
           placeholder="••••••••"
           onChange={(e) => setPassword(e.target.value)}
+          defaultValue={actionState.payload?.get("newPassword") as string}
           required
         />
         <PasswordStrengthMeter password={password} />
@@ -41,6 +42,7 @@ const PasswordResetForm = ({ token }: PasswordResetFormProps) => {
           id="confirmPassword"
           name="confirmPassword"
           placeholder="••••••••"
+          defaultValue={actionState.payload?.get("confirmPassword") as string}
           required
         />
       </div>
