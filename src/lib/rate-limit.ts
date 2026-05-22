@@ -12,3 +12,9 @@ export const forgotPasswordRateLimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(5, "10m"),
   prefix: "ratelimit:forgot-password",
 });
+
+export const emailOtpRateLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "10m"),
+  prefix: "ratelimit:email-otp",
+});
