@@ -3,15 +3,15 @@ import { resend } from "@/lib/resend";
 type SendEmailParams = {
   to: string;
   subject: string;
-  text: string;
+  html: string;
 };
 
-const sendEmail = async ({ to, subject, text }: SendEmailParams) => {
+const sendEmail = async ({ to, subject, html }: SendEmailParams) => {
   await resend.emails.send({
     from: "noreply@tickethub.johnsenb.dev",
     to,
     subject,
-    text,
+    html,
   });
 };
 

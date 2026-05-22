@@ -14,7 +14,7 @@ interface PasswordResetEmailProps {
   url: string;
 }
 
-export const PasswordResetEmail = ({ url }: PasswordResetEmailProps) => (
+const PasswordResetEmail = ({ url }: PasswordResetEmailProps) => (
   <Tailwind>
     <Html>
       <Head />
@@ -42,8 +42,8 @@ export const PasswordResetEmail = ({ url }: PasswordResetEmailProps) => (
             </Button>
 
             <Text className="text-gray-500 text-xs m-0 mt-6">
-              If you didn't request a password reset, you can safely ignore
-              this email.
+              If you didn't request a password reset, you can safely ignore this
+              email.
             </Text>
           </Section>
 
