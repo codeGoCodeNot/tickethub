@@ -3,7 +3,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { inngest } from "./inngest";
 import { hashPassword, verifyPassword } from "./password";
-import { emailOTP } from "better-auth/plugins";
+import { emailOTP, organization } from "better-auth/plugins";
 
 export const auth = betterAuth({
   trustedOrigins: ["https://tickethub.johnsenb.dev"],
@@ -41,5 +41,6 @@ export const auth = betterAuth({
         }
       },
     }),
+    organization(),
   ],
 });

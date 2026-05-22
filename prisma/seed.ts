@@ -54,6 +54,7 @@ const comments = [
 const seed = async () => {
   const t0 = performance.now();
   console.log("Db seeding started...");
+  await prisma.organization.deleteMany();
   await prisma.user.deleteMany();
   await prisma.ticket.deleteMany();
   await prisma.comment.deleteMany();
@@ -69,6 +70,25 @@ const seed = async () => {
       providerId: "credential",
       userId: users[0].id,
       password: hashedPassword,
+    },
+  });
+
+  const org = await prisma.organization.create({
+    data: {
+      id: "org-1",
+      name: "Tickethub",
+      slug: "tickethub",
+      createdAt: new Date(),
+    },
+  });
+
+  await prisma.member.create({
+    data: {
+      id: "member-1",
+      organizationId: org.id,
+      userId: users[0].id,
+      role: "owner",
+      createdAt: new Date(),
     },
   });
 

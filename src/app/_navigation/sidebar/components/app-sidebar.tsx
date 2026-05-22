@@ -14,18 +14,32 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import UserAvatar from "@/components/user-avatar";
-import { useSession } from "@/lib/auth-client";
-import { LucideBuilding2, LucideChevronsUpDown } from "lucide-react";
+import {
+  organization,
+  useActiveOrganization,
+  useListOrganizations,
+  useSession,
+} from "@/lib/auth-client";
+import { Check, LucideBuilding2, LucideChevronsUpDown } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { accountNavItems, ticketNavItems } from "./constants";
+import {
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenu,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
   const pathname = usePathname();
   const { data: session } = useSession();
   const user = session?.user;
+  const { data: organizations } = useListOrganizations();
+  const { data: activeOrganization } = useActiveOrganization();
 
   return (
     <>
@@ -39,18 +53,42 @@ const AppSidebar = () => {
         <SidebarHeader className="border-b mt-20">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton size="lg" className="cursor-default">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <LucideBuilding2 className="size-4" />
-                </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">My Organization</span>
-                  <span className="text-xs text-muted-foreground">
-                    Personal
-                  </span>
-                </div>
-                <LucideChevronsUpDown className="ml-auto size-4 opacity-50" />
-              </SidebarMenuButton>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton size="lg">
+                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                      <LucideBuilding2 className="size-4" />
+                    </div>
+                    <div className="flex flex-col gap-0.5 leading-none">
+                      <span className="font-semibold">
+                        {activeOrganization?.name ?? "No Organization"}
+                      </span>
+                    </div>
+                    <LucideChevronsUpDown className="ml-auto size-4 opacity-50" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  side="right"
+                  className="w-56"
+                >
+                  {" "}
+                  <DropdownMenuLabel>Organization</DropdownMenuLabel>
+                  {organizations?.map((org) => (
+                    <DropdownMenuItem
+                      key={org.id}
+                      onSelect={() =>
+                        organization.setActive({ organizationId: org.id })
+                      }
+                    >
+                      {org.name}
+                      {activeOrganization?.id === org.id && (
+                        <Check className="ml-auto size-4" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
