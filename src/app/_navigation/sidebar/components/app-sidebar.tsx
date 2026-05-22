@@ -1,6 +1,13 @@
 "use client";
 
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -24,15 +31,12 @@ import { Check, LucideBuilding2, LucideChevronsUpDown } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { accountNavItems, ticketNavItems } from "./constants";
 import {
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenu,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+  accountNavItems,
+  organizationNavItems,
+  ticketNavItems,
+} from "./constants";
+import { useEffect } from "react";
 import { organizationPath } from "@/path";
 
 const AppSidebar = () => {
@@ -137,6 +141,24 @@ const AppSidebar = () => {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Organization</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {organizationNavItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={pathname === item.href}>
+                    <Link href={item.href as Route}>
+                      {item.icon}
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
         <SidebarFooter className="border-t">
           <SidebarMenu>

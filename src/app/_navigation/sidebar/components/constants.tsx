@@ -1,5 +1,6 @@
 import {
   homePath,
+  organizationCreatePath,
   organizationPath,
   passwordPath,
   profilePath,
@@ -10,6 +11,7 @@ import {
   LucideBuilding2,
   LucideKeyRound,
   LucideLibrary,
+  LucidePlus,
   LucideUser,
 } from "lucide-react";
 import { NavItem } from "../types";
@@ -38,9 +40,9 @@ export const accountNavItems: NavItem[] = [
     icon: <LucideKeyRound />,
     href: passwordPath(),
   },
-  {
-    title: "Organization",
-    icon: <LucideBuilding2 />,
-    href: organizationPath(),
-  },
+];
+
+export const organizationNavItems: NavItem[] = [
+  { title: "Overview", icon: <LucideBuilding2 />, href: organizationPath() },
+  { title: "Create", icon: <LucidePlus />, href: organizationCreatePath() },
 ];

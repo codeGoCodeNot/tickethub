@@ -7,9 +7,9 @@ const OrganizationList = async () => {
   const organizations = await getOrganizationsByUser(user?.id);
 
   return (
-    <div className="flex flex-col flex-1 px-8">
+    <div className="flex flex-col flex-1 px-8 gap-y-2">
       {organizations.map((organization) => (
-        <div key={organization.id}>
+        <div key={organization.id} className="p-4 border rounded-md">
           <div className="text-lg">Name: {organization.name}</div>
           <div>
             Joined At:{" "}
