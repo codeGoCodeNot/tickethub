@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./lib/auth";
 import { loginRateLimit } from "./lib/rate-limit";
-import { signInPath } from "./path";
+import { signInPath, verifyEmailPath } from "./path";
 
 export const proxy = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
@@ -20,9 +20,10 @@ export const proxy = async (request: NextRequest) => {
 
   if (pathname.startsWith("/tickets") || pathname.startsWith("/account")) {
     const session = await auth.api.getSession({ headers: request.headers });
-    if (!session) {
+    if (!session)
       return NextResponse.redirect(new URL(signInPath(), request.url));
-    }
+    if (!session.user.emailVerified)
+      return NextResponse.redirect(new URL(verifyEmailPath(), request.url));
   }
 
   return NextResponse.next();

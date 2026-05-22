@@ -7,7 +7,7 @@ import fromErrorToActionState, {
 import { auth } from "@/lib/auth";
 import { inngest } from "@/lib/inngest";
 import { passwordSchema } from "@/lib/validation";
-import { signInPath } from "@/path";
+import { verifyEmailPath } from "@/path";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -24,10 +24,12 @@ const signUpSchema = z
   });
 
 const signUp = async (_actionState: ActionState, formData: FormData) => {
+  let email;
+
   try {
-    const { name, email, password } = signUpSchema.parse(
-      Object.fromEntries(formData.entries()),
-    );
+    const data = signUpSchema.parse(Object.fromEntries(formData.entries()));
+    const { name, password } = data;
+    email = data.email;
 
     await auth.api.signUpEmail({
       body: {
@@ -44,12 +46,16 @@ const signUp = async (_actionState: ActionState, formData: FormData) => {
         name,
       },
     });
+
+    await auth.api.sendVerificationOTP({
+      body: { email, type: "email-verification" },
+    });
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }
 
   await setCookieByKey("toast", "Account created successfully.");
-  redirect(signInPath());
+  redirect(verifyEmailPath(email));
 };
 
 export default signUp;

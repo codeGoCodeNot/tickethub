@@ -1,11 +1,9 @@
 import { Route } from "next";
 
 // Home
-
 export const homePath = (): Route => "/" as Route;
 
 // tickets
-
 export const ticketsPath = (): Route => "/tickets";
 export const ticketPath = (ticketId: string): Route =>
   `/tickets/${ticketId}` as Route;
@@ -20,3 +18,9 @@ export const forgotPasswordPath = (): Route => "/forgot-password" as Route;
 // account
 export const profilePath = (): Route => "/account/profile" as Route;
 export const passwordPath = (): Route => "/account/password" as Route;
+
+// email
+export const verifyEmailPath = (email?: string): Route =>
+  (email
+    ? `/verify-email?email=${encodeURIComponent(email)}`
+    : "/verify-email") as Route;

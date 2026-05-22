@@ -6,18 +6,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { forgotPasswordPath, signUpPath } from "@/path";
+import { forgotPasswordPath, signUpPath, verifyEmailPath } from "@/path";
 import { LucideLoaderCircle, LucideTicket } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import signInAction from "../actions/sign-in";
 import SignInProviderForm from "./sign-in-provider-form";
+import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     setIsPending(true);
@@ -28,6 +30,10 @@ const SignInForm = () => {
     );
     setIsPending(false);
     if (error) {
+      if (error.code === "EMAIL_NOT_VERIFIED") {
+        router.push(verifyEmailPath(formData.get("email") as string));
+        return;
+      }
       setError(
         error.status === 429
           ? "Too many login attempts. Please try again later."

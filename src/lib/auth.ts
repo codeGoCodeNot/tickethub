@@ -3,6 +3,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { inngest } from "./inngest";
 import { hashPassword, verifyPassword } from "./password";
+import { emailOTP } from "better-auth/plugins";
 
 export const auth = betterAuth({
   trustedOrigins: ["https://tickethub.johnsenb.dev"],
@@ -11,6 +12,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
       await inngest.send({
         name: "app/reset-password",
@@ -28,4 +30,16 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
+  plugins: [
+    emailOTP({
+      async sendVerificationOTP({ email, otp, type }) {
+        if (type === "email-verification") {
+          await inngest.send({
+            name: "app/verify-email",
+            data: { email, otp },
+          });
+        }
+      },
+    }),
+  ],
 });
