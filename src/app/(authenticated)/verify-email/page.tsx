@@ -15,18 +15,12 @@ const VerifyEmailContent = async ({ searchParams }: VerifyEmailPageProps) => {
   if (user?.emailVerified) redirect(ticketsPath());
 
   return (
-    <div className="flex flex-col flex-1 gap-y-8">
-      <Heading
-        title="Verify Your Email"
-        description="Verify your email to start using our service"
+    <div className="flex flex-col flex-1 items-center justify-center">
+      <CardCompact
+        title="Verify your Email"
+        description="Verify your email to start"
+        content={<VerifyEmailForm email={email ?? ""} />}
       />
-      <div className="flex flex-col flex-1 items-center justify-center">
-        <CardCompact
-          title="Verify your Email"
-          description="Verify your email to start"
-          content={<VerifyEmailForm email={email ?? ""} />}
-        />
-      </div>
     </div>
   );
 };

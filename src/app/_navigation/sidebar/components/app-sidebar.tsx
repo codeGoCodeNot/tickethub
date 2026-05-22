@@ -31,7 +31,9 @@ import {
   DropdownMenuItem,
   DropdownMenu,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { organizationPath } from "@/path";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -72,8 +74,7 @@ const AppSidebar = () => {
                   side="right"
                   className="w-56"
                 >
-                  {" "}
-                  <DropdownMenuLabel>Organization</DropdownMenuLabel>
+                  <DropdownMenuLabel>Select Organization</DropdownMenuLabel>
                   {organizations?.map((org) => (
                     <DropdownMenuItem
                       key={org.id}

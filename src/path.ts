@@ -24,3 +24,8 @@ export const verifyEmailPath = (email?: string): Route =>
   (email
     ? `/verify-email?email=${encodeURIComponent(email)}`
     : "/verify-email") as Route;
+
+// organization
+export const organizationPath = (): Route => "/organization" as Route;
+export const organizationCreatePath = (): Route =>
+  "/organization/create" as Route;

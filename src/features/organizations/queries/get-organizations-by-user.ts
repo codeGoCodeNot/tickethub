@@ -6,7 +6,7 @@ const getOrganizationsByUser = async (userId: string | undefined) => {
   cacheTag("organizations", `user-${userId}`);
   if (!userId) return [];
 
-  return await prisma.organization.findMany({
+  const organizations = await prisma.organization.findMany({
     where: {
       members: {
         some: { userId: userId },
@@ -16,8 +16,16 @@ const getOrganizationsByUser = async (userId: string | undefined) => {
       members: {
         where: { userId: userId },
       },
+      _count: {
+        select: { members: true },
+      },
     },
   });
+
+  return organizations.map(({ members, ...organization }) => ({
+    ...organization,
+    membershipByUser: members[0],
+  }));
 };
 
 export default getOrganizationsByUser;
