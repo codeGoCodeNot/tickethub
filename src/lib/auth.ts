@@ -1,10 +1,10 @@
+import PasswordResetEmail from "@/emails/password-reset";
+import sendEmail from "@/features/resend/send-email";
 import prisma from "@/lib/prisma";
+import { render } from "@react-email/components";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { hashPassword, verifyPassword } from "./password";
-import sendEmail from "@/features/resend/send-email";
-import { render } from "@react-email/components";
-import PasswordResetEmail from "@/emails/password-reset";
 
 export const auth = betterAuth({
   trustedOrigins: ["https://tickethub.johnsenb.dev"],
