@@ -9,14 +9,16 @@ import { Label } from "@/components/ui/label";
 import { forgotPasswordPath, signInPath } from "@/path";
 import { LucideLoaderCircle, LucideTicket } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import signUp from "../actions/sign-up";
+import PasswordStrengthMeter from "@/components/password-strength-meter";
 
 const SignUpForm = () => {
   const [actionState, action, isPending] = useActionState(
     signUp,
     EMPTY_ACTION_STATE,
   );
+  const [password, setPassword] = useState("");
 
   return (
     <div className="w-full max-w-sm space-y-6">
@@ -69,11 +71,13 @@ const SignUpForm = () => {
                   name="password"
                   placeholder="••••••••"
                   defaultValue={actionState.payload?.get("password") as string}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <p className="text-sm text-red-500">
                   {actionState.fieldErrors?.["password"]?.[0]}
                 </p>
+                <PasswordStrengthMeter password={password} />
               </div>
 
               <div className="grid gap-1.5">

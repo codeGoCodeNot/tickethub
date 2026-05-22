@@ -5,15 +5,21 @@ import { PasswordInput } from "@/components/password-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { LucideLoaderCircle } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import passwordReset from "../actions/reset-password";
 import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
+import PasswordStrengthMeter from "@/components/password-strength-meter";
 
-const PasswordResetForm = ({ token }: { token: string }) => {
+type PasswordResetFormProps = {
+  token: string;
+};
+
+const PasswordResetForm = ({ token }: PasswordResetFormProps) => {
   const [actionState, action, isPending] = useActionState(
     passwordReset,
     EMPTY_ACTION_STATE,
   );
+  const [password, setPassword] = useState("");
 
   return (
     <Form action={action} actionState={actionState}>
@@ -24,8 +30,10 @@ const PasswordResetForm = ({ token }: { token: string }) => {
           id="password"
           name="newPassword"
           placeholder="••••••••"
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <PasswordStrengthMeter password={password} />
       </div>
       <div className="grid gap-1.5">
         <Label htmlFor="confirmPassword">Confirm Password</Label>
