@@ -27,17 +27,17 @@ import {
   useListOrganizations,
   useSession,
 } from "@/lib/auth-client";
+import { AnimatePresence, motion } from "framer-motion";
 import { Check, LucideBuilding2, LucideChevronsUpDown } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import {
   accountNavItems,
   organizationNavItems,
   ticketNavItems,
 } from "./constants";
-import { useEffect } from "react";
-import { organizationPath } from "@/path";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -46,6 +46,11 @@ const AppSidebar = () => {
   const user = session?.user;
   const { data: organizations } = useListOrganizations();
   const { data: activeOrganization } = useActiveOrganization();
+  const [optimisticOrg, setOptimisticOrg] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const displayOrg = optimisticOrg ?? activeOrganization;
 
   return (
     <>
@@ -66,9 +71,18 @@ const AppSidebar = () => {
                       <LucideBuilding2 className="size-4" />
                     </div>
                     <div className="flex flex-col gap-0.5 leading-none">
-                      <span className="font-semibold">
-                        {activeOrganization?.name ?? "No Organization"}
-                      </span>
+                      <AnimatePresence mode="wait">
+                        <motion.span
+                          key={displayOrg?.id ?? "none"}
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          transition={{ duration: 0.2 }}
+                          className="font-semibold"
+                        >
+                          {displayOrg?.name ?? "No Organization"}
+                        </motion.span>
+                      </AnimatePresence>
                     </div>
                     <LucideChevronsUpDown className="ml-auto size-4 opacity-50" />
                   </SidebarMenuButton>
@@ -82,12 +96,13 @@ const AppSidebar = () => {
                   {organizations?.map((org) => (
                     <DropdownMenuItem
                       key={org.id}
-                      onSelect={() =>
-                        organization.setActive({ organizationId: org.id })
-                      }
+                      onSelect={() => {
+                        setOptimisticOrg({ id: org.id, name: org.name });
+                        organization.setActive({ organizationId: org.id });
+                      }}
                     >
                       {org.name}
-                      {activeOrganization?.id === org.id && (
+                      {displayOrg?.id === org.id && (
                         <Check className="ml-auto size-4" />
                       )}
                     </DropdownMenuItem>
