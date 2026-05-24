@@ -12,7 +12,11 @@ import OrganizationCards from "./organization-cards";
 import OrganizationTable from "./organization-table";
 import Placeholder from "@/components/placeholder";
 
-const OrganizationList = async ({ limitedAccess }: { limitedAccess?: boolean } = {}) => {
+type OrganizationListProps = {
+  limitedAccess?: boolean;
+};
+
+const OrganizationList = async ({ limitedAccess }: OrganizationListProps) => {
   const user = await getAuth();
   const organizations = await getOrganizationsByUser(user?.id);
 
@@ -43,12 +47,18 @@ const OrganizationList = async ({ limitedAccess }: { limitedAccess?: boolean } =
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <OrganizationTable organizations={mapped} limitedAccess={limitedAccess} />
+        <OrganizationTable
+          organizations={mapped}
+          limitedAccess={limitedAccess}
+        />
       </Table>
 
       {/* Mobile cards */}
       <div className="md:hidden">
-        <OrganizationCards organizations={mapped} limitedAccess={limitedAccess} />
+        <OrganizationCards
+          organizations={mapped}
+          limitedAccess={limitedAccess}
+        />
       </div>
     </div>
   );

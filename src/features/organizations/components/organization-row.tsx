@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import useConfirmDialog from "@/features/hook/use-confirm-dialog";
 import { organization } from "@/lib/auth-client";
+import { membershipsPath } from "@/path";
 import { motion } from "framer-motion";
 import {
   LucideArrowLeftRight,
+  LucideArrowUpRightFromSquare,
   LucideLoaderCircle,
   LucideTrash2,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -68,6 +71,14 @@ const OrganizationRow = ({
       "This will permanently delete this organization and all its data.",
   });
 
+  const detailsButton = (
+    <Button variant="outline" size="icon" asChild>
+      <Link href={membershipsPath(id)}>
+        <LucideArrowUpRightFromSquare />
+      </Link>
+    </Button>
+  );
+
   return (
     <MotionTableRow
       initial={{ opacity: 0, y: 6 }}
@@ -98,6 +109,7 @@ const OrganizationRow = ({
               <LucideArrowLeftRight />
             )}
           </Button>
+          {!limitedAccess && detailsButton}
           {!limitedAccess && deleteDialog}
           {!limitedAccess && deleteTrigger}
         </div>

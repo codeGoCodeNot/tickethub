@@ -3,7 +3,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { organization, useActiveOrganization } from "@/lib/auth-client";
-import { LucideLoaderCircle, LucideMenu, LucideUsers } from "lucide-react";
+import {
+  LucideArrowUpRightFromSquare,
+  LucideLoaderCircle,
+  LucideMenu,
+  LucideUsers,
+} from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import OrganizationMoreMenu from "./organization-more-menu";
@@ -19,6 +24,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { membershipsPath } from "@/path";
 
 type OrganizationCardsProps = {
   organizations: {
@@ -56,7 +63,9 @@ const OrganizationCards = ({
     if (!deleteTargetId) return;
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting...");
-      const result = await organization.delete({ organizationId: deleteTargetId });
+      const result = await organization.delete({
+        organizationId: deleteTargetId,
+      });
       if (result.error) {
         toast.error("Failed to delete.", { id: toastId });
         return;
@@ -81,6 +90,11 @@ const OrganizationCards = ({
             className="relative p-4 border rounded-md flex flex-col gap-y-1"
           >
             <div className="absolute top-2 right-2 z-[10]">
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={membershipsPath(org.id)}>
+                  <LucideArrowUpRightFromSquare />
+                </Link>
+              </Button>
               <OrganizationMoreMenu
                 isActive={isActive}
                 onSwitch={() => handleSwitch(org.id, org.name)}
