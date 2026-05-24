@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { organization, useActiveOrganization } from "@/lib/auth-client";
+import { organization } from "@/lib/auth-client";
 import { motion } from "framer-motion";
 import { LucideArrowLeftRight, LucideLoaderCircle } from "lucide-react";
 import { useState } from "react";
@@ -15,6 +15,8 @@ type OrganizationRowProps = {
   name: string;
   joinedAt: string;
   members: number;
+  isActive: boolean;
+  onSwitch: () => void;
 };
 
 const OrganizationRow = ({
@@ -22,10 +24,10 @@ const OrganizationRow = ({
   name,
   joinedAt,
   members,
+  isActive,
+  onSwitch,
 }: OrganizationRowProps) => {
-  const { data: activeOrg } = useActiveOrganization();
   const [isPending, setIsPending] = useState(false);
-  const isActive = activeOrg?.id === id;
 
   return (
     <MotionTableRow
@@ -41,8 +43,9 @@ const OrganizationRow = ({
         <Button
           size="icon"
           variant={isActive ? "default" : "outline"}
-          disabled={isActive}
+          disabled={isActive || isPending}
           onClick={async () => {
+            onSwitch();
             setIsPending(true);
             await organization.setActive({ organizationId: id });
             toast.success(`Switched to ${name}`);
