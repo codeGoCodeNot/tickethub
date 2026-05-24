@@ -4,10 +4,21 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { organization, useActiveOrganization } from "@/lib/auth-client";
 import { LucideLoaderCircle, LucideMenu, LucideUsers } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import OrganizationMoreMenu from "./organization-more-menu";
 import { motion } from "framer-motion";
+import deleteOrganization from "../actions/delete-organization";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type OrganizationCardsProps = {
   organizations: {
@@ -27,6 +38,8 @@ const OrganizationCards = ({
   );
   const [pendingId, setPendingId] = useState<string | null>(null);
   const effectiveActiveId = optimisticActiveId ?? activeOrg?.id;
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [isPendingDelete, startDeleteTransition] = useTransition();
 
   const handleSwitch = async (id: string, name: string) => {
     setOptimisticActiveId(id);
@@ -34,6 +47,20 @@ const OrganizationCards = ({
     await organization.setActive({ organizationId: id });
     toast.success(`Switched to ${name}`);
     setPendingId(null);
+  };
+
+  const handleDelete = () => {
+    if (!deleteTargetId) return;
+    startDeleteTransition(async () => {
+      const toastId = toast.loading("Deleting...");
+      try {
+        await deleteOrganization(deleteTargetId);
+        toast.success("Organization deleted", { id: toastId });
+        setDeleteTargetId(null);
+      } catch {
+        toast.error("Failed to delete.", { id: toastId });
+      }
+    });
   };
 
   return (
@@ -58,6 +85,7 @@ const OrganizationCards = ({
                     <LucideMenu />
                   </Button>
                 }
+                onDelete={() => setDeleteTargetId(org.id)}
               />
             </div>
             <div className="flex items-center gap-x-2 pr-10">
@@ -81,6 +109,34 @@ const OrganizationCards = ({
           </motion.div>
         );
       })}
+      <AlertDialog
+        open={!!deleteTargetId}
+        onOpenChange={(o) => !o && setDeleteTargetId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Organization?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isPendingDelete}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isPendingDelete}
+            >
+              {isPendingDelete ? (
+                <LucideLoaderCircle className="animate-spin size-4" />
+              ) : (
+                "Continue"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

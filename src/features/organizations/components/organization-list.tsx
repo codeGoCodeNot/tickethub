@@ -10,6 +10,7 @@ import { format } from "date-fns/format";
 import getOrganizationsByUser from "../queries/get-organizations-by-user";
 import OrganizationCards from "./organization-cards";
 import OrganizationTable from "./organization-table";
+import Placeholder from "@/components/placeholder";
 
 const OrganizationList = async () => {
   const user = await getAuth();
@@ -21,6 +22,12 @@ const OrganizationList = async () => {
     joinedAt: format(new Date(org.membershipByUser.createdAt), "MMM d, yyyy"),
     members: org._count.members,
   }));
+
+  if (!organizations.length) {
+    return (
+      <Placeholder label="Create an Organization to get started" icon={null} />
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 px-8 gap-y-2">

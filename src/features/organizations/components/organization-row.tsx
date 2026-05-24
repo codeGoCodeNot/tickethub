@@ -2,11 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import useConfirmDialog from "@/features/hook/use-confirm-dialog";
 import { organization } from "@/lib/auth-client";
 import { motion } from "framer-motion";
-import { LucideArrowLeftRight, LucideLoaderCircle } from "lucide-react";
-import { useState } from "react";
+import {
+  LucideArrowLeftRight,
+  LucideLoaderCircle,
+  LucideTrash2,
+} from "lucide-react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import deleteOrganization from "../actions/delete-organization";
 
 const MotionTableRow = motion(TableRow);
 
@@ -28,6 +34,35 @@ const OrganizationRow = ({
   onSwitch,
 }: OrganizationRowProps) => {
   const [isPending, setIsPending] = useState(false);
+  const [isPendingDelete, startDeleteTransition] = useTransition();
+
+  const handleDelete = () => {
+    startDeleteTransition(async () => {
+      const toastId = toast.loading("Deleting organization...");
+      try {
+        await deleteOrganization(id);
+        toast.success("Organization deleted", { id: toastId });
+      } catch {
+        toast.error("Failed to delete organization.", { id: toastId });
+      }
+    });
+  };
+
+  const [deleteTrigger, deleteDialog] = useConfirmDialog({
+    action: handleDelete,
+    trigger: (
+      <Button variant="destructive" size="icon" disabled={isPendingDelete}>
+        {isPendingDelete ? (
+          <LucideLoaderCircle className="animate-spin" />
+        ) : (
+          <LucideTrash2 />
+        )}
+      </Button>
+    ),
+    title: "Delete Organization?",
+    description:
+      "This will permanently delete this organization and all its data.",
+  });
 
   return (
     <MotionTableRow
@@ -39,7 +74,7 @@ const OrganizationRow = ({
       <TableCell>{name}</TableCell>
       <TableCell>{joinedAt}</TableCell>
       <TableCell>{members}</TableCell>
-      <TableCell className="relative z-[10]">
+      <TableCell className="relative z-[10] flex gap-x-1">
         <Button
           size="icon"
           variant={isActive ? "default" : "outline"}
@@ -58,6 +93,8 @@ const OrganizationRow = ({
             <LucideArrowLeftRight />
           )}
         </Button>
+        {deleteDialog}
+        {deleteTrigger}
       </TableCell>
     </MotionTableRow>
   );
