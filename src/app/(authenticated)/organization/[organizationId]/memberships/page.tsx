@@ -1,6 +1,7 @@
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
 import MembershipList from "@/features/members/components/membership-list";
+import getOrgOwnerOrRedirect from "@/features/members/queries/get-org-owner-or-redirect";
 import OrganizationCreateDialog from "@/features/organizations/components/organization-create-dialog";
 import { Suspense } from "react";
 
@@ -25,6 +26,7 @@ const MembershipsPage = ({ params }: MembershipsPageProps) => {
 
 const MembershipsContent = async ({ params }: MembershipsPageProps) => {
   const { organizationId } = await params;
+  await getOrgOwnerOrRedirect(organizationId);
   return <MembershipList organizationId={organizationId} />;
 };
 
