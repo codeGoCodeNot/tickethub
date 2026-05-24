@@ -33,6 +33,7 @@ type OrganizationCardsProps = {
     name: string;
     joinedAt: string;
     members: number;
+    role: string;
   }[];
   limitedAccess?: boolean;
 };
@@ -99,6 +100,7 @@ const OrganizationCards = ({
   return (
     <div className="flex flex-col gap-y-2">
       {organizations.map((org) => {
+        const isOwnerOrAdmin = ["owner", "admin"].includes(org.role);
         const isActive = effectiveActiveId === org.id;
         const isPending = pendingId === org.id;
         return (
@@ -110,7 +112,7 @@ const OrganizationCards = ({
             className="relative p-4 border rounded-md flex flex-col gap-y-1"
           >
             <div className="absolute top-2 right-2 z-[10]">
-              {!limitedAccess && (
+              {isOwnerOrAdmin && (
                 <Button variant="ghost" size="icon" asChild>
                   <Link href={membershipsPath(org.id)}>
                     <LucideArrowUpRightFromSquare />
@@ -127,7 +129,7 @@ const OrganizationCards = ({
                 }
                 onLeave={() => setLeaveTargetId(org.id)}
                 onDelete={() => setDeleteTargetId(org.id)}
-                limitedAccess={limitedAccess}
+                limitedAccess={limitedAccess || !isOwnerOrAdmin}
               />
             </div>
             <div className="flex items-center gap-x-2 pr-10">

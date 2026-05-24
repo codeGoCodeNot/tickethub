@@ -95,7 +95,7 @@ const AppSidebar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
-                  side="right"
+                  side={isMobile ? "bottom" : "right"}
                   className="w-56"
                 >
                   <DropdownMenuLabel>Select Organization</DropdownMenuLabel>

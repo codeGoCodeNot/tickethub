@@ -2,7 +2,6 @@
 
 import { TableBody } from "@/components/ui/table";
 import { useActiveOrganization } from "@/lib/auth-client";
-import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import OrganizationRow from "./organization-row";
 
@@ -12,6 +11,7 @@ type OrganizationTableProps = {
     name: string;
     joinedAt: string;
     members: number;
+    role: string;
   }[];
   limitedAccess?: boolean;
 };
@@ -38,6 +38,7 @@ const OrganizationTable = ({
           isActive={effectiveActiveId === org.id}
           onSwitch={() => setOptimisticActiveId(org.id)}
           limitedAccess={limitedAccess}
+          role={org.role}
         />
       ))}
     </TableBody>

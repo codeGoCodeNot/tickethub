@@ -1,3 +1,4 @@
+import Placeholder from "@/components/placeholder";
 import {
   Table,
   TableCaption,
@@ -10,7 +11,6 @@ import { format } from "date-fns/format";
 import getOrganizationsByUser from "../queries/get-organizations-by-user";
 import OrganizationCards from "./organization-cards";
 import OrganizationTable from "./organization-table";
-import Placeholder from "@/components/placeholder";
 
 type OrganizationListProps = {
   limitedAccess?: boolean;
@@ -25,6 +25,7 @@ const OrganizationList = async ({ limitedAccess }: OrganizationListProps) => {
     name: org.name,
     joinedAt: format(new Date(org.membershipByUser.createdAt), "MMM d, yyyy"),
     members: org._count.members,
+    role: org.membershipByUser.role,
   }));
 
   if (!organizations.length) {

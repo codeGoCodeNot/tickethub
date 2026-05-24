@@ -28,6 +28,7 @@ type OrganizationRowProps = {
   isActive: boolean;
   onSwitch: () => void;
   limitedAccess?: boolean;
+  role: string;
 };
 
 const OrganizationRow = ({
@@ -38,11 +39,14 @@ const OrganizationRow = ({
   isActive,
   onSwitch,
   limitedAccess,
+  role,
 }: OrganizationRowProps) => {
   const [isPending, setIsPending] = useState(false);
   const [isPendingDelete, startDeleteTransition] = useTransition();
   const [isPendingLeave, startLeaveTransition] = useTransition();
   const router = useRouter();
+
+  const isOwnerOrIsAdmin = ["owner", "admin"].includes(role);
 
   const handleDelete = () => {
     startDeleteTransition(async () => {
@@ -141,11 +145,11 @@ const OrganizationRow = ({
               <LucideArrowLeftRight />
             )}
           </Button>
-          {!limitedAccess && detailsButton}
+          {isOwnerOrIsAdmin && detailsButton}
           {!limitedAccess && leaveDialog}
           {!limitedAccess && leaveTrigger}
-          {!limitedAccess && deleteDialog}
-          {!limitedAccess && deleteTrigger}
+          {isOwnerOrIsAdmin && deleteDialog}
+          {isOwnerOrIsAdmin && deleteTrigger}
         </div>
       </TableCell>
     </MotionTableRow>
