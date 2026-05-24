@@ -1,6 +1,8 @@
 import Heading from "@/components/heading";
+import Spinner from "@/components/spinner";
 import OrganizationCreateDialog from "@/features/organizations/components/organization-create-dialog";
 import OrganizationList from "@/features/organizations/components/organization-list";
+import { LucideLoaderCircle } from "lucide-react";
 import { Suspense } from "react";
 
 const OrganizationPage = () => {
@@ -11,7 +13,7 @@ const OrganizationPage = () => {
         description="Manage your organizations"
         actions={<OrganizationCreateDialog />}
       />
-      <Suspense>
+      <Suspense fallback={<Spinner />}>
         <OrganizationList />
       </Suspense>
     </div>

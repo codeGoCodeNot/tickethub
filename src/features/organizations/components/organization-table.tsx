@@ -17,13 +17,11 @@ type OrganizationTableProps = {
 const OrganizationTable = ({ organizations }: OrganizationTableProps): React.JSX.Element => {
   const { data: activeOrg } = useActiveOrganization();
   const [optimisticActiveId, setOptimisticActiveId] = useState<string | null>(null);
-  const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const effectiveActiveId = optimisticActiveId ?? activeOrg?.id;
-  const visibleOrgs = organizations.filter((org) => !deletedIds.includes(org.id));
 
   return (
     <TableBody>
-      {visibleOrgs.map((org) => (
+      {organizations.map((org) => (
         <OrganizationRow
           key={org.id}
           id={org.id}
@@ -32,7 +30,6 @@ const OrganizationTable = ({ organizations }: OrganizationTableProps): React.JSX
           members={org.members}
           isActive={effectiveActiveId === org.id}
           onSwitch={() => setOptimisticActiveId(org.id)}
-          onDeleted={(id) => setDeletedIds((prev) => [...prev, id])}
         />
       ))}
     </TableBody>

@@ -23,7 +23,6 @@ type OrganizationRowProps = {
   members: number;
   isActive: boolean;
   onSwitch: () => void;
-  onDeleted: (id: string) => void;
 };
 
 const OrganizationRow = ({
@@ -33,7 +32,6 @@ const OrganizationRow = ({
   members,
   isActive,
   onSwitch,
-  onDeleted,
 }: OrganizationRowProps) => {
   const [isPending, setIsPending] = useState(false);
   const [isPendingDelete, startDeleteTransition] = useTransition();
@@ -42,7 +40,6 @@ const OrganizationRow = ({
   const handleDelete = () => {
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting organization...");
-      onDeleted(id);
       const result = await organization.delete({ organizationId: id });
       if (result.error) {
         toast.error("Failed to delete organization.", { id: toastId });
