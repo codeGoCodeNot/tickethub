@@ -32,6 +32,9 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
     userId: membership.userId,
   }));
 
+  const currentUserRole =
+    memberships.find((m) => m.userId === user?.id)?.role ?? "member";
+
   if (!memberships.length) {
     return <Placeholder label="No members found" icon={null} />;
   }
@@ -51,12 +54,20 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <MembershipTable memberships={mapped} currentUserId={user?.id} />
+        <MembershipTable
+          memberships={mapped}
+          currentUserId={user?.id}
+          currentUserRole={currentUserRole}
+        />
       </Table>
 
       {/* Mobile cards */}
       <div className="md:hidden">
-        <MembershipCards memberships={mapped} currentUserId={user?.id} />
+        <MembershipCards
+          memberships={mapped}
+          currentUserId={user?.id}
+          currentUserRole={currentUserRole}
+        />
       </div>
     </div>
   );

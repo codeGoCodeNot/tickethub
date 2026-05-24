@@ -100,6 +100,7 @@ const OrganizationCards = ({
   return (
     <div className="flex flex-col gap-y-2">
       {organizations.map((org) => {
+        const isOwner = org.role === "owner";
         const isOwnerOrAdmin = ["owner", "admin"].includes(org.role);
         const isActive = effectiveActiveId === org.id;
         const isPending = pendingId === org.id;
@@ -129,7 +130,7 @@ const OrganizationCards = ({
                 }
                 onLeave={() => setLeaveTargetId(org.id)}
                 onDelete={() => setDeleteTargetId(org.id)}
-                limitedAccess={limitedAccess || !isOwnerOrAdmin}
+                limitedAccess={limitedAccess || !isOwner}
               />
             </div>
             <div className="flex items-center gap-x-2 pr-10">

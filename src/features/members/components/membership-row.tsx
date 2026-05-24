@@ -22,6 +22,7 @@ type MembershipRowProps = {
   role: string;
   userId?: string;
   currentUserId?: string;
+  currentUserRole: string;
 };
 
 const MembershipRow = ({
@@ -33,7 +34,9 @@ const MembershipRow = ({
   role,
   userId,
   currentUserId,
+  currentUserRole,
 }: MembershipRowProps) => {
+  const isOwnerOrAdmin = ["owner", "admin"].includes(currentUserRole);
   const router = useRouter();
   const [isPendingDelete, startDeleteTransition] = useTransition();
 
@@ -91,8 +94,8 @@ const MembershipRow = ({
         </Badge>
       </TableCell>
       <TableCell className="relative z-[10]">
-        {deleteDialog}
-        {deleteTrigger}
+        {isOwnerOrAdmin && deleteDialog}
+        {isOwnerOrAdmin && deleteTrigger}
       </TableCell>
     </MotionTableRow>
   );

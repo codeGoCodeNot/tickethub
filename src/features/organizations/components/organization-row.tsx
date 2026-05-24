@@ -46,6 +46,7 @@ const OrganizationRow = ({
   const [isPendingLeave, startLeaveTransition] = useTransition();
   const router = useRouter();
 
+  const isOwner = role === "owner";
   const isOwnerOrIsAdmin = ["owner", "admin"].includes(role);
 
   const handleDelete = () => {
@@ -148,8 +149,8 @@ const OrganizationRow = ({
           {isOwnerOrIsAdmin && detailsButton}
           {!limitedAccess && leaveDialog}
           {!limitedAccess && leaveTrigger}
-          {isOwnerOrIsAdmin && deleteDialog}
-          {isOwnerOrIsAdmin && deleteTrigger}
+          {isOwner && deleteDialog}
+          {isOwner && deleteTrigger}
         </div>
       </TableCell>
     </MotionTableRow>

@@ -31,12 +31,15 @@ type MembershipCardsProps = {
     userId: string;
   }[];
   currentUserId?: string;
+  currentUserRole: string;
 };
 
 const MembershipCards = ({
   memberships,
   currentUserId,
+  currentUserRole,
 }: MembershipCardsProps): React.JSX.Element => {
+  const isOwnerOrAdmin = ["owner", "admin"].includes(currentUserRole);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isPendingDelete, startDeleteTransition] = useTransition();
   const router = useRouter();
@@ -71,14 +74,16 @@ const MembershipCards = ({
             className="relative p-4 border rounded-md flex flex-col gap-y-1"
           >
             <div className="absolute top-2 right-2 z-[10]">
-              <MembershipMoreMenu
-                onDelete={() => setDeleteTargetId(membership.id)}
-                trigger={
-                  <Button variant="ghost" size="icon">
-                    <LucideMenu />
-                  </Button>
-                }
-              />
+              {isOwnerOrAdmin && (
+                <MembershipMoreMenu
+                  onDelete={() => setDeleteTargetId(membership.id)}
+                  trigger={
+                    <Button variant="ghost" size="icon">
+                      <LucideMenu />
+                    </Button>
+                  }
+                />
+              )}
             </div>
             <div className="flex items-center gap-x-2 pr-10">
               <span className="font-semibold truncate">{membership.name}</span>

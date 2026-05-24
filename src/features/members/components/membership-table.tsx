@@ -15,11 +15,13 @@ type MembershipTableProps = {
     userId: string;
   }[];
   currentUserId?: string;
+  currentUserRole: string;
 };
 
 const MembershipTable = ({
   memberships,
   currentUserId,
+  currentUserRole,
 }: MembershipTableProps) => {
   return (
     <TableBody>
@@ -29,6 +31,7 @@ const MembershipTable = ({
             key={membership.id}
             {...membership}
             currentUserId={currentUserId}
+            currentUserRole={currentUserRole}
           />
         ))}
       </AnimatePresence>
