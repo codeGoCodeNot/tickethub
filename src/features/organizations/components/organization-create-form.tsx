@@ -11,7 +11,6 @@ import { LucideLoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { invalidateOrgCache } from "../actions/invalidate-org-cache";
 
 type OrganizationCreateFormProps = {
   onSuccess: () => void;
@@ -52,7 +51,6 @@ const OrganizationCreateForm = ({ onSuccess }: OrganizationCreateFormProps) => {
     formRef.current?.reset();
     setIsPending(false);
     toast.success("Organization created");
-    await invalidateOrgCache();
     router.refresh();
     onSuccess();
   };

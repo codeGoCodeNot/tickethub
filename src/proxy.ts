@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./lib/auth";
 import { loginRateLimit } from "./lib/rate-limit";
-import { redis } from "./lib/redis";
 import { organizationPath, signInPath, verifyEmailPath } from "./path";
 
 export const proxy = async (request: NextRequest) => {
@@ -31,24 +30,8 @@ export const proxy = async (request: NextRequest) => {
       return NextResponse.redirect(new URL(verifyEmailPath(), request.url));
 
     if (!pathname.startsWith("/organization")) {
-      const cacheKey = `has-org:${session.user.id}`;
-      const cached = await redis.get(cacheKey);
-
-      if (cached === false) {
+      if (!session.session.activeOrganizationId) {
         return NextResponse.redirect(new URL(organizationPath(), request.url));
-      }
-
-      if (cached === null) {
-        const organizations = await auth.api.listOrganizations({
-          headers: request.headers,
-        });
-        const hasOrg = organizations.length > 0;
-        await redis.set(cacheKey, hasOrg, { ex: 300 }); // Cache for 5 minutes
-        if (!hasOrg) {
-          return NextResponse.redirect(
-            new URL(organizationPath(), request.url),
-          );
-        }
       }
     }
   }
