@@ -29,3 +29,5 @@ export const verifyEmailPath = (email?: string): Route =>
 export const organizationPath = (): Route => "/organization" as Route;
 export const organizationCreatePath = (): Route =>
   "/organization/create" as Route;
+export const selectOrganizationPath = (): Route =>
+  "/organization/select-organization" as Route;

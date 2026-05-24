@@ -27,10 +27,12 @@ type OrganizationCardsProps = {
     joinedAt: string;
     members: number;
   }[];
+  limitedAccess?: boolean;
 };
 
 const OrganizationCards = ({
   organizations,
+  limitedAccess,
 }: OrganizationCardsProps): React.JSX.Element => {
   const { data: activeOrg } = useActiveOrganization();
   const [optimisticActiveId, setOptimisticActiveId] = useState<string | null>(
@@ -88,6 +90,7 @@ const OrganizationCards = ({
                   </Button>
                 }
                 onDelete={() => setDeleteTargetId(org.id)}
+                limitedAccess={limitedAccess}
               />
             </div>
             <div className="flex items-center gap-x-2 pr-10">

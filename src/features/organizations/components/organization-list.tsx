@@ -12,7 +12,7 @@ import OrganizationCards from "./organization-cards";
 import OrganizationTable from "./organization-table";
 import Placeholder from "@/components/placeholder";
 
-const OrganizationList = async () => {
+const OrganizationList = async ({ limitedAccess }: { limitedAccess?: boolean } = {}) => {
   const user = await getAuth();
   const organizations = await getOrganizationsByUser(user?.id);
 
@@ -43,12 +43,12 @@ const OrganizationList = async () => {
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <OrganizationTable organizations={mapped} />
+        <OrganizationTable organizations={mapped} limitedAccess={limitedAccess} />
       </Table>
 
       {/* Mobile cards */}
       <div className="md:hidden">
-        <OrganizationCards organizations={mapped} />
+        <OrganizationCards organizations={mapped} limitedAccess={limitedAccess} />
       </div>
     </div>
   );

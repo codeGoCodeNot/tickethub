@@ -11,8 +11,9 @@ import { LucideArrowLeftRight, LucideTrash2 } from "lucide-react";
 type OrganizationMoreMenuProps = {
   isActive: boolean;
   onSwitch: () => Promise<void>;
-  onDelete: () => void; // just opens the dialog
+  onDelete: () => void;
   trigger: React.ReactNode;
+  limitedAccess?: boolean;
 };
 
 const OrganizationMoreMenu = ({
@@ -20,6 +21,7 @@ const OrganizationMoreMenu = ({
   onSwitch,
   onDelete,
   trigger,
+  limitedAccess,
 }: OrganizationMoreMenuProps) => {
   return (
     <DropdownMenu>
@@ -29,10 +31,12 @@ const OrganizationMoreMenu = ({
           <LucideArrowLeftRight className="size-4" />
           {isActive ? "Active" : "Activate"}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={onDelete}>
-          <LucideTrash2 className="text-red-500" />
-          Delete
-        </DropdownMenuItem>
+        {!limitedAccess && (
+          <DropdownMenuItem onClick={onDelete}>
+            <LucideTrash2 className="text-red-500" />
+            Delete
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

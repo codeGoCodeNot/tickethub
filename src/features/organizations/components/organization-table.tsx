@@ -12,11 +12,17 @@ type OrganizationTableProps = {
     joinedAt: string;
     members: number;
   }[];
+  limitedAccess?: boolean;
 };
 
-const OrganizationTable = ({ organizations }: OrganizationTableProps): React.JSX.Element => {
+const OrganizationTable = ({
+  organizations,
+  limitedAccess,
+}: OrganizationTableProps): React.JSX.Element => {
   const { data: activeOrg } = useActiveOrganization();
-  const [optimisticActiveId, setOptimisticActiveId] = useState<string | null>(null);
+  const [optimisticActiveId, setOptimisticActiveId] = useState<string | null>(
+    null,
+  );
   const effectiveActiveId = optimisticActiveId ?? activeOrg?.id;
 
   return (
@@ -30,6 +36,7 @@ const OrganizationTable = ({ organizations }: OrganizationTableProps): React.JSX
           members={org.members}
           isActive={effectiveActiveId === org.id}
           onSwitch={() => setOptimisticActiveId(org.id)}
+          limitedAccess={limitedAccess}
         />
       ))}
     </TableBody>

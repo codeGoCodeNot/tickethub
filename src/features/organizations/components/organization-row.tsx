@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
-const MotionTableRow = motion(TableRow);
+const MotionTableRow = motion.create(TableRow);
 
 type OrganizationRowProps = {
   id: string;
@@ -23,6 +23,7 @@ type OrganizationRowProps = {
   members: number;
   isActive: boolean;
   onSwitch: () => void;
+  limitedAccess?: boolean;
 };
 
 const OrganizationRow = ({
@@ -32,6 +33,7 @@ const OrganizationRow = ({
   members,
   isActive,
   onSwitch,
+  limitedAccess,
 }: OrganizationRowProps) => {
   const [isPending, setIsPending] = useState(false);
   const [isPendingDelete, startDeleteTransition] = useTransition();
@@ -78,26 +80,26 @@ const OrganizationRow = ({
       <TableCell>{members}</TableCell>
       <TableCell className="relative z-[10]">
         <div className="flex gap-x-1">
-        <Button
-          size="icon"
-          variant={isActive ? "default" : "outline"}
-          disabled={isActive || isPending}
-          onClick={async () => {
-            onSwitch();
-            setIsPending(true);
-            await organization.setActive({ organizationId: id });
-            toast.success(`Switched to ${name}`);
-            setIsPending(false);
-          }}
-        >
-          {isPending ? (
-            <LucideLoaderCircle className="animate-spin" />
-          ) : (
-            <LucideArrowLeftRight />
-          )}
-        </Button>
-        {deleteDialog}
-        {deleteTrigger}
+          <Button
+            size="icon"
+            variant={isActive ? "default" : "outline"}
+            disabled={isActive || isPending}
+            onClick={async () => {
+              onSwitch();
+              setIsPending(true);
+              await organization.setActive({ organizationId: id });
+              toast.success(`Switched to ${name}`);
+              setIsPending(false);
+            }}
+          >
+            {isPending ? (
+              <LucideLoaderCircle className="animate-spin" />
+            ) : (
+              <LucideArrowLeftRight />
+            )}
+          </Button>
+          {!limitedAccess && deleteDialog}
+          {!limitedAccess && deleteTrigger}
         </div>
       </TableCell>
     </MotionTableRow>
