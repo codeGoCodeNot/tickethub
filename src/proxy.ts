@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./lib/auth";
 import { loginRateLimit } from "./lib/rate-limit";
-import { organizationPath, signInPath, verifyEmailPath } from "./path";
+import { signInPath, verifyEmailPath } from "./path";
 
 export const proxy = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
@@ -29,11 +29,6 @@ export const proxy = async (request: NextRequest) => {
     if (!session.user.emailVerified)
       return NextResponse.redirect(new URL(verifyEmailPath(), request.url));
 
-    if (!pathname.startsWith("/organization")) {
-      if (!session.session.activeOrganizationId) {
-        return NextResponse.redirect(new URL(organizationPath(), request.url));
-      }
-    }
   }
 
   return NextResponse.next();
