@@ -54,7 +54,9 @@ const OrganizationRow = ({
       const toastId = toast.loading("Deleting organization...");
       const { error } = await organization.delete({ organizationId: id });
       if (error) {
-        toast.error("Failed to delete organization.", { id: toastId });
+        toast.error(error.message || "Failed to delete organization.", {
+          id: toastId,
+        });
         return;
       }
       toast.success("Organization deleted", { id: toastId });
@@ -67,7 +69,9 @@ const OrganizationRow = ({
       const toastId = toast.loading("Leaving organization...");
       const { error } = await organization.leave({ organizationId: id });
       if (error) {
-        toast.error("Failed to leave organization.", { id: toastId });
+        toast.error(error.message || "Failed to leave organization.", {
+          id: toastId,
+        });
         return;
       }
       toast.success("Left the organization", { id: toastId });

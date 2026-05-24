@@ -14,11 +14,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { organization } from "@/lib/auth-client";
 import { AnimatePresence, motion } from "framer-motion";
-import { LucideLoaderCircle, LucideMail, LucideMenu, LucideShield } from "lucide-react";
+import {
+  LucideLoaderCircle,
+  LucideMail,
+  LucideMenu,
+  LucideShield,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import MembershipMoreMenu from "./membership-more-menu";
+import SelectRole from "./select-role";
 
 type MembershipCardsProps = {
   memberships: {
@@ -87,9 +93,16 @@ const MembershipCards = ({
             </div>
             <div className="flex items-center gap-x-2 pr-10">
               <span className="font-semibold truncate">{membership.name}</span>
-              <Badge variant="outline" className="capitalize shrink-0 text-xs">
-                {membership.role}
-              </Badge>
+              {isOwnerOrAdmin && membership.role !== "owner" ? (
+                <SelectRole memberId={membership.id} role={membership.role} />
+              ) : (
+                <Badge
+                  variant="outline"
+                  className="capitalize shrink-0 text-xs"
+                >
+                  {membership.role}
+                </Badge>
+              )}
               {membership.userId === currentUserId && (
                 <Badge variant="secondary" className="shrink-0 text-xs">
                   You
@@ -127,8 +140,13 @@ const MembershipCards = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPendingDelete}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={isPendingDelete}>
+            <AlertDialogCancel disabled={isPendingDelete}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isPendingDelete}
+            >
               {isPendingDelete ? (
                 <LucideLoaderCircle className="animate-spin size-4" />
               ) : (

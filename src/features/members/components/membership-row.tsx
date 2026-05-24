@@ -10,6 +10,7 @@ import { LucideLoaderCircle, LucideTrash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import SelectRole from "./select-role";
 
 const MotionTableRow = motion.create(TableRow);
 
@@ -83,9 +84,13 @@ const MembershipRow = ({
       </TableCell>
       <TableCell>{email}</TableCell>
       <TableCell>
-        <Badge variant="outline" className="capitalize">
-          {role}
-        </Badge>
+        {isOwnerOrAdmin && role !== "owner" ? (
+          <SelectRole memberId={id} role={role} />
+        ) : (
+          <Badge variant="outline" className="capitalize">
+            {role}
+          </Badge>
+        )}
       </TableCell>
       <TableCell>{joinedAt}</TableCell>
       <TableCell>
