@@ -39,8 +39,11 @@ const OrganizationCards = ({
   const [pendingId, setPendingId] = useState<string | null>(null);
   const effectiveActiveId = optimisticActiveId ?? activeOrg?.id;
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [deletedIds, setDeletedIds] = useState<string[]>([]);
   const [isPendingDelete, startDeleteTransition] = useTransition();
   const router = useRouter();
+
+  const visibleOrgs = organizations.filter((org) => !deletedIds.includes(org.id));
 
   const handleSwitch = async (id: string, name: string) => {
     setOptimisticActiveId(id);
@@ -52,22 +55,25 @@ const OrganizationCards = ({
 
   const handleDelete = () => {
     if (!deleteTargetId) return;
+    const idToDelete = deleteTargetId;
+    setDeletedIds((prev) => [...prev, idToDelete]);
+    setDeleteTargetId(null);
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting...");
-      const result = await organization.delete({ organizationId: deleteTargetId });
+      const result = await organization.delete({ organizationId: idToDelete });
       if (result.error) {
+        setDeletedIds((prev) => prev.filter((id) => id !== idToDelete));
         toast.error("Failed to delete.", { id: toastId });
         return;
       }
       toast.success("Organization deleted", { id: toastId });
-      setDeleteTargetId(null);
       router.refresh();
     });
   };
 
   return (
     <div className="flex flex-col gap-y-2">
-      {organizations.map((org) => {
+      {visibleOrgs.map((org) => {
         const isActive = effectiveActiveId === org.id;
         const isPending = pendingId === org.id;
         return (
