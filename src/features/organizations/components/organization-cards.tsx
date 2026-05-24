@@ -74,6 +74,7 @@ const OrganizationCards = ({
       }
       toast.success("Left organization", { id: toastId });
       setLeaveTargetId(null);
+      await organization.setActive({ organizationId: null });
       router.refresh();
     });
   };
@@ -162,7 +163,9 @@ const OrganizationCards = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPendingLeave}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isPendingLeave}>
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction onClick={handleLeave} disabled={isPendingLeave}>
               {isPendingLeave ? (
                 <LucideLoaderCircle className="animate-spin size-4" />

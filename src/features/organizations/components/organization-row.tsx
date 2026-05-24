@@ -66,6 +66,7 @@ const OrganizationRow = ({
         return;
       }
       toast.success("Left the organization", { id: toastId });
+      await organization.setActive({ organizationId: null });
       router.refresh();
     });
   };
