@@ -63,10 +63,10 @@ const OrganizationCards = ({
     if (!deleteTargetId) return;
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting...");
-      const result = await organization.delete({
+      const { error } = await organization.delete({
         organizationId: deleteTargetId,
       });
-      if (result.error) {
+      if (error) {
         toast.error("Failed to delete.", { id: toastId });
         return;
       }

@@ -18,7 +18,7 @@ type OrganizationTableProps = {
 const OrganizationTable = ({
   organizations,
   limitedAccess,
-}: OrganizationTableProps): React.JSX.Element => {
+}: OrganizationTableProps) => {
   const { data: activeOrg } = useActiveOrganization();
   const [optimisticActiveId, setOptimisticActiveId] = useState<string | null>(
     null,

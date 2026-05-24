@@ -82,14 +82,23 @@ const seed = async () => {
     },
   });
 
-  await prisma.member.create({
-    data: {
-      id: "member-1",
-      organizationId: org.id,
-      userId: users[0].id,
-      role: "owner",
-      createdAt: new Date(),
-    },
+  await prisma.member.createMany({
+    data: [
+      {
+        id: "member-1",
+        organizationId: org.id,
+        userId: users[0].id, // Johnsen - owner
+        role: "owner",
+        createdAt: new Date(),
+      },
+      {
+        id: "member-2",
+        organizationId: org.id,
+        userId: users[1].id, // user@example.com - member
+        role: "member",
+        createdAt: new Date(),
+      },
+    ],
   });
 
   const dbTickets = await prisma.ticket.createManyAndReturn({

@@ -12,15 +12,24 @@ type MembershipTableProps = {
     emailVerified: boolean;
     joinedAt: string;
     role: string;
+    userId: string;
   }[];
+  currentUserId?: string;
 };
 
-const MembershipTable = ({ memberships }: MembershipTableProps): React.JSX.Element => {
+const MembershipTable = ({
+  memberships,
+  currentUserId,
+}: MembershipTableProps) => {
   return (
     <TableBody>
       <AnimatePresence initial={false}>
-        {memberships.map((m) => (
-          <MembershipRow key={m.id} {...m} />
+        {memberships.map((membership) => (
+          <MembershipRow
+            key={membership.id}
+            {...membership}
+            currentUserId={currentUserId}
+          />
         ))}
       </AnimatePresence>
     </TableBody>

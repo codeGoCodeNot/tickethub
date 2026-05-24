@@ -1,5 +1,4 @@
-import AppSidebar from "@/app/_navigation/sidebar/components/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import SidebarLayout from "@/app/_navigation/sidebar-layout";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -7,7 +6,6 @@ import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
-import Header from "./_navigation/header";
 import Provider from "./_providers/provider";
 import "./globals.css";
 
@@ -39,15 +37,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Provider>
-              <SidebarProvider>
-                <Suspense fallback={null}>
-                  <AppSidebar />
-                </Suspense>
-                <Header />
-                <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/60 flex flex-col">
-                  {children}
-                </main>
-              </SidebarProvider>
+              <Suspense fallback={null}>
+                <SidebarLayout>{children}</SidebarLayout>
+              </Suspense>
               <Toaster expand />
             </Provider>
           </ThemeProvider>

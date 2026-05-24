@@ -6,6 +6,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Placeholder from "@/components/placeholder";
+import { getAuth } from "@/features/auth/queries/get-auth";
 import { format } from "date-fns/format";
 import getMemberships from "../queries/get-memberhips";
 import MembershipCards from "./membership-cards";
@@ -16,7 +17,10 @@ type MembershipListProps = {
 };
 
 const MembershipList = async ({ organizationId }: MembershipListProps) => {
-  const memberships = await getMemberships(organizationId);
+  const [memberships, user] = await Promise.all([
+    getMemberships(organizationId),
+    getAuth(),
+  ]);
 
   const mapped = memberships.map((membership) => ({
     id: membership.id,
@@ -25,6 +29,7 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
     emailVerified: membership.user.emailVerified,
     joinedAt: format(new Date(membership.createdAt), "MMM d, yyyy"),
     role: membership.role,
+    userId: membership.userId,
   }));
 
   if (!memberships.length) {
@@ -43,14 +48,15 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
             <TableHead>Role</TableHead>
             <TableHead>Joined At</TableHead>
             <TableHead>Verified</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <MembershipTable memberships={mapped} />
+        <MembershipTable memberships={mapped} currentUserId={user?.id} />
       </Table>
 
       {/* Mobile cards */}
       <div className="md:hidden">
-        <MembershipCards memberships={mapped} />
+        <MembershipCards memberships={mapped} currentUserId={user?.id} />
       </div>
     </div>
   );

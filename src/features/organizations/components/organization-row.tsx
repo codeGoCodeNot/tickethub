@@ -45,8 +45,8 @@ const OrganizationRow = ({
   const handleDelete = () => {
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting organization...");
-      const result = await organization.delete({ organizationId: id });
-      if (result.error) {
+      const { error } = await organization.delete({ organizationId: id });
+      if (error) {
         toast.error("Failed to delete organization.", { id: toastId });
         return;
       }
