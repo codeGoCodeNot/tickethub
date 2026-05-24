@@ -51,8 +51,8 @@ const OrganizationCreateForm = ({ onSuccess }: OrganizationCreateFormProps) => {
     formRef.current?.reset();
     setIsPending(false);
     toast.success("Organization created");
-    router.refresh();
     onSuccess();
+    router.refresh();
   };
 
   return (
