@@ -8,7 +8,6 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import OrganizationMoreMenu from "./organization-more-menu";
 import { motion } from "framer-motion";
-import deleteOrganization from "../actions/delete-organization";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
 
 type OrganizationCardsProps = {
   organizations: {
@@ -40,6 +40,7 @@ const OrganizationCards = ({
   const effectiveActiveId = optimisticActiveId ?? activeOrg?.id;
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isPendingDelete, startDeleteTransition] = useTransition();
+  const router = useRouter();
 
   const handleSwitch = async (id: string, name: string) => {
     setOptimisticActiveId(id);
@@ -53,13 +54,14 @@ const OrganizationCards = ({
     if (!deleteTargetId) return;
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting...");
-      try {
-        await deleteOrganization(deleteTargetId);
-        toast.success("Organization deleted", { id: toastId });
-        setDeleteTargetId(null);
-      } catch {
+      const result = await organization.delete({ organizationId: deleteTargetId });
+      if (result.error) {
         toast.error("Failed to delete.", { id: toastId });
+        return;
       }
+      toast.success("Organization deleted", { id: toastId });
+      setDeleteTargetId(null);
+      router.refresh();
     });
   };
 

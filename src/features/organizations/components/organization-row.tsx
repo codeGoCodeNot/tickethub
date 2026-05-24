@@ -10,9 +10,9 @@ import {
   LucideLoaderCircle,
   LucideTrash2,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
-import deleteOrganization from "../actions/delete-organization";
 
 const MotionTableRow = motion(TableRow);
 
@@ -35,16 +35,18 @@ const OrganizationRow = ({
 }: OrganizationRowProps) => {
   const [isPending, setIsPending] = useState(false);
   const [isPendingDelete, startDeleteTransition] = useTransition();
+  const router = useRouter();
 
   const handleDelete = () => {
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting organization...");
-      try {
-        await deleteOrganization(id);
-        toast.success("Organization deleted", { id: toastId });
-      } catch {
+      const result = await organization.delete({ organizationId: id });
+      if (result.error) {
         toast.error("Failed to delete organization.", { id: toastId });
+        return;
       }
+      toast.success("Organization deleted", { id: toastId });
+      router.refresh();
     });
   };
 
@@ -74,7 +76,8 @@ const OrganizationRow = ({
       <TableCell>{name}</TableCell>
       <TableCell>{joinedAt}</TableCell>
       <TableCell>{members}</TableCell>
-      <TableCell className="relative z-[10] flex gap-x-1">
+      <TableCell className="relative z-[10]">
+        <div className="flex gap-x-1">
         <Button
           size="icon"
           variant={isActive ? "default" : "outline"}
@@ -95,6 +98,7 @@ const OrganizationRow = ({
         </Button>
         {deleteDialog}
         {deleteTrigger}
+        </div>
       </TableCell>
     </MotionTableRow>
   );
