@@ -28,7 +28,12 @@ import {
   useSession,
 } from "@/lib/auth-client";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, LucideBuilding2, LucideChevronsUpDown } from "lucide-react";
+import {
+  Check,
+  LucideBuilding2,
+  LucideChevronsUpDown,
+  LucidePlus,
+} from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -38,6 +43,7 @@ import {
   organizationNavItems,
   ticketNavItems,
 } from "./constants";
+import OrganizationCreateDialog from "@/features/organizations/components/organization-create-dialog";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -171,6 +177,16 @@ const AppSidebar = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <OrganizationCreateDialog
+                  trigger={
+                    <SidebarMenuButton>
+                      <LucidePlus />
+                      <span>Create</span>
+                    </SidebarMenuButton>
+                  }
+                />
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

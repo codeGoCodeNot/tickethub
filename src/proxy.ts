@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./lib/auth";
 import { loginRateLimit } from "./lib/rate-limit";
 import { redis } from "./lib/redis";
-import { organizationCreatePath, signInPath, verifyEmailPath } from "./path";
+import { organizationPath, signInPath, verifyEmailPath } from "./path";
 
 export const proxy = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
@@ -35,9 +35,7 @@ export const proxy = async (request: NextRequest) => {
       const cached = await redis.get(cacheKey);
 
       if (cached === false) {
-        return NextResponse.redirect(
-          new URL(organizationCreatePath(), request.url),
-        );
+        return NextResponse.redirect(new URL(organizationPath(), request.url));
       }
 
       if (cached === null) {
@@ -48,7 +46,7 @@ export const proxy = async (request: NextRequest) => {
         await redis.set(cacheKey, hasOrg, { ex: 300 }); // Cache for 5 minutes
         if (!hasOrg) {
           return NextResponse.redirect(
-            new URL(organizationCreatePath(), request.url),
+            new URL(organizationPath(), request.url),
           );
         }
       }

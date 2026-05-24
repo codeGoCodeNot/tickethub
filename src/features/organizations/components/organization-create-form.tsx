@@ -7,13 +7,17 @@ import {
   useActiveOrganization,
   useListOrganizations,
 } from "@/lib/auth-client";
-import { organizationPath } from "@/path";
 import { LucideLoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { invalidateOrgCache } from "../actions/invalidate-org-cache";
 
-const OrganizationCreateForm = () => {
+type OrganizationCreateFormProps = {
+  onSuccess: () => void;
+};
+
+const OrganizationCreateForm = ({ onSuccess }: OrganizationCreateFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { refetch: refetchOrgs } = useListOrganizations();
@@ -48,7 +52,9 @@ const OrganizationCreateForm = () => {
     formRef.current?.reset();
     setIsPending(false);
     toast.success("Organization created");
-    router.push(organizationPath());
+    await invalidateOrgCache();
+    router.refresh();
+    onSuccess();
   };
 
   return (

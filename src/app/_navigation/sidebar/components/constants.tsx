@@ -44,5 +44,4 @@ export const accountNavItems: NavItem[] = [
 
 export const organizationNavItems: NavItem[] = [
   { title: "Overview", icon: <LucideBuilding2 />, href: organizationPath() },
-  { title: "Create", icon: <LucidePlus />, href: organizationCreatePath() },
 ];
