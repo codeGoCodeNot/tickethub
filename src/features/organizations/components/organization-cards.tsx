@@ -48,7 +48,9 @@ const OrganizationCards = ({
   const [pendingId, setPendingId] = useState<string | null>(null);
   const effectiveActiveId = optimisticActiveId ?? activeOrg?.id;
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [leaveTargetId, setLeaveTargetId] = useState<string | null>(null);
   const [isPendingDelete, startDeleteTransition] = useTransition();
+  const [isPendingLeave, startLeaveTransition] = useTransition();
   const router = useRouter();
 
   const handleSwitch = async (id: string, name: string) => {
@@ -57,6 +59,23 @@ const OrganizationCards = ({
     await organization.setActive({ organizationId: id });
     toast.success(`Switched to ${name}`);
     setPendingId(null);
+  };
+
+  const handleLeave = () => {
+    if (!leaveTargetId) return;
+    startLeaveTransition(async () => {
+      const toastId = toast.loading("Leaving organization...");
+      const { error } = await organization.leave({
+        organizationId: leaveTargetId,
+      });
+      if (error) {
+        toast.error("Failed to leave organization.", { id: toastId });
+        return;
+      }
+      toast.success("Left organization", { id: toastId });
+      setLeaveTargetId(null);
+      router.refresh();
+    });
   };
 
   const handleDelete = () => {
@@ -90,11 +109,13 @@ const OrganizationCards = ({
             className="relative p-4 border rounded-md flex flex-col gap-y-1"
           >
             <div className="absolute top-2 right-2 z-[10]">
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={membershipsPath(org.id)}>
-                  <LucideArrowUpRightFromSquare />
-                </Link>
-              </Button>
+              {!limitedAccess && (
+                <Button variant="ghost" size="icon" asChild>
+                  <Link href={membershipsPath(org.id)}>
+                    <LucideArrowUpRightFromSquare />
+                  </Link>
+                </Button>
+              )}
               <OrganizationMoreMenu
                 isActive={isActive}
                 onSwitch={() => handleSwitch(org.id, org.name)}
@@ -103,6 +124,7 @@ const OrganizationCards = ({
                     <LucideMenu />
                   </Button>
                 }
+                onLeave={() => setLeaveTargetId(org.id)}
                 onDelete={() => setDeleteTargetId(org.id)}
                 limitedAccess={limitedAccess}
               />
@@ -128,6 +150,29 @@ const OrganizationCards = ({
           </motion.div>
         );
       })}
+      <AlertDialog
+        open={!!leaveTargetId}
+        onOpenChange={(o) => !o && setLeaveTargetId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Leave Organization?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You will lose access to this organization.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isPendingLeave}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLeave} disabled={isPendingLeave}>
+              {isPendingLeave ? (
+                <LucideLoaderCircle className="animate-spin size-4" />
+              ) : (
+                "Continue"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <AlertDialog
         open={!!deleteTargetId}
         onOpenChange={(o) => !o && setDeleteTargetId(null)}

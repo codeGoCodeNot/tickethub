@@ -2,6 +2,7 @@
 
 import { TableBody } from "@/components/ui/table";
 import { useActiveOrganization } from "@/lib/auth-client";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import OrganizationRow from "./organization-row";
 

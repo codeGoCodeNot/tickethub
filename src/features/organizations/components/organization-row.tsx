@@ -10,6 +10,7 @@ import {
   LucideArrowLeftRight,
   LucideArrowUpRightFromSquare,
   LucideLoaderCircle,
+  LucideLogOut,
   LucideTrash2,
 } from "lucide-react";
 import Link from "next/link";
@@ -40,6 +41,7 @@ const OrganizationRow = ({
 }: OrganizationRowProps) => {
   const [isPending, setIsPending] = useState(false);
   const [isPendingDelete, startDeleteTransition] = useTransition();
+  const [isPendingLeave, startLeaveTransition] = useTransition();
   const router = useRouter();
 
   const handleDelete = () => {
@@ -51,6 +53,19 @@ const OrganizationRow = ({
         return;
       }
       toast.success("Organization deleted", { id: toastId });
+      router.refresh();
+    });
+  };
+
+  const handleLeave = () => {
+    startLeaveTransition(async () => {
+      const toastId = toast.loading("Leaving organization...");
+      const { error } = await organization.leave({ organizationId: id });
+      if (error) {
+        toast.error("Failed to leave organization.", { id: toastId });
+        return;
+      }
+      toast.success("Left the organization", { id: toastId });
       router.refresh();
     });
   };
@@ -69,6 +84,22 @@ const OrganizationRow = ({
     title: "Delete Organization?",
     description:
       "This will permanently delete this organization and all its data.",
+  });
+
+  const [leaveTrigger, leaveDialog] = useConfirmDialog({
+    action: handleLeave,
+    trigger: (
+      <Button variant="outline" size="icon" disabled={isPendingLeave}>
+        {isPendingLeave ? (
+          <LucideLoaderCircle className="animate-spin" />
+        ) : (
+          <LucideLogOut />
+        )}
+      </Button>
+    ),
+    title: "Leave Organization?",
+    description:
+      "This will permanently leave this organization and all its data.",
   });
 
   const detailsButton = (
@@ -110,6 +141,8 @@ const OrganizationRow = ({
             )}
           </Button>
           {!limitedAccess && detailsButton}
+          {!limitedAccess && leaveDialog}
+          {!limitedAccess && leaveTrigger}
           {!limitedAccess && deleteDialog}
           {!limitedAccess && deleteTrigger}
         </div>
