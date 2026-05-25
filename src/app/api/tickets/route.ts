@@ -10,6 +10,7 @@ export async function GET(request: Request) {
 
   const { list, metadata } = await getTickets(
     undefined,
+    undefined,
     search,
     sort,
     page,

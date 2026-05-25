@@ -3,6 +3,7 @@ import { cacheTag } from "next/cache";
 
 const getTickets = async (
   userId?: string,
+  organizationId?: string,
   search?: string,
   sort?: string,
   page = 0,
@@ -12,6 +13,7 @@ const getTickets = async (
   cacheTag("tickets");
   const where = {
     userId,
+    organizationId,
     ...(search && {
       title: { contains: search, mode: "insensitive" as const },
     }),

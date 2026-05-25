@@ -7,6 +7,7 @@ import fromErrorToActionState, {
 } from "@/components/form/utils/to-action-state";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
+import getActiveOrganization from "@/features/organizations/queries/get-active-organization";
 import prisma from "@/lib/prisma";
 import { ticketPath, ticketsPath } from "@/path";
 import { toCent } from "@/utils/currency";
@@ -32,6 +33,14 @@ const upsertTicket = async (
   formData: FormData,
 ) => {
   const user = await getAuthOrRedirect();
+  const organizationId = await getActiveOrganization();
+
+  if (!organizationId) {
+    return toActionState(
+      "ERROR",
+      "No active organization. Please switch to an organization to create a ticket.",
+    );
+  }
 
   try {
     if (id) {
@@ -58,7 +67,7 @@ const upsertTicket = async (
     await prisma.ticket.upsert({
       where: { id },
       update: dbData,
-      create: dbData,
+      create: { ...dbData, organizationId },
     });
   } catch (error) {
     return fromErrorToActionState(error, formData);

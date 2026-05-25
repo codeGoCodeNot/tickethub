@@ -8,6 +8,7 @@ import TicketPagination from "./ticket-pagination";
 
 type TicketListProps = {
   userId?: string;
+  organizationId?: string | null;
   search?: string;
   sort?: string;
   page?: number;
@@ -16,6 +17,7 @@ type TicketListProps = {
 
 const TicketList = async ({
   userId,
+  organizationId,
   search,
   sort,
   page,
@@ -24,6 +26,7 @@ const TicketList = async ({
   await connection();
   const { list: tickets, metadata: ticketMetadata } = await getTickets(
     userId,
+    organizationId ?? undefined,
     search,
     sort,
     page,
