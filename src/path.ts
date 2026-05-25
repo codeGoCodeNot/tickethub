@@ -35,3 +35,5 @@ export const selectOrganizationPath = (): Route =>
   "/organization/select-organization" as Route;
 export const membershipsPath = (organizationId: string): Route =>
   `/organization/${organizationId}/memberships` as Route;
+export const invitationsPath = (organizationId: string): Route =>
+  `/organization/${organizationId}/invitations` as Route;

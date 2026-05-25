@@ -15,15 +15,7 @@ const MembershipsPage = ({ params }: MembershipsPageProps) => {
       <Heading
         title="Memberships"
         description="Manage your organization memberships"
-        actions={
-          <>
-            <OrganizationDialog />
-            <OrganizationDialog
-              title="Update Organization"
-              description="Update your organization's name."
-            />
-          </>
-        }
+        actions={<OrganizationDialog />}
       />
       <Suspense fallback={<Spinner />}>
         <MembershipsContent params={params} />

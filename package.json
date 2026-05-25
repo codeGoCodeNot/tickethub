@@ -50,6 +50,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "@react-email/ui": "6.3.0",
     "@tailwindcss/postcss": "^4",
     "@types/big.js": "^6.2.2",
     "@types/node": "^20",

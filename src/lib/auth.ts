@@ -41,6 +41,19 @@ export const auth = betterAuth({
         }
       },
     }),
-    organization(),
+    organization({
+      async sendInvitationEmail({ email, inviter, organization, id }) {
+        const invitationUrl = `${process.env.BETTER_AUTH_URL}/organization/accept-invitation?id=${id}`;
+        await inngest.send({
+          name: "app/org-invitation",
+          data: {
+            email,
+            invitedByUsername: inviter.user.name,
+            teamName: organization.name,
+            invitationUrl,
+          },
+        });
+      },
+    }),
   ],
 });

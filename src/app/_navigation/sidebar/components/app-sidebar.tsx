@@ -33,7 +33,9 @@ import {
   Check,
   LucideBuilding2,
   LucideChevronsUpDown,
+  LucideMail,
   LucidePlus,
+  LucideUsers,
 } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
@@ -44,6 +46,7 @@ import {
   organizationNavItems,
   ticketNavItems,
 } from "./constants";
+import { invitationsPath, membershipsPath } from "@/path";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -181,6 +184,32 @@ const AppSidebar = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {displayOrg && (
+                <>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === membershipsPath(displayOrg.id)}
+                    >
+                      <Link href={membershipsPath(displayOrg.id)}>
+                        <LucideUsers />
+                        <span>Members</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === invitationsPath(displayOrg.id)}
+                    >
+                      <Link href={invitationsPath(displayOrg.id)}>
+                        <LucideMail />
+                        <span>Invitations</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
+              )}
               <SidebarMenuItem>
                 <OrganizationDialog
                   trigger={
