@@ -2,7 +2,7 @@ import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
 import MembershipList from "@/features/members/components/membership-list";
 import getOrgOwnerOrRedirect from "@/features/members/queries/get-org-owner-or-redirect";
-import OrganizationCreateDialog from "@/features/organizations/components/organization-create-dialog";
+import OrganizationDialog from "@/features/organizations/components/organization-dialog";
 import { Suspense } from "react";
 
 type MembershipsPageProps = {
@@ -15,7 +15,15 @@ const MembershipsPage = ({ params }: MembershipsPageProps) => {
       <Heading
         title="Memberships"
         description="Manage your organization memberships"
-        actions={<OrganizationCreateDialog />}
+        actions={
+          <>
+            <OrganizationDialog />
+            <OrganizationDialog
+              title="Update Organization"
+              description="Update your organization's name."
+            />
+          </>
+        }
       />
       <Suspense fallback={<Spinner />}>
         <MembershipsContent params={params} />

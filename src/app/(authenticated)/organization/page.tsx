@@ -1,6 +1,6 @@
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
-import OrganizationCreateDialog from "@/features/organizations/components/organization-create-dialog";
+import OrganizationDialog from "@/features/organizations/components/organization-dialog";
 import OrganizationList from "@/features/organizations/components/organization-list";
 import { Suspense } from "react";
 
@@ -10,7 +10,7 @@ const OrganizationPage = () => {
       <Heading
         title="Organizations"
         description="Manage your organizations"
-        actions={<OrganizationCreateDialog />}
+        actions={<OrganizationDialog />}
       />
       <Suspense fallback={<Spinner />}>
         <OrganizationList />

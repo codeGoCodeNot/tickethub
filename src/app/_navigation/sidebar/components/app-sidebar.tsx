@@ -43,7 +43,7 @@ import {
   organizationNavItems,
   ticketNavItems,
 } from "./constants";
-import OrganizationCreateDialog from "@/features/organizations/components/organization-create-dialog";
+import OrganizationDialog from "@/features/organizations/components/organization-dialog";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -178,7 +178,7 @@ const AppSidebar = () => {
                 </SidebarMenuItem>
               ))}
               <SidebarMenuItem>
-                <OrganizationCreateDialog
+                <OrganizationDialog
                   trigger={
                     <SidebarMenuButton>
                       <LucidePlus />

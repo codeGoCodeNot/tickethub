@@ -26,6 +26,14 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { membershipsPath } from "@/path";
+import OrganizationCreateForm from "./organization-create-form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type OrganizationCardsProps = {
   organizations: {
@@ -50,6 +58,7 @@ const OrganizationCards = ({
   const effectiveActiveId = optimisticActiveId ?? activeOrg?.id;
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [leaveTargetId, setLeaveTargetId] = useState<string | null>(null);
+  const [editTargetOrg, setEditTargetOrg] = useState<{ id: string; name: string } | null>(null);
   const [isPendingDelete, startDeleteTransition] = useTransition();
   const [isPendingLeave, startLeaveTransition] = useTransition();
   const router = useRouter();
@@ -130,6 +139,7 @@ const OrganizationCards = ({
                 }
                 onLeave={() => setLeaveTargetId(org.id)}
                 onDelete={() => setDeleteTargetId(org.id)}
+                onEdit={() => setEditTargetOrg({ id: org.id, name: org.name })}
                 limitedAccess={limitedAccess || !isOwner}
               />
             </div>
@@ -207,6 +217,25 @@ const OrganizationCards = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <Dialog
+        open={!!editTargetOrg}
+        onOpenChange={(o) => !o && setEditTargetOrg(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Organization</DialogTitle>
+            <DialogDescription>
+              Update your organization&apos;s name.
+            </DialogDescription>
+          </DialogHeader>
+          {editTargetOrg && (
+            <OrganizationCreateForm
+              onSuccess={() => setEditTargetOrg(null)}
+              existingOrg={editTargetOrg}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

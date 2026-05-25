@@ -14,15 +14,18 @@ import { toast } from "sonner";
 
 type OrganizationCreateFormProps = {
   onSuccess: () => void;
+  existingOrg?: { id: string; name: string };
 };
 
-const OrganizationCreateForm = ({ onSuccess }: OrganizationCreateFormProps) => {
+const OrganizationCreateForm = ({
+  onSuccess,
+  existingOrg,
+}: OrganizationCreateFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const { refetch: refetchOrgs } = useListOrganizations();
   const { refetch: refetchActive } = useActiveOrganization();
   const router = useRouter();
-
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -32,25 +35,39 @@ const OrganizationCreateForm = ({ onSuccess }: OrganizationCreateFormProps) => {
       setError("Organization name must be at least 3 characters");
       return;
     }
+    const slug = name
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "")
+      .replace(/-+/g, "-");
+
     setIsPending(true);
-    const { data: org, error } = await organization.create({
-      name,
-      slug: name
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9-]/g, "")
-        .replace(/-+/g, "-"),
-    });
-    if (error || !org) {
-      setError(error?.message ?? "Something went wrong");
-      setIsPending(false);
-      return;
+
+    if (existingOrg) {
+      const { error } = await organization.update({
+        organizationId: existingOrg.id,
+        data: { name, slug },
+      });
+      if (error) {
+        setError(error.message ?? "Something went wrong");
+        setIsPending(false);
+        return;
+      }
+      toast.success("Organization updated");
+    } else {
+      const { data: org, error } = await organization.create({ name, slug });
+      if (error || !org) {
+        setError(error?.message ?? "Something went wrong");
+        setIsPending(false);
+        return;
+      }
+      await organization.setActive({ organizationId: org.id });
+      await Promise.all([refetchOrgs(), refetchActive()]);
+      formRef.current?.reset();
+      toast.success("Organization created");
     }
-    await organization.setActive({ organizationId: org.id });
-    await Promise.all([refetchOrgs(), refetchActive()]);
-    formRef.current?.reset();
+
     setIsPending(false);
-    toast.success("Organization created");
     onSuccess();
     router.refresh();
   };
@@ -58,11 +75,15 @@ const OrganizationCreateForm = ({ onSuccess }: OrganizationCreateFormProps) => {
   return (
     <form onSubmit={handleSubmit} ref={formRef}>
       <div className="flex flex-col gap-y-1">
-        <Input name="name" placeholder="Organization Name" />
+        <Input
+          name="name"
+          placeholder="Organization Name"
+          defaultValue={existingOrg?.name ?? ""}
+        />
         {error && <p className="text-sm text-red-500">{error}</p>}
         <Button type="submit" disabled={isPending} className="w-full">
           {isPending && <LucideLoaderCircle className="animate-spin" />}
-          Create Organization
+          {existingOrg ? "Update Organization" : "Create Organization"}
         </Button>
       </div>
     </form>

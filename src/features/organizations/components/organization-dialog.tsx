@@ -14,29 +14,36 @@ import OrganizationCreateForm from "./organization-create-form";
 
 type OrganizationCreateDialogProps = {
   trigger?: React.ReactNode;
+  title?: string;
+  description?: string;
+  existingOrg?: { id: string; name: string };
 };
 
-const OrganizationCreateDialog = ({
+const OrganizationDialog = ({
   trigger,
+  title = "+ Create Organization",
+  description = "Create a new organization to collaborate with your team.",
+  existingOrg,
 }: OrganizationCreateDialogProps) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {trigger ?? <Button>+ Create Organization</Button>}
+        {trigger ?? <Button>{title}</Button>}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Organization</DialogTitle>
-          <DialogDescription>
-            Create a new organization for your team.
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <OrganizationCreateForm onSuccess={() => setOpen(false)} />
+        <OrganizationCreateForm
+          onSuccess={() => setOpen(false)}
+          existingOrg={existingOrg}
+        />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default OrganizationCreateDialog;
+export default OrganizationDialog;

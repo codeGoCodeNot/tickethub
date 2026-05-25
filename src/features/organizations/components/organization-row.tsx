@@ -11,9 +11,11 @@ import {
   LucideArrowUpRightFromSquare,
   LucideLoaderCircle,
   LucideLogOut,
+  LucidePencil,
   LucideTrash2,
 } from "lucide-react";
 import Link from "next/link";
+import OrganizationDialog from "./organization-dialog";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -151,6 +153,16 @@ const OrganizationRow = ({
             )}
           </Button>
           {isOwnerOrIsAdmin && detailsButton}
+          {isOwner && (
+            <OrganizationDialog
+              existingOrg={{ id, name }}
+              trigger={
+                <Button variant="outline" size="icon">
+                  <LucidePencil />
+                </Button>
+              }
+            />
+          )}
           {!limitedAccess && leaveDialog}
           {!limitedAccess && leaveTrigger}
           {isOwner && deleteDialog}
