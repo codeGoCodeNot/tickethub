@@ -69,11 +69,10 @@ const TicketsPage = async ({ searchParams }: TicketsPageProps) => {
         description="Fill out the form below to create a new ticket."
         content={<TicketUpsertForm />}
       />
-      <div className="flex flex-col items-center">
-        <TicketOrgFilter />
-      </div>
 
-      <Suspense key={String(orgOnly)} fallback={<Spinner />}>
+      <TicketOrgFilter />
+
+      <Suspense key={`${orgOnly}-${organizationId}`} fallback={<Spinner />}>
         <AuthenticatedTicketList
           searchParams={searchParams}
           orgOnly={orgOnly}

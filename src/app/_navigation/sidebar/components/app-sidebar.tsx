@@ -21,6 +21,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import UserAvatar from "@/components/user-avatar";
+import OrganizationDialog from "@/features/organizations/components/organization-dialog";
 import {
   organization,
   useActiveOrganization,
@@ -43,8 +44,6 @@ import {
   organizationNavItems,
   ticketNavItems,
 } from "./constants";
-import OrganizationDialog from "@/features/organizations/components/organization-dialog";
-import { router } from "better-auth/api";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -104,9 +103,11 @@ const AppSidebar = () => {
                   {organizations?.map((org) => (
                     <DropdownMenuItem
                       key={org.id}
-                      onSelect={() => {
+                      onSelect={async () => {
                         setOptimisticOrg({ id: org.id, name: org.name });
-                        organization.setActive({ organizationId: org.id });
+                        await organization.setActive({
+                          organizationId: org.id,
+                        });
                         router.refresh();
                       }}
                     >
