@@ -60,6 +60,10 @@ const AppSidebar = () => {
     name: string;
   } | null>(null);
   const displayOrg = optimisticOrg ?? activeOrganization;
+  const currentUserRole = activeOrganization?.members?.find(
+    (member) => member.userId === user?.id,
+  )?.role;
+  const isOwnerOrAdmin = ["owner", "admin"].includes(currentUserRole ?? "");
   const router = useRouter();
 
   return (
@@ -184,7 +188,7 @@ const AppSidebar = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              {displayOrg && (
+              {displayOrg && isOwnerOrAdmin && (
                 <>
                   <SidebarMenuItem>
                     <SidebarMenuButton
