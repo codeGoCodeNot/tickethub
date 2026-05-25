@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   accountNavItems,
@@ -44,6 +44,7 @@ import {
   ticketNavItems,
 } from "./constants";
 import OrganizationDialog from "@/features/organizations/components/organization-dialog";
+import { router } from "better-auth/api";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -57,6 +58,7 @@ const AppSidebar = () => {
     name: string;
   } | null>(null);
   const displayOrg = optimisticOrg ?? activeOrganization;
+  const router = useRouter();
 
   return (
     <>
@@ -105,6 +107,7 @@ const AppSidebar = () => {
                       onSelect={() => {
                         setOptimisticOrg({ id: org.id, name: org.name });
                         organization.setActive({ organizationId: org.id });
+                        router.refresh();
                       }}
                     >
                       {org.name}
