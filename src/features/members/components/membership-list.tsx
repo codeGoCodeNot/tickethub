@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/table";
 import Placeholder from "@/components/placeholder";
 import { getAuth } from "@/features/auth/queries/get-auth";
+import { MemberWithUser } from "@/features/members/type";
 import { format } from "date-fns/format";
 import getMemberships from "../queries/get-memberhips";
 import MembershipCards from "./membership-cards";
@@ -17,7 +18,7 @@ type MembershipListProps = {
 };
 
 const MembershipList = async ({ organizationId }: MembershipListProps) => {
-  const [memberships, user] = await Promise.all([
+  const [memberships, user]: [MemberWithUser[], Awaited<ReturnType<typeof getAuth>>] = await Promise.all([
     getMemberships(organizationId),
     getAuth(),
   ]);

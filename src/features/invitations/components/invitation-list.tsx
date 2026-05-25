@@ -1,5 +1,5 @@
 import Placeholder from "@/components/placeholder";
-import getInvitations from "../queries/get-invitations";
+import { InvitationWithMetadata } from "@/features/invitations/type";
 import {
   Table,
   TableCaption,
@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import getInvitations from "../queries/get-invitations";
 import InvitationCards from "./invitation-cards";
 import InvitationTable from "./invitation-table";
 
@@ -16,7 +17,7 @@ type InvitationListProps = {
 };
 
 const InvitationList = async ({ organizationId }: InvitationListProps) => {
-  const invitations = await getInvitations(organizationId);
+  const invitations: InvitationWithMetadata[] = await getInvitations(organizationId);
 
   if (!invitations.length)
     return <Placeholder label="No invitations found" icon={null} />;
