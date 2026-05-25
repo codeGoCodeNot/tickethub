@@ -9,28 +9,21 @@ type InvitationsPageProps = {
   params: Promise<{ organizationId: string }>;
 };
 
-const InvitationsPage = ({ params }: InvitationsPageProps) => {
-  return (
-    <div className="flex flex-col flex-1 gap-y-8">
-      <Suspense fallback={<Spinner />}>
-        <InvitationsContent params={params} />
-      </Suspense>
-    </div>
-  );
-};
-
-const InvitationsContent = async ({ params }: InvitationsPageProps) => {
+const InvitationsPage = async ({ params }: InvitationsPageProps) => {
   const { organizationId } = await params;
   await getOrgOwnerOrRedirect(organizationId);
+
   return (
-    <>
+    <div className="flex flex-col flex-1 gap-y-8">
       <Heading
         title="Invitations"
         description="Manage your organization's invitations"
         actions={<InvitationDialog organizationId={organizationId} />}
       />
-      <InvitationList organizationId={organizationId} />
-    </>
+      <Suspense fallback={<Spinner />}>
+        <InvitationList organizationId={organizationId} />
+      </Suspense>
+    </div>
   );
 };
 
