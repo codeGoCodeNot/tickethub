@@ -67,6 +67,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
       onOptimisticStatusChange={setOptimisticStatus}
       onStartTransition={startTransition}
       isTicketOwner={isTicketOwner}
+      isOrgAdminOrOwner={isOrdAdminOrOwner}
       trigger={
         <Button variant="ghost" size="icon">
           <LucideMenu />

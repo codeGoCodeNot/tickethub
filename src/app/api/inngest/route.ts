@@ -1,5 +1,6 @@
 import eventOrgInvitation from "@/features/inngest/events/event-org-invitation";
 import eventResetPassword from "@/features/inngest/events/event-reset-password";
+import eventTicketDeleted from "@/features/inngest/events/event-ticket-deleted";
 import eventVerifyEmail from "@/features/inngest/events/event-verify-email";
 import eventWelcome from "@/features/inngest/events/event-welcome";
 import { inngest } from "@/lib/inngest";
@@ -12,5 +13,6 @@ export const { GET, POST, PUT } = serve({
     eventWelcome,
     eventVerifyEmail,
     eventOrgInvitation,
+    eventTicketDeleted,
   ],
 });
