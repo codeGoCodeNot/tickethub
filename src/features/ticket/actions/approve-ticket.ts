@@ -3,7 +3,7 @@
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import prisma from "@/lib/prisma";
-import { ticketsByOrganizationPath, ticketsPath } from "@/path";
+import { ticketApprovePath } from "@/path";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { forbidden } from "next/navigation";
 
@@ -23,8 +23,7 @@ const approveTicket = async (id: string) => {
 
   revalidateTag("tickets", { expire: 0 });
   revalidateTag("tickets/organization", { expire: 0 });
-  revalidatePath(ticketsPath());
-  revalidatePath(ticketsByOrganizationPath());
+  revalidatePath(ticketApprovePath());
 };
 
 export default approveTicket;
