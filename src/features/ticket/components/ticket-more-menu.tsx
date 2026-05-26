@@ -28,6 +28,7 @@ type TicketMoreMenuProps = {
   onOptimisticStatusChange: (action: TicketStatus) => void;
   onStartTransition: React.TransitionStartFunction;
   ticket: Ticket;
+  isTicketOwner: boolean;
   trigger: React.ReactNode;
 };
 
@@ -37,6 +38,7 @@ const TicketMoreMenu = ({
   optimisticStatus,
   onOptimisticStatusChange,
   onStartTransition,
+  isTicketOwner,
 }: TicketMoreMenuProps) => {
   const handleUpdateTicketStatus = async (value: string) => {
     onStartTransition(async () => {
@@ -106,8 +108,8 @@ const TicketMoreMenu = ({
               )}
             </DropdownMenuRadioGroup>
             <DropdownMenuSeparator />
-            {editButton}
-            <DropdownMenuSeparator />
+            {isTicketOwner && editButton}
+            {isTicketOwner && <DropdownMenuSeparator />}
             {deleteDialogTrigger}
           </DropdownMenuGroup>
         </DropdownMenuContent>

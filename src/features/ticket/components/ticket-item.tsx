@@ -11,7 +11,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
 import isOwner from "@/features/auth/utils/is-owner";
-import { useSession } from "@/lib/auth-client";
+import { useActiveOrganization, useSession } from "@/lib/auth-client";
 import { ticketPath } from "@/path";
 import { toCurrencyFromCents } from "@/utils/currency";
 import clsx from "clsx";
@@ -42,8 +42,14 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
   const [optimisticStatus, setOptimisticStatus] = useOptimistic(ticket.status);
   const [isPending, startTransition] = useTransition();
 
+  const { data: activeOrganization } = useActiveOrganization();
   const { data: session } = useSession();
   const user = session?.user;
+  const currentUserRole = activeOrganization?.members.find(
+    (member) => member.userId === user?.id,
+  )?.role;
+
+  const isOrdAdminOrOwner = ["owner", "admin"].includes(currentUserRole ?? "");
   const isTicketOwner = isOwner(user, ticket);
 
   const detailButton = (
@@ -60,6 +66,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
       optimisticStatus={optimisticStatus}
       onOptimisticStatusChange={setOptimisticStatus}
       onStartTransition={startTransition}
+      isTicketOwner={isTicketOwner}
       trigger={
         <Button variant="ghost" size="icon">
           <LucideMenu />
@@ -103,7 +110,9 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
                 )}
               </Badge>
               <div className="ml-auto flex items-center gap-x-1">
-                {isDetail ? isTicketOwner && moreMenu : detailButton}
+                {isDetail
+                  ? (isTicketOwner || isOrdAdminOrOwner) && moreMenu
+                  : detailButton}
               </div>
             </div>
             <Separator />

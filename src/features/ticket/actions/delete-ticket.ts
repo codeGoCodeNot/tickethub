@@ -6,6 +6,7 @@ import fromErrorToActionState, {
 } from "@/components/form/utils/to-action-state";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
+import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import prisma from "@/lib/prisma";
 import { ticketsPath } from "@/path";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -15,8 +16,11 @@ const deleteTicket = async (id: string) => {
   const user = await getAuthOrRedirect();
   try {
     const ticket = await prisma.ticket.findUnique({ where: { id } });
+    const adminOrOwner = ticket
+      ? await isOwnerOrAdmin(user.id, ticket?.organizationId)
+      : false;
 
-    if (!ticket || !isOwner(user, ticket)) {
+    if (!ticket || (!isOwner(user, ticket) && !adminOrOwner)) {
       return toActionState(
         "ERROR",
         "You are not authorized to delete this ticket",
