@@ -7,6 +7,8 @@ import { Suspense } from "react";
 import { searchParamsCache } from "@/features/ticket/search-params";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
 import CardCompact from "@/components/card-compact";
+import { getAuth } from "@/features/auth/queries/get-auth";
+import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 
 type TicketsByOrganizationPageProps = {
   searchParams: Promise<SearchParams>;
@@ -18,6 +20,10 @@ const TicketsByOrganizationPage = async ({
   const params = await searchParams;
   const organizationId = await getActiveOrganization();
   const { search, sort, page, size } = searchParamsCache.parse(params);
+  const user = await getAuth();
+  const adminOrOwner = organizationId
+    ? await isOwnerOrAdmin(user?.id, organizationId)
+    : false;
 
   return (
     <div className="flex flex-col flex-1 gap-y-8">
@@ -39,6 +45,7 @@ const TicketsByOrganizationPage = async ({
           sort={sort}
           page={page}
           size={size}
+          isOwnerOrAdmin={adminOrOwner}
         />
       </Suspense>
     </div>

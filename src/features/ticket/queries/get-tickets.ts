@@ -8,15 +8,18 @@ const getTickets = async (
   sort?: string,
   page = 0,
   size = 5,
+  isOwnerOrAdmin = false,
 ) => {
   "use cache";
   cacheTag("tickets");
+
   const where = {
     userId,
     organizationId,
     ...(search && {
       title: { contains: search, mode: "insensitive" as const },
     }),
+    ...(!isOwnerOrAdmin && { status: { not: "PENDING" as const } }),
   };
 
   const skip = page * size;

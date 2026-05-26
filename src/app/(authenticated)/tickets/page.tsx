@@ -4,6 +4,7 @@ import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
 import TicketOrgFilter from "@/components/ticket-org-filter";
 import { getAuth } from "@/features/auth/queries/get-auth";
+import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import getActiveOrganization from "@/features/organizations/queries/get-active-organization";
 import TicketList from "@/features/ticket/components/ticket-list";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
@@ -29,6 +30,9 @@ const AuthenticatedTicketList = async ({
   const { search, sort, page, size } = searchParamsCache.parse(
     await searchParams,
   );
+  const adminOrOwner = organizationId
+    ? await isOwnerOrAdmin(user?.id, organizationId)
+    : false;
   return (
     <TicketList
       userId={user?.id}
@@ -37,6 +41,7 @@ const AuthenticatedTicketList = async ({
       sort={sort}
       page={page}
       size={size}
+      isOwnerOrAdmin={adminOrOwner}
     />
   );
 };

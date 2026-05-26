@@ -10,6 +10,7 @@
 */
 
 export const TicketStatus = {
+  PENDING: 'PENDING',
   OPEN: 'OPEN',
   IN_PROGRESS: 'IN_PROGRESS',
   DONE: 'DONE'

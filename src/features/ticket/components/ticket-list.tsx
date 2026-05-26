@@ -13,6 +13,7 @@ type TicketListProps = {
   sort?: string;
   page?: number;
   size?: number;
+  isOwnerOrAdmin?: boolean;
 };
 
 const TicketList = async ({
@@ -22,6 +23,7 @@ const TicketList = async ({
   sort,
   page,
   size,
+  isOwnerOrAdmin,
 }: TicketListProps) => {
   await connection();
   const { list: tickets, metadata: ticketMetadata } = await getTickets(
@@ -31,6 +33,7 @@ const TicketList = async ({
     sort,
     page,
     size,
+    isOwnerOrAdmin,
   );
 
   return (

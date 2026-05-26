@@ -14,7 +14,7 @@ model Ticket {
   updatedAt DateTime     @updatedAt
   title     String
   content   String       @db.VarChar(1024)
-  status    TicketStatus @default(OPEN)
+  status    TicketStatus @default(PENDING)
   deadline  String
   bounty    Int
   userId    String
@@ -28,6 +28,7 @@ model Ticket {
 }
 
 enum TicketStatus {
+  PENDING
   OPEN
   IN_PROGRESS
   DONE
