@@ -33,6 +33,7 @@ import {
   Check,
   LucideBuilding2,
   LucideChevronsUpDown,
+  LucideClipboardCheck,
   LucideMail,
   LucidePlus,
   LucideUsers,
@@ -46,7 +47,7 @@ import {
   organizationNavItems,
   ticketNavItems,
 } from "./constants";
-import { invitationsPath, membershipsPath } from "@/path";
+import { invitationsPath, membershipsPath, ticketApprovePath } from "@/path";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -148,6 +149,19 @@ const AppSidebar = () => {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
+                {displayOrg && isOwnerOrAdmin && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === ticketApprovePath()}
+                    >
+                      <Link href={ticketApprovePath() as Route}>
+                        <LucideClipboardCheck />
+                        <span>Approvals</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
