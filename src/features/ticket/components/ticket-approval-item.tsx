@@ -15,7 +15,6 @@ import { format } from "date-fns";
 import { LucideCalendar, LucideClock, LucideLoaderCircle } from "lucide-react";
 import { useTransition } from "react";
 import approveTicket from "../actions/approve-ticket";
-import Placeholder from "@/components/placeholder";
 
 type TicketApprovalItemProps = {
   ticket: {
