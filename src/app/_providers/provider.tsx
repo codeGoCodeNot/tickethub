@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  isServer,
+  environmentManager,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
@@ -19,7 +19,7 @@ const makeQueryClient = () => {
 let browserQueryClient: QueryClient | undefined = undefined;
 
 const getQueryClient = () => {
-  if (isServer) {
+  if (environmentManager.isServer()) {
     return makeQueryClient();
   } else {
     if (!browserQueryClient) browserQueryClient = makeQueryClient();

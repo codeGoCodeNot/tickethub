@@ -1,15 +1,18 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const TicketPoller = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const handleRefresh = () => {
       if (document.visibilityState === "visible") {
         router.refresh();
+        queryClient.invalidateQueries();
       }
     };
 
@@ -19,7 +22,7 @@ const TicketPoller = () => {
       document.removeEventListener("visibilitychange", handleRefresh);
       window.removeEventListener("focus", handleRefresh);
     };
-  }, [router]);
+  }, [router, queryClient]);
 
   return null;
 };
