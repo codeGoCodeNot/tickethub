@@ -39,7 +39,9 @@ const TicketDeleteDialog = ({
 
   const handleDelete = () => {
     startTransition(async () => {
-      const toastId = toast.loading("Deleting ticket...");
+      const toastId = toast.loading(
+        type === "removed" ? "Removing ticket..." : "Rejecting ticket...",
+      );
       try {
         const state = await deleteTicket(
           ticketId,
@@ -56,7 +58,12 @@ const TicketDeleteDialog = ({
           toast.dismiss(toastId);
           throw err;
         }
-        toast.error("Failed to delete ticket.", { id: toastId });
+        toast.error(
+          type === "removed"
+            ? "Failed to remove ticket."
+            : "Failed to reject ticket.",
+          { id: toastId },
+        );
       }
     });
   };
@@ -72,7 +79,9 @@ const TicketDeleteDialog = ({
           </DialogHeader>
           {isOrgAdminOrOwner && (
             <div className="flex flex-col gap-y-2">
-              <Label>Reason for deletion</Label>
+              <Label>
+                Reason for {type === "removed" ? "removal" : "rejection"}
+              </Label>
               <Textarea
                 placeholder="Explain why this ticket is being removed..."
                 value={reason}
@@ -90,7 +99,7 @@ const TicketDeleteDialog = ({
               onClick={handleDelete}
               disabled={isPending || (isOrgAdminOrOwner && !reason.trim())}
             >
-              Delete
+              {type === "removed" ? "Remove" : "Reject"}
             </Button>
           </DialogFooter>
         </DialogContent>

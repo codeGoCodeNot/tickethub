@@ -65,7 +65,10 @@ const deleteTicket = async (
   revalidateTag("tickets/organization", { expire: 0 });
   revalidatePath(ticketsPath());
   revalidatePath(ticketsByOrganizationPath());
-  await setCookieByKey("toast", "Ticket deleted");
+  await setCookieByKey(
+    "toast",
+    type === "removed" ? "Ticket removed" : "Ticket rejected",
+  );
   redirect(ticketsPath());
 };
 
