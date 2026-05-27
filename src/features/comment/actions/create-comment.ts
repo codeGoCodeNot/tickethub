@@ -10,7 +10,7 @@ import { updateTag } from "next/cache";
 import z from "zod";
 
 const createCommentSchema = z.object({
-  content: z.string().trim().min(3, "Content is required"),
+  content: z.string().trim().min(1, "Content is required"),
 });
 
 const createComment = async (

@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import approveTicket from "../actions/approve-ticket";
 import TicketDeleteDialog from "./ticket-delete-dialog";
+import { toast } from "sonner";
 
 type TicketApprovalItemProps = {
   ticket: {
@@ -36,8 +37,14 @@ const TicketApprovalItem = ({ ticket }: TicketApprovalItemProps) => {
 
   const handleApprove = () => {
     startTransition(async () => {
-      await approveTicket(ticket.id);
-      router.refresh();
+      const toastId = toast.loading("Approving ticket...");
+      try {
+        await approveTicket(ticket.id);
+        toast.success("Ticket approved", { id: toastId });
+        router.refresh();
+      } catch {
+        toast.error("Failed to approve ticket.", { id: toastId });
+      }
     });
   };
 
