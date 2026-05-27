@@ -7,8 +7,7 @@ import fromErrorToActionState, {
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
 import prisma from "@/lib/prisma";
-import { ticketPath } from "@/path";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import z from "zod";
 
 const updateCommentSchema = z.object({
@@ -45,8 +44,7 @@ const updateComment = async (
     return fromErrorToActionState(error, formData);
   }
 
-  revalidateTag(`ticket-${existingComment.ticketId}-comments`, { expire: 0 });
-  revalidatePath(ticketPath(existingComment.ticketId));
+  updateTag(`ticket-${existingComment.ticketId}-comments`);
   return toActionState("SUCCESS", "Comment updated");
 };
 

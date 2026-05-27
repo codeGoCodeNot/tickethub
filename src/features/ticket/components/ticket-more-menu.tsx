@@ -83,7 +83,7 @@ const TicketMoreMenu = ({
             ticketId={ticket.id}
             title="Delete ticket"
             description="This action cannot be undone."
-            isOrgAdminOrOwner={isOrgAdminOrOwner}
+            isOrgAdminOrOwner={isOrgAdminOrOwner && !isTicketOwner}
             type="removed"
             trigger={
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>

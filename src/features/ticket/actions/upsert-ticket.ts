@@ -10,10 +10,10 @@ import isOwner from "@/features/auth/utils/is-owner";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import getActiveOrganization from "@/features/organizations/queries/get-active-organization";
 import prisma from "@/lib/prisma";
-import { ticketPath, ticketsPath } from "@/path";
+import { ticketPath } from "@/path";
 import { toCent } from "@/utils/currency";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -79,15 +79,12 @@ const upsertTicket = async (
     return fromErrorToActionState(error, formData);
   }
 
-  revalidateTag("tickets", { expire: 0 });
+  updateTag("tickets");
 
   if (id) {
-    revalidateTag(`ticket-${id}`, { expire: 0 });
-    revalidatePath(ticketPath(id));
+    updateTag(`ticket-${id}`);
     await setCookieByKey("toast", "Ticket updated");
     redirect(ticketPath(id));
-  } else {
-    revalidatePath(ticketsPath());
   }
 
   return toActionState(

@@ -7,8 +7,7 @@ import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
 import { TicketStatus } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
-import { ticketsPath } from "@/path";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 const updateTicketStatus = async (id: string, status: TicketStatus) => {
   const user = await getAuthOrRedirect();
@@ -27,9 +26,8 @@ const updateTicketStatus = async (id: string, status: TicketStatus) => {
       data: { status },
     });
 
-    revalidateTag("tickets", { expire: 0 });
-    revalidateTag(`ticket-${id}`, { expire: 0 });
-    revalidatePath(ticketsPath());
+    updateTag("tickets");
+    updateTag(`ticket-${id}`);
   } catch (error) {
     return fromErrorToActionState(error);
   }

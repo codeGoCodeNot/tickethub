@@ -9,8 +9,8 @@ import isOwner from "@/features/auth/utils/is-owner";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import { inngest } from "@/lib/inngest";
 import prisma from "@/lib/prisma";
-import { ticketsByOrganizationPath, ticketsPath } from "@/path";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { ticketsPath } from "@/path";
+import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 const deleteTicket = async (
@@ -60,11 +60,9 @@ const deleteTicket = async (
     return fromErrorToActionState(error);
   }
 
-  revalidateTag("tickets", { expire: 0 });
-  revalidateTag(`ticket-${id}`, { expire: 0 });
-  revalidateTag("tickets/organization", { expire: 0 });
-  revalidatePath(ticketsPath());
-  revalidatePath(ticketsByOrganizationPath());
+  updateTag("tickets");
+  updateTag(`ticket-${id}`);
+  updateTag(`tickets/organization`);
   await setCookieByKey(
     "toast",
     type === "removed" ? "Ticket removed" : "Ticket rejected",

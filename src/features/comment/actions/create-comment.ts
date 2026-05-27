@@ -6,8 +6,7 @@ import fromErrorToActionState, {
 } from "@/components/form/utils/to-action-state";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import prisma from "@/lib/prisma";
-import { ticketPath } from "@/path";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import z from "zod";
 
 const createCommentSchema = z.object({
@@ -37,8 +36,7 @@ const createComment = async (
     return fromErrorToActionState(error, formData);
   }
 
-  revalidateTag(`ticket-${ticketId}-comments`, { expire: 0 });
-  revalidatePath(ticketPath(ticketId));
+  updateTag(`ticket-${ticketId}-comments`);
   return toActionState("SUCCESS", "Comment created");
 };
 
