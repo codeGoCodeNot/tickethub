@@ -81,7 +81,10 @@ const TicketMoreMenu = ({
           {isTicketOwner && <DropdownMenuSeparator />}
           <TicketDeleteDialog
             ticketId={ticket.id}
+            title="Delete ticket"
+            description="This action cannot be undone."
             isOrgAdminOrOwner={isOrgAdminOrOwner}
+            type="removed"
             trigger={
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <LucideTrash2 className="h-4 w-4 text-destructive" />

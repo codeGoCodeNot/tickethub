@@ -13,7 +13,11 @@ import { ticketsByOrganizationPath, ticketsPath } from "@/path";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-const deleteTicket = async (id: string, reason?: string) => {
+const deleteTicket = async (
+  id: string,
+  reason?: string,
+  type?: "removed" | "rejected",
+) => {
   const user = await getAuthOrRedirect();
   try {
     const ticket = await prisma.ticket.findUnique({
@@ -48,6 +52,7 @@ const deleteTicket = async (id: string, reason?: string) => {
           organizationName: ticket?.organization.name,
           reason,
           adminName: user.name,
+          type,
         },
       });
     }

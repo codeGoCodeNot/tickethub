@@ -20,12 +20,18 @@ type TicketDeleteDialogProps = {
   ticketId: string;
   trigger: React.ReactNode;
   isOrgAdminOrOwner: boolean;
+  title: string;
+  description: string;
+  type: "removed" | "rejected";
 };
 
 const TicketDeleteDialog = ({
   ticketId,
   trigger,
   isOrgAdminOrOwner,
+  title,
+  description,
+  type,
 }: TicketDeleteDialogProps) => {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
@@ -38,6 +44,7 @@ const TicketDeleteDialog = ({
         const state = await deleteTicket(
           ticketId,
           isOrgAdminOrOwner ? reason : undefined,
+          type,
         );
         if (state?.status === "ERROR") {
           toast.error(state.message, { id: toastId });
@@ -60,8 +67,8 @@ const TicketDeleteDialog = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Ticket</DialogTitle>
-            <DialogDescription>This action cannot be undone.</DialogDescription>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
           {isOrgAdminOrOwner && (
             <div className="flex flex-col gap-y-2">

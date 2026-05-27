@@ -11,6 +11,7 @@ type EventTicketDeleted = {
     organizationName: string;
     reason: string;
     adminName: string;
+    type: "removed" | "rejected";
   };
 };
 
@@ -19,7 +20,7 @@ const eventTicketDeleted = inngest.createFunction(
   async ({ event }: { event: EventTicketDeleted }) => {
     await sendEmail({
       to: event.data.memberEmail,
-      subject: `Your ticket "${event.data.ticketTitle}" has been removed`,
+      subject: `Your ticket "${event.data.ticketTitle}" has been ${event.data.type === "removed" ? "removed" : "rejected"}`,
       html: await render(
         TicketDeletedEmail({
           memberName: event.data.memberName,
@@ -27,6 +28,7 @@ const eventTicketDeleted = inngest.createFunction(
           organizationName: event.data.organizationName,
           reason: event.data.reason,
           adminName: event.data.adminName,
+          type: event.data.type,
         }),
       ),
     });

@@ -10,11 +10,14 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
+import { useActiveOrganization, useSession } from "@/lib/auth-client";
 import { toCurrencyFromCents } from "@/utils/currency";
 import { format } from "date-fns";
 import { LucideCalendar, LucideClock, LucideLoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import approveTicket from "../actions/approve-ticket";
+import TicketDeleteDialog from "./ticket-delete-dialog";
 
 type TicketApprovalItemProps = {
   ticket: {
@@ -29,12 +32,23 @@ type TicketApprovalItemProps = {
 
 const TicketApprovalItem = ({ ticket }: TicketApprovalItemProps) => {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const handleApprove = () => {
     startTransition(async () => {
       await approveTicket(ticket.id);
+      router.refresh();
     });
   };
+
+  const { data: activeOrganization } = useActiveOrganization();
+  const { data: session } = useSession();
+  const user = session?.user;
+  const currentUserRole = activeOrganization?.members.find(
+    (member) => member.userId === user?.id,
+  )?.role;
+
+  const isOrgAdminOrOwner = ["owner", "admin"].includes(currentUserRole ?? "");
 
   return (
     <div className="w-full max-w-[500px] self-center">
@@ -53,7 +67,19 @@ const TicketApprovalItem = ({ ticket }: TicketApprovalItemProps) => {
               <LucideClock className="size-3" />
               Pending
             </Badge>
-            <div className="ml-auto">
+            <div className="ml-auto flex items-center gap-x-1">
+              <TicketDeleteDialog
+                ticketId={ticket.id}
+                title="Reject ticket"
+                description="This action cannot be undone."
+                isOrgAdminOrOwner={isOrgAdminOrOwner}
+                type="rejected"
+                trigger={
+                  <Button variant="destructive" size="sm" className="ml-auto">
+                    <span>Reject</span>
+                  </Button>
+                }
+              />
               <Button size="sm" onClick={handleApprove} disabled={isPending}>
                 {isPending ? (
                   <LucideLoaderCircle className="animate-spin size-3" />

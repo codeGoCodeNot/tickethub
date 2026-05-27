@@ -90,7 +90,10 @@ const upsertTicket = async (
     revalidatePath(ticketsPath());
   }
 
-  return toActionState("SUCCESS", "Ticket created");
+  return toActionState(
+    "SUCCESS",
+    adminOrOwner ? "Ticket created" : "Ticket submitted for approval",
+  );
 };
 
 export default upsertTicket;
