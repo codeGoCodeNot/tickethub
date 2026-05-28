@@ -1,4 +1,5 @@
 import z, { ZodError } from "zod";
+import * as Sentry from "@sentry/nextjs";
 
 export type ActionState = {
   status?: "SUCCESS" | "ERROR";
@@ -32,6 +33,7 @@ const fromErrorToActionState = (
     };
   } else if (error instanceof Error) {
     // db or other errors case
+    Sentry.captureException(error);
     return {
       timestamp: Date.now(),
       status: "ERROR",
@@ -40,6 +42,7 @@ const fromErrorToActionState = (
       payload: formData,
     };
   } else {
+    Sentry.captureException(error);
     return {
       timestamp: Date.now(),
       status: "ERROR",
