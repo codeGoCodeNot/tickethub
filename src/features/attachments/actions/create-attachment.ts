@@ -4,15 +4,14 @@ import fromErrorToActionState, {
   ActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
+import { fileSchema } from "@/features/attachments/schema";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import isOwner from "@/features/auth/utils/is-owner";
-import prisma from "@/lib/prisma";
-import { fileSchema } from "@/features/attachments/schema";
-import { ticketPath } from "@/path";
-import { revalidatePath } from "next/cache";
-import z from "zod";
 import s3 from "@/lib/aws";
+import prisma from "@/lib/prisma";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { updateTag } from "next/cache";
+import z from "zod";
 import { generateS3Key } from "../utils/generate-s3-key";
 
 const createAttachmentSchema = z.object({
@@ -72,7 +71,7 @@ const createAttachment = async (
     return fromErrorToActionState(error, formData);
   }
 
-  revalidatePath(ticketPath(ticketId));
+  updateTag(`ticket-${ticketId}-attachments`);
   return toActionState("SUCCESS", "Attachment is uploaded");
 };
 

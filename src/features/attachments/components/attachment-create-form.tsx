@@ -50,6 +50,12 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
     };
   }, [files]);
 
+  useEffect(() => {
+    if (actionState.status === "SUCCESS") {
+      setFiles([]);
+    }
+  }, [actionState.status, actionState.timestamp]);
+
   const fallback = (
     <div className="flex size-16 items-center justify-center rounded p-1 text-center text-[10px] leading-tight text-muted-foreground ring-1 ring-border">
       {" "}
