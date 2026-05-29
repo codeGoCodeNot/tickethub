@@ -10,8 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
-import isOwner from "@/features/auth/utils/is-owner";
-import { useActiveOrganization, useSession } from "@/lib/auth-client";
 import { ticketPath } from "@/path";
 import { toCurrencyFromCents } from "@/utils/currency";
 import clsx from "clsx";
@@ -35,22 +33,22 @@ import TicketMoreMenu from "./ticket-more-menu";
 type TicketItemProps = {
   ticket: TicketWithMetadata;
   isDetail?: boolean;
+  isTicketOwner: boolean;
+  isOrgAdminOrOwner: boolean;
+  attachments?: React.ReactNode;
   comments?: React.ReactNode;
 };
 
-const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
+const TicketItem = ({
+  ticket,
+  isDetail,
+  isTicketOwner,
+  isOrgAdminOrOwner,
+  attachments,
+  comments,
+}: TicketItemProps) => {
   const [optimisticStatus, setOptimisticStatus] = useOptimistic(ticket.status);
   const [isPending, startTransition] = useTransition();
-
-  const { data: activeOrganization } = useActiveOrganization();
-  const { data: session } = useSession();
-  const user = session?.user;
-  const currentUserRole = activeOrganization?.members.find(
-    (member) => member.userId === user?.id,
-  )?.role;
-
-  const isOrdAdminOrOwner = ["owner", "admin"].includes(currentUserRole ?? "");
-  const isTicketOwner = isOwner(user, ticket);
 
   const detailButton = (
     <Button variant="ghost" size="icon" asChild>
@@ -67,7 +65,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
       onOptimisticStatusChange={setOptimisticStatus}
       onStartTransition={startTransition}
       isTicketOwner={isTicketOwner}
-      isOrgAdminOrOwner={isOrdAdminOrOwner}
+      isOrgAdminOrOwner={isOrgAdminOrOwner}
       trigger={
         <Button variant="ghost" size="icon">
           <LucideMenu />
@@ -112,7 +110,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
               </Badge>
               <div className="ml-auto flex items-center gap-x-1">
                 {isDetail
-                  ? (isTicketOwner || isOrdAdminOrOwner) && moreMenu
+                  ? (isTicketOwner || isOrgAdminOrOwner) && moreMenu
                   : detailButton}
               </div>
             </div>
@@ -144,7 +142,12 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
           </CardFooter>
         </Card>
       </div>
-      {isDetail && comments}
+      {isDetail && (
+        <>
+          {attachments}
+          {comments}
+        </>
+      )}
     </div>
   );
 };

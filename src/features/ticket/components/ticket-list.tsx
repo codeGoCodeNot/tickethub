@@ -50,7 +50,14 @@ const TicketList = async ({
         />
       </div>
       {tickets.length ? (
-        tickets.map((ticket) => <TicketItem key={ticket.id} ticket={ticket} />)
+        tickets.map((ticket) => (
+          <TicketItem
+            key={ticket.id}
+            ticket={ticket}
+            isTicketOwner={ticket.userId === userId}
+            isOrgAdminOrOwner={isOwnerOrAdmin ?? false}
+          />
+        ))
       ) : (
         <Placeholder label="No tickets found" icon={null} />
       )}

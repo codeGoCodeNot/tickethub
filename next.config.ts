@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   typedRoutes: true,
   experimental: {
     authInterrupts: true,
+    serverActions: {
+      bodySizeLimit: "4mb",
+    },
     staleTimes: {
       dynamic: 60 * 5,
       static: 3600,

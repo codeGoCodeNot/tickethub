@@ -4,7 +4,10 @@ type Entity = {
   userId: string | null | undefined;
 };
 
-const isOwner = (user: User | null | undefined, entity: Entity) => {
+const isOwner = (
+  user: User | null | undefined,
+  entity: Entity | null | undefined,
+) => {
   if (!user || !entity) return false;
 
   if (!entity.userId) return false;

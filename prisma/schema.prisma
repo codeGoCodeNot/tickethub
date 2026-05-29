@@ -22,6 +22,7 @@ model Ticket {
   comments  Comment[]
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
 
   @@index([userId])
   @@index([organizationId])
@@ -32,6 +33,19 @@ enum TicketStatus {
   OPEN
   IN_PROGRESS
   DONE
+}
+
+model Attachment {
+  id       String   @id @default(cuid())
+  filename    String
+  // size   Int // Size in bytes
+  // createdAt DateTime @default(now())
+  // mimetype String // MIME type of the file
+  // userId    String // The user who uploaded the attachment
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
 }
 
 model Comment {

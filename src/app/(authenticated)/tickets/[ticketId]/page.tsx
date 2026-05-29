@@ -1,7 +1,9 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
+import Attachments from "@/features/attachments/components/attachments";
 import { getAuth } from "@/features/auth/queries/get-auth";
+import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import Comments from "@/features/comment/components/comments";
 import getComments from "@/features/comment/queries/get-comments";
 import TicketItem from "@/features/ticket/components/ticket-item";
@@ -24,11 +26,25 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
 
   if (!ticket) return notFound();
 
+  const isTicketOwner = ticket.userId === user?.id;
+  const isOrgAdminOrOwner = await isOwnerOrAdmin(
+    user?.id,
+    ticket.organizationId,
+  );
+
   return (
     <div className="flex flex-col flex-1 items-center animate-fade-from-top">
       <TicketItem
         ticket={ticket}
         isDetail
+        isTicketOwner={isTicketOwner}
+        isOrgAdminOrOwner={isOrgAdminOrOwner}
+        attachments={
+          <Attachments
+            ticketId={ticketId}
+            isOwner={ticket.userId === user?.id}
+          />
+        }
         comments={
           <Comments
             ticketId={ticketId}
