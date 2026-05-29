@@ -16,12 +16,14 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import {
   LucideCalendar,
+  LucideChevronDown,
   LucideLoaderCircle,
   LucideMenu,
+  LucidePaperclip,
   LucideSquareArrowOutUpRight,
 } from "lucide-react";
 import Link from "next/link";
-import { useOptimistic, useTransition } from "react";
+import { useOptimistic, useTransition, useState } from "react";
 import {
   STATUS_CLASSES,
   TICKET_ICONS,
@@ -49,6 +51,7 @@ const TicketItem = ({
 }: TicketItemProps) => {
   const [optimisticStatus, setOptimisticStatus] = useOptimistic(ticket.status);
   const [isPending, startTransition] = useTransition();
+  const [attachmentsOpen, setAttachmentsOpen] = useState(false);
 
   const detailButton = (
     <Button variant="ghost" size="icon" asChild>
@@ -140,14 +143,29 @@ const TicketItem = ({
               {toCurrencyFromCents(ticket.bounty)}
             </span>
           </CardFooter>
+          {isDetail && attachments && (
+            <div className="px-6 pb-4">
+              <button
+                type="button"
+                onClick={() => setAttachmentsOpen((prev) => !prev)}
+                className="w-full flex items-center justify-between py-2 border-t border-border/50 text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <span className="flex items-center gap-x-1.5">
+                  <LucidePaperclip className="size-3" />
+                  Attachments
+                </span>
+                <LucideChevronDown
+                  className={clsx("size-3 transition-transform duration-200", {
+                    "rotate-180": attachmentsOpen,
+                  })}
+                />
+              </button>
+              {attachmentsOpen && <div className="pt-3">{attachments}</div>}
+            </div>
+          )}
         </Card>
       </div>
-      {isDetail && (
-        <>
-          {attachments}
-          {comments}
-        </>
-      )}
+      {isDetail && comments}
     </div>
   );
 };
