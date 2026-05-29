@@ -15,6 +15,7 @@ type AttachmentCreateFormProps = {
 
 type Preview = {
   name: string;
+  type: string;
   url: string | null;
 };
 
@@ -31,7 +32,8 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
   useEffect(() => {
     const next = files.map((file) => ({
       name: file.name,
-      url: file.type.startsWith("image/") ? URL.createObjectURL(file) : null,
+      type: file.type,
+      url: ACCEPTED.includes(file.type) ? URL.createObjectURL(file) : null,
     }));
     setPreviews(next);
 
@@ -41,6 +43,13 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
       });
     };
   }, [files]);
+
+  const fallback = (
+    <div className="flex size-16 items-center justify-center rounded p-1 text-center text-[10px] leading-tight text-muted-foreground ring-1 ring-border">
+      {" "}
+      Preview not available
+    </div>
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -71,17 +80,16 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
 
       {previews.map((preview, index) => (
         <div key={`${preview.name}-${index}`} className="relative size-16">
-          {preview.url ? (
+          {preview.url === null ? (
+            fallback
+          ) : preview.type === "application/pdf" ? (
+            <iframe src={preview.url} className="size-16" />
+          ) : (
             <img
               src={preview.url}
               alt={preview.name}
               className="size-16 rounded object-cover ring-1 ring-border"
             />
-          ) : (
-            <div className="flex size-16 items-center justify-center rounded p-1 text-center text-[10px] leading-tight text-muted-foreground ring-1 ring-border">
-              {" "}
-              Preview not available
-            </div>
           )}
           <button
             type="button"
