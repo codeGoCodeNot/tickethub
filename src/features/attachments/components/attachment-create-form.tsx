@@ -8,6 +8,12 @@ import { Input } from "@/components/ui/input";
 import { ACCEPTED } from "../constants";
 import { Button } from "@/components/ui/button";
 import { LucideX } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 type AttachmentCreateFormProps = {
   ticketId: string;
@@ -82,20 +88,54 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
         <div key={`${preview.name}-${index}`} className="relative size-16">
           {preview.url === null ? (
             fallback
-          ) : preview.type === "application/pdf" ? (
-            <iframe src={preview.url} className="size-16" />
           ) : (
-            <img
-              src={preview.url}
-              alt={preview.name}
-              className="size-16 rounded object-cover ring-1 ring-border"
-            />
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className="group relative block size-16 cursor-pointer overflow-hidden rounded ring-1 ring-border"
+                >
+                  {preview.type === "application/pdf" ? (
+                    <iframe
+                      src={preview.url}
+                      className="size-16 pointer-events-none"
+                    />
+                  ) : (
+                    <img
+                      src={preview.url}
+                      alt={preview.name}
+                      className="size-16 object-cover"
+                    />
+                  )}
+                  {/* hover overlay */}
+                  <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    View
+                  </span>
+                </button>
+              </DialogTrigger>
+
+              <DialogContent className="max-w-3xl">
+                <DialogTitle className="truncate text-sm">
+                  {preview.name}
+                </DialogTitle>
+                {preview.type === "application/pdf" ? (
+                  <iframe src={preview.url} className="h-[80vh] w-full" />
+                ) : (
+                  <img
+                    src={preview.url}
+                    alt={preview.name}
+                    className="max-h-[80vh] w-full object-contain"
+                  />
+                )}
+              </DialogContent>
+            </Dialog>
           )}
+
           <button
             type="button"
             onClick={() => removeFile(index)}
             aria-label={`Remove ${preview.name}`}
-            className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-destructive text-white shadow ring-1 ring-background hover:bg-destructive/90"
+            className="absolute -right-2 -top-2 z-10 flex size-5 items-center justify-center rounded-full bg-destructive text-white shadow ring-1 ring-background hover:bg-destructive/90"
           >
             <LucideX className="size-3" />
           </button>
