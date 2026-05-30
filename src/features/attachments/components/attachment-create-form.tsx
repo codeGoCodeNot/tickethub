@@ -93,7 +93,7 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
 
         {previews.map((preview, index) => (
           <div key={`${preview.name}-${index}`} className="relative size-16">
-            {preview.url === null ? (
+            {preview.url === null || preview.type === "application/pdf" ? (
               fallback
             ) : (
               <Dialog>
@@ -102,38 +102,25 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
                     type="button"
                     className="group relative block size-16 cursor-pointer overflow-hidden rounded ring-1 ring-border"
                   >
-                    {preview.type === "application/pdf" ? (
-                      <iframe
-                        src={preview.url}
-                        className="size-16 pointer-events-none"
-                      />
-                    ) : (
-                      <img
-                        src={preview.url}
-                        alt={preview.name}
-                        className="size-16 object-cover"
-                      />
-                    )}
-                    {/* hover overlay */}
+                    <img
+                      src={preview.url}
+                      alt={preview.name}
+                      className="size-16 object-cover"
+                    />
                     <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
                       View
                     </span>
                   </button>
                 </DialogTrigger>
-
                 <DialogContent className="max-w-3xl">
                   <DialogTitle className="truncate text-sm">
                     {preview.name}
                   </DialogTitle>
-                  {preview.type === "application/pdf" ? (
-                    <iframe src={preview.url} className="h-[80vh] w-full" />
-                  ) : (
-                    <img
-                      src={preview.url}
-                      alt={preview.name}
-                      className="max-h-[80vh] w-full object-contain"
-                    />
-                  )}
+                  <img
+                    src={preview.url}
+                    alt={preview.name}
+                    className="max-h-[80vh] w-full object-contain"
+                  />
                 </DialogContent>
               </Dialog>
             )}
