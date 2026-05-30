@@ -1,5 +1,6 @@
 import { eventAttachmentDeleted } from "@/features/inngest/events/event-attachment-deleted";
 import eventOrgInvitation from "@/features/inngest/events/event-org-invitation";
+import { eventOrganizationDeleted } from "@/features/inngest/events/event-organization-deleted";
 import eventResetPassword from "@/features/inngest/events/event-reset-password";
 import eventTicketDeleted from "@/features/inngest/events/event-ticket-deleted";
 import eventVerifyEmail from "@/features/inngest/events/event-verify-email";
@@ -16,5 +17,6 @@ export const { GET, POST, PUT } = serve({
     eventOrgInvitation,
     eventTicketDeleted,
     eventAttachmentDeleted,
+    eventOrganizationDeleted,
   ],
 });

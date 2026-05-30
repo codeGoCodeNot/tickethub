@@ -1,18 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { organization, useActiveOrganization } from "@/lib/auth-client";
-import {
-  LucideArrowUpRightFromSquare,
-  LucideLoaderCircle,
-  LucideMenu,
-  LucideUsers,
-} from "lucide-react";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
-import OrganizationMoreMenu from "./organization-more-menu";
-import { motion } from "framer-motion";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,10 +10,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { membershipsPath } from "@/path";
-import OrganizationCreateForm from "./organization-create-form";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -34,6 +19,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { organization, useActiveOrganization } from "@/lib/auth-client";
+import { membershipsPath } from "@/path";
+import { motion } from "framer-motion";
+import {
+  LucideArrowUpRightFromSquare,
+  LucideLoaderCircle,
+  LucideMenu,
+  LucideUsers,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
+import deleteOrganization from "../actions/delete-organization";
+import OrganizationCreateForm from "./organization-create-form";
+import OrganizationMoreMenu from "./organization-more-menu";
 
 type OrganizationCardsProps = {
   organizations: {
@@ -58,7 +59,10 @@ const OrganizationCards = ({
   const effectiveActiveId = optimisticActiveId ?? activeOrg?.id;
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [leaveTargetId, setLeaveTargetId] = useState<string | null>(null);
-  const [editTargetOrg, setEditTargetOrg] = useState<{ id: string; name: string } | null>(null);
+  const [editTargetOrg, setEditTargetOrg] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const [isPendingDelete, startDeleteTransition] = useTransition();
   const [isPendingLeave, startLeaveTransition] = useTransition();
   const router = useRouter();
@@ -93,13 +97,15 @@ const OrganizationCards = ({
     if (!deleteTargetId) return;
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting...");
-      const { error } = await organization.delete({
-        organizationId: deleteTargetId,
-      });
-      if (error) {
-        toast.error("Failed to delete.", { id: toastId });
+      const result = await deleteOrganization(deleteTargetId);
+
+      if (result?.status === "ERROR") {
+        toast.error(result.message || "Failed to delete organization.", {
+          id: toastId,
+        });
         return;
       }
+
       toast.success("Organization deleted", { id: toastId });
       setDeleteTargetId(null);
       router.refresh();

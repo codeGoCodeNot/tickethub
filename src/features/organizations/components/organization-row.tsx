@@ -15,10 +15,11 @@ import {
   LucideTrash2,
 } from "lucide-react";
 import Link from "next/link";
-import OrganizationDialog from "./organization-dialog";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+import deleteOrganization from "../actions/delete-organization";
+import OrganizationDialog from "./organization-dialog";
 
 const MotionTableRow = motion.create(TableRow);
 
@@ -54,13 +55,15 @@ const OrganizationRow = ({
   const handleDelete = () => {
     startDeleteTransition(async () => {
       const toastId = toast.loading("Deleting organization...");
-      const { error } = await organization.delete({ organizationId: id });
-      if (error) {
-        toast.error(error.message || "Failed to delete organization.", {
+      const result = await deleteOrganization(id);
+
+      if (result?.status === "ERROR") {
+        toast.error(result.message || "Failed to delete organization.", {
           id: toastId,
         });
         return;
       }
+
       toast.success("Organization deleted", { id: toastId });
       router.refresh();
     });
