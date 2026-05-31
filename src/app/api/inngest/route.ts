@@ -1,4 +1,5 @@
 import { eventAttachmentDeleted } from "@/features/inngest/events/event-attachment-deleted";
+import { eventEmailChange } from "@/features/inngest/events/event-email-change";
 import eventOrgInvitation from "@/features/inngest/events/event-org-invitation";
 import { eventOrganizationDeleted } from "@/features/inngest/events/event-organization-deleted";
 import eventResetPassword from "@/features/inngest/events/event-reset-password";
@@ -14,6 +15,7 @@ export const { GET, POST, PUT } = serve({
     eventResetPassword,
     eventWelcome,
     eventVerifyEmail,
+    eventEmailChange,
     eventOrgInvitation,
     eventTicketDeleted,
     eventAttachmentDeleted,

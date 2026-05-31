@@ -1,13 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateUser } from "@/lib/auth-client";
-import { LucideLoaderCircle } from "lucide-react";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
+import ChangeEmailDialog from "./change-email-dialog";
+import ChangeNameDialog from "./change-name-dialog";
 
 type ProfileFormProps = {
   name: string;
@@ -16,51 +12,29 @@ type ProfileFormProps = {
 };
 
 const ProfileForm = ({ name, email }: ProfileFormProps) => {
-  const [pendingName, setPendingName] = useState(name);
-  const [isPending, startTransition] = useTransition();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    startTransition(async () => {
-      const toastId = toast.loading("Saving...");
-      const { error } = await updateUser({ name: pendingName });
-      if (error) {
-        toast.error(error.message ?? "Failed to update profile.", {
-          id: toastId,
-        });
-        return;
-      }
-      toast.success("Profile updated", { id: toastId });
-    });
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="border-0 shadow-md w-full max-w-[500px] mx-auto">
-        <CardContent className="pt-6 flex flex-col gap-y-4">
-          <div className="grid gap-1.5">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              value={pendingName}
-              onChange={(e) => setPendingName(e.target.value)}
-              placeholder="Your name"
-            />
+    <Card className="border-0 shadow-md w-full max-w-[500px] mx-auto">
+      <CardContent className="pt-6 flex flex-col gap-y-4">
+        <div className="grid gap-1.5">
+          <Label>Name</Label>
+          <div className="flex items-center justify-between gap-x-2 rounded-md border bg-muted/30 px-3 py-2">
+            <span className="text-sm truncate">{name}</span>
+            <ChangeNameDialog currentName={name} />
           </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={email} disabled />
-            <p className="text-xs text-muted-foreground">
-              Changing your email requires re-verification.
-            </p>
+        </div>
+
+        <div className="grid gap-1.5">
+          <Label>Email</Label>
+          <div className="flex items-center justify-between gap-x-2 rounded-md border bg-muted/30 px-3 py-2">
+            <span className="text-sm truncate">{email}</span>
+            <ChangeEmailDialog />
           </div>
-          <Button type="submit" disabled={isPending}>
-            {isPending && <LucideLoaderCircle className="animate-spin" />}
-            Save changes
-          </Button>
-        </CardContent>
-      </Card>
-    </form>
+          <p className="text-xs text-muted-foreground">
+            Changing your email requires verification.
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

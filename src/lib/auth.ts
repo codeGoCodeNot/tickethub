@@ -10,6 +10,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -31,12 +32,26 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    // auth.ts
     emailOTP({
+      changeEmail: { enabled: true },
       async sendVerificationOTP({ email, otp, type }) {
+        console.log(`[DEBUG] sendVerificationOTP called:`, {
+          email,
+          type,
+          otp,
+        }); // Should log for all types
+
         if (type === "email-verification") {
           await inngest.send({
             name: "app/verify-email",
-            data: { email, otp },
+            data: { email, otp, type },
+          });
+        } else if (type === "change-email") {
+          console.log(`[DEBUG] Sending change-email via Inngest to:`, email);
+          await inngest.send({
+            name: "app/change-email",
+            data: { email, otp, type },
           });
         }
       },
