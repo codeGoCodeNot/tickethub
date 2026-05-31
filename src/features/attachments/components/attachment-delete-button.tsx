@@ -2,14 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import useConfirmDialog from "@/features/hook/use-confirm-dialog";
-import { LucideLoaderCircle, LucideTrash } from "lucide-react";
-import deleteAttachment from "../actions/delete-attachment";
+import { LucideLoaderCircle, LucideX } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import deleteAttachment from "../actions/delete-attachment";
 
-type AttachmentDeleteButtonProps = {
-  id: string;
-};
+type AttachmentDeleteButtonProps = { id: string };
 
 const AttachmentDeleteButton = ({ id }: AttachmentDeleteButtonProps) => {
   const [isPending, startTransition] = useTransition();
@@ -32,18 +30,22 @@ const AttachmentDeleteButton = ({ id }: AttachmentDeleteButtonProps) => {
 
   const [deleteButton, deleteDialog] = useConfirmDialog({
     title: "Delete Attachment",
-    description:
-      "Are you sure you want to delete this attachment? This action cannot be undone.",
+    description: "Are you sure you want to delete this attachment?",
+    action: deleteWithToast,
     trigger: (
-      <Button variant="destructive" size="icon" disabled={isPending}>
+      <Button
+        type="button"
+        aria-label="Delete attachment"
+        disabled={isPending}
+        className="flex size-5 items-center justify-center rounded-full bg-destructive p-0 text-white shadow ring-1 ring-background hover:bg-destructive/90"
+      >
         {isPending ? (
-          <LucideLoaderCircle className="animate-spin" />
+          <LucideLoaderCircle className="size-3 animate-spin" />
         ) : (
-          <LucideTrash />
+          <LucideX className="size-3" />
         )}
       </Button>
     ),
-    action: deleteWithToast,
   });
 
   return (

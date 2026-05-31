@@ -5,13 +5,14 @@ import { NextRequest } from "next/server";
 import s3 from "@/lib/aws";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { generateS3Key } from "@/features/attachments/utils/generate-s3-key";
+import isOwner from "@/features/auth/utils/is-owner";
 
 type GetParams = {
   params: Promise<{ attachmentId: string }>;
 };
 
 export const GET = async (request: NextRequest, { params }: GetParams) => {
-  await getAuthOrRedirect();
+  const user = await getAuthOrRedirect();
 
   const { attachmentId } = await params;
 
@@ -21,6 +22,8 @@ export const GET = async (request: NextRequest, { params }: GetParams) => {
   });
 
   if (!attachment) return new Response("Not found", { status: 404 });
+  if (!isOwner(user, attachment.ticket))
+    return new Response("Forbidden", { status: 403 });
 
   const presignedUrl = await getSignedUrl(
     s3,
@@ -36,15 +39,17 @@ export const GET = async (request: NextRequest, { params }: GetParams) => {
     { expiresIn: 5 * 60 }, // URL expires in 5 minutes
   );
 
-  const response = await fetch(presignedUrl);
+  return Response.redirect(presignedUrl);
 
-  const headers = new Headers();
-  headers.append(
-    "content-disposition",
-    `attachment; filename="${attachment.filename}"`,
-  );
+  // const response = await fetch(presignedUrl);
 
-  return new Response(response.body, {
-    headers,
-  });
+  // const headers = new Headers();
+  // headers.append(
+  //   "content-disposition",
+  //   `attachment; filename="${attachment.filename}"`,
+  // );
+
+  // return new Response(response.body, {
+  //   headers,
+  // });
 };
