@@ -1,19 +1,20 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
-import createAttachment from "../actions/create-attachment";
-import { EMPTY_ACTION_STATE } from "@/components/form/utils/to-action-state";
-import Form from "@/components/form/utils/form";
-import { Input } from "@/components/ui/input";
-import { ACCEPTED } from "../constants";
 import { Button } from "@/components/ui/button";
-import { LucideLoaderCircle, LucideX } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { LucideLoaderCircle, LucideX } from "lucide-react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { toast } from "sonner";
+import createAttachment from "../actions/create-attachment";
+import deleteAttachment from "../actions/delete-attachment";
+import presignAttachmentUpload from "../actions/presign-attachment-upload";
+import { ACCEPTED } from "../constants";
 
 type AttachmentCreateFormProps = {
   ticketId: string;
@@ -26,14 +27,10 @@ type Preview = {
 };
 
 const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
-  const [actionState, action, isPending] = useActionState(
-    createAttachment.bind(null, ticketId),
-    EMPTY_ACTION_STATE,
-  );
-
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<Preview[]>([]);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const next = files.map((file) => ({
@@ -50,12 +47,6 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
     };
   }, [files]);
 
-  useEffect(() => {
-    if (actionState.status === "SUCCESS") {
-      setFiles([]);
-    }
-  }, [actionState.status, actionState.timestamp]);
-
   const fallback = (
     <div className="flex size-16 items-center justify-center rounded p-1 text-center text-[10px] leading-tight text-muted-foreground ring-1 ring-border">
       {" "}
@@ -64,9 +55,7 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setFiles(Array.from(event.target.files));
-    }
+    if (event.target.files) setFiles(Array.from(event.target.files));
   };
 
   const removeFile = (index: number) => {
@@ -78,19 +67,71 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
     if (inputRef.current) inputRef.current.files = dataTransfer.files;
   };
 
-  return (
-    <Form action={action} actionState={actionState}>
-      <div className="flex flex-col gap-y-1">
-        <Input
-          type="file"
-          name="files"
-          id="files"
-          multiple
-          accept={ACCEPTED.join(",")}
-          onChange={handleChange}
-          ref={inputRef}
-        />
+  const handleUpload = () => {
+    if (files.length === 0) return;
+    startTransition(async () => {
+      const toastId = toast.loading("Uploading attachments...");
+      const created: string[] = [];
 
+      try {
+        for (const file of files) {
+          const presign = await presignAttachmentUpload({
+            ticketId,
+            filename: file.name,
+            mimeType: file.type,
+          });
+          if (presign.status === "ERROR") {
+            throw new Error(presign.message || "Failed to get upload URL");
+          }
+          const { attachmentId, uploadUrl } = presign.data as {
+            attachmentId: string;
+            key: string;
+            uploadUrl: string;
+          };
+
+          const res = await fetch(uploadUrl, {
+            method: "PUT",
+            headers: { "Content-Type": file.type },
+            body: file,
+          });
+          if (!res.ok) throw new Error("Failed to upload file to storage");
+
+          const create = await createAttachment({
+            ticketId,
+            attachmentId,
+            filename: file.name,
+          });
+          if (create.status === "ERROR") throw new Error(create.message);
+
+          created.push(attachmentId);
+        }
+
+        toast.success("Uploaded", { id: toastId });
+        setFiles([]);
+        if (inputRef.current) inputRef.current.value = "";
+      } catch (error) {
+        console.error("Error uploading attachments:", error);
+        await Promise.all(
+          created.map((id) => deleteAttachment(id).catch(() => null)),
+        );
+        toast.error("Failed to upload attachments.", { id: toastId });
+      }
+    });
+  };
+
+  return (
+    <div className="flex flex-col gap-y-1">
+      <Input
+        ref={inputRef}
+        type="file"
+        name="files"
+        id="files"
+        multiple
+        accept={ACCEPTED.join(",")}
+        onChange={handleChange}
+      />
+
+      <div className="flex flex-wrap gap-3">
         {previews.map((preview, index) => (
           <div key={`${preview.name}-${index}`} className="relative size-16">
             {preview.url === null || preview.type === "application/pdf" ? (
@@ -135,22 +176,18 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
             </button>
           </div>
         ))}
-
-        <p className="text-sm text-red-500">
-          {actionState.fieldErrors?.["files"]?.[0]}
-        </p>
-
-        <Button type="submit" disabled={isPending}>
-          {isPending ? (
-            <>
-              <LucideLoaderCircle className="animate-spin" /> Uploading...
-            </>
-          ) : (
-            "Upload"
-          )}
-        </Button>
       </div>
-    </Form>
+
+      <Button type="submit" disabled={isPending} onClick={handleUpload}>
+        {isPending ? (
+          <>
+            <LucideLoaderCircle className="animate-spin" /> Uploading...
+          </>
+        ) : (
+          "Upload"
+        )}
+      </Button>
+    </div>
   );
 };
 
