@@ -1,4 +1,5 @@
 import AccountTabs from "@/components/account-tabs";
+import CardCompact from "@/components/card-compact";
 import Heading from "@/components/heading";
 import DeleteAccount from "@/features/account/profile/components/delete-account";
 import ProfileForm from "@/features/account/profile/components/profile-form";
@@ -14,14 +15,19 @@ const ProfilePage = async () => {
         description="Update your account information"
         tabs={<AccountTabs />}
       />
-      <div className="px-8 max-w-lg flex flex-col gap-y-4 mx-auto">
-        <ProfileForm
-          name={user.name}
-          email={user.email}
-          image={user.image ?? undefined}
-        />
-        <DeleteAccount />
-      </div>
+
+      <CardCompact
+        title="Personal Information"
+        description="Update your personal information"
+        content={
+          <ProfileForm
+            name={user.name}
+            email={user.email}
+            image={user.image ?? undefined}
+          />
+        }
+        footer={<DeleteAccount />}
+      />
     </div>
   );
 };

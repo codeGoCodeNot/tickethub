@@ -13,28 +13,25 @@ type ProfileFormProps = {
 
 const ProfileForm = ({ name, email }: ProfileFormProps) => {
   return (
-    <Card className="border-0 shadow-md w-full max-w-[500px] mx-auto">
-      <CardContent className="pt-6 flex flex-col gap-y-4">
-        <div className="grid gap-1.5">
-          <Label>Name</Label>
-          <div className="flex items-center justify-between gap-x-2 rounded-md border bg-muted/30 px-3 py-2">
-            <span className="text-sm truncate">{name}</span>
-            <ChangeNameDialog currentName={name} />
-          </div>
+    <div className="flex flex-col gap-y-5">
+      <div className="grid gap-1.5">
+        <Label>Name</Label>
+        <div className="flex items-center justify-between gap-x-2 rounded-md border bg-muted/30 px-3 py-2">
+          <span className="text-sm truncate">{name}</span>
+          <ChangeNameDialog currentName={name} />
         </div>
-
-        <div className="grid gap-1.5">
-          <Label>Email</Label>
-          <div className="flex items-center justify-between gap-x-2 rounded-md border bg-muted/30 px-3 py-2">
-            <span className="text-sm truncate">{email}</span>
-            <ChangeEmailDialog />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Changing your email requires verification.
-          </p>
+      </div>
+      <div className="grid gap-1.5">
+        <Label>Email</Label>
+        <div className="flex items-center justify-between gap-x-2 rounded-md border bg-muted/30 px-3 py-2">
+          <span className="text-sm truncate">{email}</span>
+          <ChangeEmailDialog />
         </div>
-      </CardContent>
-    </Card>
+        <p className="text-xs text-muted-foreground">
+          Changing your email requires verification.
+        </p>
+      </div>
+    </div>
   );
 };
 
