@@ -1,11 +1,11 @@
 import { signIn } from "@/lib/auth-client";
-import { ticketsPath } from "@/path";
+import { homePath } from "@/path";
 
 const signInAction = async (email: string, password: string) => {
   const { error } = await signIn.email({
     email,
     password,
-    callbackURL: ticketsPath(),
+    callbackURL: homePath(),
   });
 
   return { error };

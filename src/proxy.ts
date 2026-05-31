@@ -28,7 +28,12 @@ export const proxy = async (request: NextRequest) => {
       return NextResponse.redirect(new URL(signInPath(), request.url));
     if (!session.user.emailVerified)
       return NextResponse.redirect(new URL(verifyEmailPath(), request.url));
-
+    if (
+      pathname.startsWith("/tickets") &&
+      !session.session.activeOrganizationId
+    ) {
+      return NextResponse.redirect(new URL("/organization", request.url));
+    }
   }
 
   return NextResponse.next();

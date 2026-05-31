@@ -4,7 +4,7 @@ import AccountDropdown from "@/app/_navigation/account-dropdown";
 import ThemeSwitcher from "@/components/theme/theme-switcher";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useSession } from "@/lib/auth-client";
+import { useActiveOrganization, useSession } from "@/lib/auth-client";
 import { homePath, signInPath, signUpPath, ticketsPath } from "@/path";
 import { LucideKanban } from "lucide-react";
 import Link from "next/link";
@@ -12,14 +12,15 @@ import Link from "next/link";
 const Header = () => {
   const { data: session } = useSession();
   const user = session?.user;
+  const { data: activeOrg } = useActiveOrganization();
 
   const navItems = user ? (
     <>
-      <Button asChild variant="outline">
-        <Link href={ticketsPath()} className="text-sm">
-          <span>Tickets</span>
-        </Link>
-      </Button>
+      {activeOrg && (
+        <Button asChild variant="outline" size="sm">
+          <Link href="/tickets">Tickets</Link>
+        </Button>
+      )}
 
       <AccountDropdown user={user} />
     </>

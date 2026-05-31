@@ -132,39 +132,41 @@ const AppSidebar = () => {
         </SidebarHeader>
 
         <SidebarContent className="px-2 mt-2">
-          <SidebarGroup>
-            <SidebarGroupLabel>Tickets</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {ticketNavItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === item.href}
-                    >
-                      <Link href={item.href as Route}>
-                        {item.icon}
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-                {displayOrg && isOwnerOrAdmin && (
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === ticketApprovePath()}
-                    >
-                      <Link href={ticketApprovePath() as Route}>
-                        <LucideClipboardCheck />
-                        <span>Approvals</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          {displayOrg && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Tickets</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {ticketNavItems.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={pathname === item.href}
+                      >
+                        <Link href={item.href as Route}>
+                          {item.icon}
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                  {isOwnerOrAdmin && (
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={pathname === ticketApprovePath()}
+                      >
+                        <Link href={ticketApprovePath() as Route}>
+                          <LucideClipboardCheck />
+                          <span>Approvals</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
 
           <SidebarGroup>
             <SidebarGroupLabel>Account</SidebarGroupLabel>

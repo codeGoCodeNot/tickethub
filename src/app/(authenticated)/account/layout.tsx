@@ -1,12 +1,9 @@
-import OrgGuard from "@/features/organizations/components/org-guard";
+import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import { Suspense } from "react";
 
-const AccountLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Suspense>
-      <OrgGuard>{children}</OrgGuard>
-    </Suspense>
-  );
+const AccountLayout = async ({ children }: { children: React.ReactNode }) => {
+  await getAuthOrRedirect();
+  return <Suspense>{children}</Suspense>;
 };
 
 export default AccountLayout;

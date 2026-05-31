@@ -1,5 +1,6 @@
 import AccountTabs from "@/components/account-tabs";
 import Heading from "@/components/heading";
+import DeleteAccount from "@/features/account/components/delete-account";
 import ProfileForm from "@/features/account/components/profile-form";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 
@@ -13,12 +14,14 @@ const ProfilePage = async () => {
         description="Update your account information"
         tabs={<AccountTabs />}
       />
-
-      <ProfileForm
-        name={user.name}
-        email={user.email}
-        image={user.image ?? undefined}
-      />
+      <div className="px-8 max-w-lg flex flex-col gap-y-4 mx-auto">
+        <ProfileForm
+          name={user.name}
+          email={user.email}
+          image={user.image ?? undefined}
+        />
+        <DeleteAccount />
+      </div>
     </div>
   );
 };
