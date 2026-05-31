@@ -10,6 +10,7 @@ export const {
   organization,
   useListOrganizations,
   useActiveOrganization,
+  updateUser,
 } = createAuthClient({
   plugins: [emailOTPClient(), organizationClient()],
 });
