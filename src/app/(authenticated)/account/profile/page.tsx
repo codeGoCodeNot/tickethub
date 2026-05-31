@@ -1,7 +1,7 @@
 import AccountTabs from "@/components/account-tabs";
 import Heading from "@/components/heading";
-import DeleteAccount from "@/features/account/components/delete-account";
-import ProfileForm from "@/features/account/components/profile-form";
+import DeleteAccount from "@/features/account/profile/components/delete-account";
+import ProfileForm from "@/features/account/profile/components/profile-form";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 
 const ProfilePage = async () => {

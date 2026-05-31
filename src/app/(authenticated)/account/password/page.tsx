@@ -1,5 +1,7 @@
 import AccountTabs from "@/components/account-tabs";
+import CardCompact from "@/components/card-compact";
 import Heading from "@/components/heading";
+import PasswordForm from "@/features/account/password/components/password-form";
 
 const PasswordPage = () => {
   return (
@@ -8,6 +10,11 @@ const PasswordPage = () => {
         title="Keep your password safe"
         description="Update your account password"
         tabs={<AccountTabs />}
+      />
+      <CardCompact
+        title="Update Password"
+        description="Make sure to use a strong password that you don't use elsewhere"
+        content={<PasswordForm />}
       />
     </div>
   );
