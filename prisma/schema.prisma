@@ -42,10 +42,19 @@ model Attachment {
   // createdAt DateTime @default(now())
   // mimetype String // MIME type of the file
   // userId    String // The user who uploaded the attachment
-  ticketId  String
-  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  entity AttachmentEntity
+  ticketId  String?
+  ticket    Ticket?   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  commentId String?
+  comment Comment?  @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@index([ticketId])
+  @@index([commentId])
+}
+
+enum AttachmentEntity {
+  TICKET
+  COMMENT
 }
 
 model Comment {
@@ -57,6 +66,7 @@ model Comment {
   userId    String
   ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
 
   @@index([ticketId])
   @@index([userId])

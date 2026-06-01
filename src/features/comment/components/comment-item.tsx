@@ -1,23 +1,34 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "@/components/user-avatar";
 import isOwner from "@/features/auth/utils/is-owner";
 import { User } from "@/generated/prisma/browser";
 import { format } from "date-fns/format";
-import { LucideCalendar } from "lucide-react";
+import { LucideCalendar, LucidePaperclip } from "lucide-react";
 import { useCommentEditStore } from "../stores/comment-edit-store";
 import { CommentWithMetadata } from "../type";
 import CommentDeleteButton from "./comment-delete-button";
-import CommentTriggerButton from "./comment-trigger-button";
 import CommentEditInline from "./comment-edit-inline";
+import CommentTriggerButton from "./comment-trigger-button";
 
 type CommentItemProps = {
   comment: CommentWithMetadata;
   user: User | null;
   onSuccess: () => void;
+  attachments?: React.ReactNode;
 };
 
-const CommentItem = ({ comment, user, onSuccess }: CommentItemProps) => {
+const CommentItem = ({
+  comment,
+  user,
+  onSuccess,
+  attachments,
+}: CommentItemProps) => {
   const commentIsOwner = isOwner(user, comment);
   const { editingCommentId } = useCommentEditStore();
   const isEditing = editingCommentId === comment.id;
@@ -66,6 +77,19 @@ const CommentItem = ({ comment, user, onSuccess }: CommentItemProps) => {
           </span>
         </div>
       </CardContent>
+
+      {attachments && (
+        <>
+          <Separator />
+          <div className="px-6 py-3">
+            <div className="flex items-center gap-x-1.5 mb-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+              <LucidePaperclip className="size-3" />
+              <span>Attachments</span>
+            </div>
+            {attachments}
+          </div>
+        </>
+      )}
     </Card>
   );
 };

@@ -17,3 +17,11 @@ export const TicketStatus = {
 } as const
 
 export type TicketStatus = (typeof TicketStatus)[keyof typeof TicketStatus]
+
+
+export const AttachmentEntity = {
+  TICKET: 'TICKET',
+  COMMENT: 'COMMENT'
+} as const
+
+export type AttachmentEntity = (typeof AttachmentEntity)[keyof typeof AttachmentEntity]

@@ -4,7 +4,6 @@ import fromErrorToActionState, {
   toActionState,
 } from "@/components/form/utils/to-action-state";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
-import isOwner from "@/features/auth/utils/is-owner";
 import prisma from "@/lib/prisma";
 import { updateTag } from "next/cache";
 
@@ -12,14 +11,16 @@ const deleteComment = async (id: string) => {
   const user = await getAuthOrRedirect();
 
   const existingComment = await prisma.comment.findUnique({
-    where: {
-      id,
-    },
+    where: { id },
+    include: { ticket: true },
   });
 
-  if (!existingComment || !isOwner(user, existingComment)) {
+  if (!existingComment) return toActionState("ERROR", "Comment not found");
+  if (!existingComment.ticket)
+    return toActionState("ERROR", "Comment's ticket not found");
+  if (existingComment.userId !== user.id)
     return toActionState("ERROR", "Not authorized to delete this comment");
-  }
+
   try {
     await prisma.comment.delete({
       where: { id },
@@ -28,6 +29,7 @@ const deleteComment = async (id: string) => {
     return fromErrorToActionState(error);
   }
 
+  updateTag(`comment-${id}-attachments`);
   updateTag(`ticket-${existingComment.ticketId}-comments`);
 
   return toActionState("SUCCESS", "Comment deleted");

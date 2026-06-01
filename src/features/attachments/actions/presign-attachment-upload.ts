@@ -8,32 +8,51 @@ import { generateS3Key } from "../utils/generate-s3-key";
 import { getUploadUrl } from "@/lib/aws";
 
 type Input = {
-  ticketId: string;
+  entityId: string;
+  entity: string;
   filename: string;
   mimeType: string;
 };
 
 const presignAttachmentUpload = async ({
-  ticketId,
+  entityId,
+  entity,
   filename,
   mimeType,
 }: Input) => {
   const user = await getAuth();
 
-  const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+  let organizationId: string;
 
-  if (!ticket || !isOwner(user, ticket))
-    return toActionState(
-      "ERROR",
-      "Not authorized to upload attachment to this ticket",
-    );
+  if (entity === "TICKET") {
+    const ticket = await prisma.ticket.findUnique({ where: { id: entityId } });
+    if (!ticket || !isOwner(user, ticket)) {
+      return toActionState("ERROR", "Not authorized to upload to this ticket");
+    }
+    organizationId = ticket.organizationId;
+  } else if (entity === "COMMENT") {
+    const comment = await prisma.comment.findUnique({
+      where: { id: entityId },
+      include: { ticket: true },
+    });
+    if (!comment || !comment.ticket) {
+      return toActionState("ERROR", "Comment not found");
+    }
+    if (comment.userId !== user?.id) {
+      return toActionState("ERROR", "You can only attach to your own comment");
+    }
+    organizationId = comment.ticket.organizationId;
+  } else {
+    return toActionState("ERROR", "Invalid entity type");
+  }
 
   const attachmentId = crypto.randomUUID();
   const key = generateS3Key({
-    ticketId,
+    entityId,
+    entity,
     attachmentId,
     filename,
-    organizationId: ticket.organizationId,
+    organizationId,
   });
 
   const uploadUrl = await getUploadUrl(key, mimeType);

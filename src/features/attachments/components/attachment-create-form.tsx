@@ -15,9 +15,11 @@ import createAttachment from "../actions/create-attachment";
 import deleteAttachment from "../actions/delete-attachment";
 import presignAttachmentUpload from "../actions/presign-attachment-upload";
 import { ACCEPTED } from "../constants";
+import { AttachmentEntity } from "@/generated/prisma/enums";
 
 type AttachmentCreateFormProps = {
-  ticketId: string;
+  entityId: string;
+  entity: AttachmentEntity;
 };
 
 type Preview = {
@@ -26,7 +28,10 @@ type Preview = {
   url: string | null;
 };
 
-const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
+const AttachmentCreateForm = ({
+  entityId,
+  entity,
+}: AttachmentCreateFormProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<Preview[]>([]);
@@ -76,7 +81,8 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
       try {
         for (const file of files) {
           const presign = await presignAttachmentUpload({
-            ticketId,
+            entityId,
+            entity,
             filename: file.name,
             mimeType: file.type,
           });
@@ -97,7 +103,8 @@ const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
           if (!res.ok) throw new Error("Failed to upload file to storage");
 
           const create = await createAttachment({
-            ticketId,
+            entityId,
+            entity,
             attachmentId,
             filename: file.name,
           });

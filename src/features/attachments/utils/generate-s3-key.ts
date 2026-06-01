@@ -1,15 +1,19 @@
+import { AttachmentEntity } from "@/generated/prisma/enums";
+
 type GenerateS3KeyArgs = {
+  entityId: string;
+  entity: AttachmentEntity;
   organizationId: string;
-  ticketId: string;
   filename: string;
   attachmentId: string;
 };
 
 export const generateS3Key = ({
+  entityId,
+  entity,
   organizationId,
-  ticketId,
   filename,
   attachmentId,
 }: GenerateS3KeyArgs) => {
-  return `${organizationId}/${ticketId}/${attachmentId}-${filename}`;
+  return `${organizationId}/${entity}/${entityId}/${attachmentId}-${filename}`;
 };

@@ -32,6 +32,18 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
     ticket.organizationId,
   );
 
+  const commentAttachmentSlots = Object.fromEntries(
+    comments.map((comment) => [
+      comment.id,
+      <Attachments
+        key={comment.id}
+        entityId={comment.id}
+        entity="COMMENT"
+        isOwner={comment.userId === user?.id}
+      />,
+    ]),
+  );
+
   return (
     <div className="flex flex-col flex-1 items-center animate-fade-from-top">
       <TicketItem
@@ -41,8 +53,9 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
         isOrgAdminOrOwner={isOrgAdminOrOwner}
         attachments={
           <Attachments
-            ticketId={ticketId}
+            entityId={ticket.id}
             isOwner={ticket.userId === user?.id}
+            entity="TICKET"
           />
         }
         comments={
@@ -50,6 +63,7 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
             ticketId={ticketId}
             user={user ? { ...user, image: user.image ?? null } : null}
             initialComments={comments}
+            attachments={commentAttachmentSlots}
           />
         }
       />

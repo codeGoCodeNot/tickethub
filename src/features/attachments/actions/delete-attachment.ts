@@ -12,28 +12,63 @@ import { generateS3Key } from "../utils/generate-s3-key";
 
 const deleteAttachment = async (id: string) => {
   const user = await getAuth();
+  let entityId: string;
+  let organizationId: string;
+  let tag: string;
 
   const attachment = await prisma.attachment.findUnique({
     where: { id },
-    include: { ticket: true },
+    include: { ticket: true, comment: { include: { ticket: true } } },
   });
 
   if (!attachment) {
     return toActionState("ERROR", "Attachment not found.");
   }
 
-  if (!isOwner(user, attachment?.ticket))
-    return toActionState(
-      "ERROR",
-      "You are not authorized to delete this attachment.",
-    );
+  if (attachment.entity === "TICKET") {
+    if (!attachment.ticket || !attachment.ticketId) {
+      return toActionState("ERROR", "Ticket attachment is missing its ticket.");
+    }
+    if (!isOwner(user, attachment.ticket)) {
+      return toActionState(
+        "ERROR",
+        "Not authorized to delete this attachment.",
+      );
+    }
+    entityId = attachment.ticketId;
+    organizationId = attachment.ticket.organizationId;
+    tag = `ticket-${attachment.ticketId}-attachments`;
+  } else if (attachment.entity === "COMMENT") {
+    if (
+      !attachment.comment ||
+      !attachment.commentId ||
+      !attachment.comment.ticket
+    ) {
+      return toActionState(
+        "ERROR",
+        "Comment attachment is missing its comment.",
+      );
+    }
+    if (attachment.comment.userId !== user?.id) {
+      return toActionState(
+        "ERROR",
+        "Not authorized to delete this attachment.",
+      );
+    }
+    entityId = attachment.commentId;
+    organizationId = attachment.comment.ticket.organizationId;
+    tag = `comment-${attachment.commentId}-attachments`;
+  } else {
+    return toActionState("ERROR", "Invalid attachment entity.");
+  }
 
   try {
     const key = generateS3Key({
+      entity: attachment.entity,
+      entityId,
+      organizationId,
       attachmentId: attachment.id,
       filename: attachment.filename,
-      organizationId: attachment.ticket.organizationId,
-      ticketId: attachment.ticketId,
     });
 
     await prisma.attachment.delete({

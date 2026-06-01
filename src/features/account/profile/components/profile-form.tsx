@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import ChangeEmailDialog from "./change-email-dialog";
 import ChangeNameDialog from "./change-name-dialog";

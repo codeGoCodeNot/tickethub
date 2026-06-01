@@ -15,9 +15,15 @@ type CommentsProps = {
   ticketId: string;
   user: User | null;
   initialComments: CommentWithMetadata[];
+  attachments?: Record<string, React.ReactNode>;
 };
 
-const Comments = ({ ticketId, user, initialComments }: CommentsProps) => {
+const Comments = ({
+  ticketId,
+  user,
+  initialComments,
+  attachments,
+}: CommentsProps) => {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isFetching } =
     useComments(ticketId, initialComments);
 
@@ -66,6 +72,7 @@ const Comments = ({ ticketId, user, initialComments }: CommentsProps) => {
                 comment={comment}
                 user={user}
                 onSuccess={handleInvalidateComments}
+                attachments={attachments?.[comment.id]}
               />
             </motion.div>
           ))}
