@@ -5,6 +5,10 @@ const getPendingTickets = async (organizationId?: string) => {
   "use cache";
   cacheTag("tickets");
 
+  if (!organizationId) {
+    return [];
+  }
+
   return prisma.ticket.findMany({
     where: { organizationId, status: "PENDING" },
     orderBy: { createdAt: "asc" },

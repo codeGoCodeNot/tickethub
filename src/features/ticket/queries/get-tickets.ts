@@ -13,6 +13,10 @@ const getTickets = async (
   "use cache";
   cacheTag("tickets");
 
+  if (!userId && !organizationId) {
+    return { list: [], metadata: { count: 0, hasNextPage: false } };
+  }
+
   const where = {
     userId,
     organizationId,
