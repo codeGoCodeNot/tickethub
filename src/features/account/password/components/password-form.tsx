@@ -12,6 +12,8 @@ import Form from "@/components/form/utils/form";
 
 const PasswordForm = () => {
   const [newPassword, setNewPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [actionState, action, isPending] = useActionState(
     updatePassword,
     EMPTY_ACTION_STATE,
@@ -37,7 +39,6 @@ const PasswordForm = () => {
           placeholder="••••••••"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
-          defaultValue={actionState.payload?.get("newPassword") as string}
         />
         <PasswordStrengthMeter password={newPassword} />
 
@@ -54,7 +55,8 @@ const PasswordForm = () => {
           id="confirmPassword"
           name="confirmPassword"
           placeholder="••••••••"
-          defaultValue={actionState.payload?.get("confirmPassword") as string}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
         />
         {
           <p className="text-sm text-red-500">

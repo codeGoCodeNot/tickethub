@@ -44,12 +44,28 @@ const updatePassword = async (
       },
     });
   } catch (error) {
-    if (error instanceof APIError) {
-      return toActionState("ERROR", "Incorrect current password", formData, {
-        currentPassword: ["Incorrect current password"],
-      });
+    const safeFormData = new FormData();
+    for (const [key, value] of formData.entries()) {
+      if (
+        key === "currentPassword" ||
+        key === "newPassword" ||
+        key === "confirmPassword"
+      )
+        continue;
+      safeFormData.append(key, value);
     }
-    return fromErrorToActionState(error, formData);
+
+    if (error instanceof APIError) {
+      return toActionState(
+        "ERROR",
+        "Incorrect current password",
+        safeFormData,
+        {
+          currentPassword: ["Incorrect current password"],
+        },
+      );
+    }
+    return fromErrorToActionState(error, safeFormData);
   }
 
   revalidatePath(passwordPath());

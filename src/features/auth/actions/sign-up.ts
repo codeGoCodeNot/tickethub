@@ -51,7 +51,12 @@ const signUp = async (_actionState: ActionState, formData: FormData) => {
       body: { email, type: "email-verification" },
     });
   } catch (error) {
-    return fromErrorToActionState(error, formData);
+    const safeFormData = new FormData();
+    for (const [key, value] of formData.entries()) {
+      if (key === "password" || key === "confirmPassword") continue;
+      safeFormData.append(key, value);
+    }
+    return fromErrorToActionState(error, safeFormData);
   }
 
   await setCookieByKey("toast", "Account created successfully.");

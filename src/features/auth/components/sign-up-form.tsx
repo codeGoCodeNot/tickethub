@@ -19,6 +19,7 @@ const SignUpForm = () => {
     EMPTY_ACTION_STATE,
   );
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
     <div className="w-full max-w-sm space-y-6">
@@ -70,7 +71,7 @@ const SignUpForm = () => {
                   id="password"
                   name="password"
                   placeholder="••••••••"
-                  defaultValue={actionState.payload?.get("password") as string}
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
@@ -86,9 +87,8 @@ const SignUpForm = () => {
                   id="confirm-password"
                   name="confirmPassword"
                   placeholder="••••••••"
-                  defaultValue={
-                    actionState.payload?.get("confirmPassword") as string
-                  }
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
                 <p className="text-sm text-red-500">
