@@ -56,6 +56,7 @@ export const ModelName = {
   Comment: 'Comment',
   User: 'User',
   Session: 'Session',
+  ActivityLog: 'ActivityLog',
   Account: 'Account',
   Verification: 'Verification',
   Organization: 'Organization',
@@ -146,6 +147,18 @@ export const SessionScalarFieldEnum = {
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
+export const ActivityLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  action: 'action',
+  metadata: 'metadata'
+} as const
+
+export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
+
+
 export const AccountScalarFieldEnum = {
   id: 'id',
   accountId: 'accountId',
@@ -222,6 +235,14 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -236,4 +257,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

@@ -38,6 +38,8 @@ export const membershipsPath = (organizationId: string): Route =>
   `/organization/${organizationId}/memberships` as Route;
 export const invitationsPath = (organizationId: string): Route =>
   `/organization/${organizationId}/invitations` as Route;
+export const activityLogPath = (organizationId: string): Route =>
+  `/organization/${organizationId}/activity-log` as Route;
 
 // attachments
 export const attachmentDownloadPath = (attachmentId: string): Route =>

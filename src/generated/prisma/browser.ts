@@ -43,6 +43,11 @@ export type User = Prisma.UserModel
  */
 export type Session = Prisma.SessionModel
 /**
+ * Model ActivityLog
+ * 
+ */
+export type ActivityLog = Prisma.ActivityLogModel
+/**
  * Model Account
  * 
  */

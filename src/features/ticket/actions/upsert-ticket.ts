@@ -5,6 +5,7 @@ import fromErrorToActionState, {
   toActionState,
   type ActionState,
 } from "@/components/form/utils/to-action-state";
+import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
@@ -36,6 +37,8 @@ const upsertTicket = async (
   const user = await getAuthOrRedirect();
   const organizationId = await getActiveOrganization();
 
+  let ticketTitle = "";
+
   if (!organizationId) {
     return toActionState(
       "ERROR",
@@ -60,6 +63,8 @@ const upsertTicket = async (
       Object.fromEntries(formData.entries()),
     );
 
+    ticketTitle = data.title;
+
     const dbData = {
       ...data,
       userId: user.id,
@@ -78,6 +83,16 @@ const upsertTicket = async (
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }
+
+  await createActivityLog({
+    organizationId,
+    userId: user.id,
+    action: id ? "ticket.updated" : "ticket.created",
+    metadata: {
+      ticketTitle,
+      ...(id ? {} : { status: adminOrOwner ? "OPEN" : "PENDING" }),
+    },
+  });
 
   updateTag("tickets");
 

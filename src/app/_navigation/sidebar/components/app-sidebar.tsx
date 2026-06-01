@@ -31,6 +31,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
+  LucideActivity,
   LucideBuilding2,
   LucideChevronsUpDown,
   LucideClipboardCheck,
@@ -47,7 +48,7 @@ import {
   organizationNavItems,
   ticketNavItems,
 } from "./constants";
-import { invitationsPath, membershipsPath, ticketApprovePath } from "@/path";
+import { activityLogPath, invitationsPath, membershipsPath, ticketApprovePath } from "@/path";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -229,6 +230,19 @@ const AppSidebar = () => {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </>
+              )}
+              {displayOrg && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === activityLogPath(displayOrg.id)}
+                  >
+                    <Link href={activityLogPath(displayOrg.id)}>
+                      <LucideActivity />
+                      <span>Activity Log</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
               )}
               <SidebarMenuItem>
                 <OrganizationDialog

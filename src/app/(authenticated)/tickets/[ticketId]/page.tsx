@@ -7,6 +7,7 @@ import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import Comments from "@/features/comment/components/comments";
 import getComments from "@/features/comment/queries/get-comments";
 import TicketItem from "@/features/ticket/components/ticket-item";
+import TicketPoller from "@/features/ticket/components/ticket-poller";
 import getTicket from "@/features/ticket/queries/get-ticket";
 import { homePath, ticketsPath } from "@/path";
 import { notFound } from "next/navigation";
@@ -74,6 +75,7 @@ const TicketDetail = async ({ params }: TicketPageProps) => {
 const TicketPage = ({ params }: TicketPageProps) => {
   return (
     <div className="flex flex-col flex-1 gap-y-8">
+      <TicketPoller />
       <Heading
         title="Ticket Details"
         description="Details of the selected ticket."

@@ -1,5 +1,6 @@
 "use server";
 
+import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import prisma from "@/lib/prisma";
@@ -18,6 +19,13 @@ const approveTicket = async (id: string) => {
   await prisma.ticket.update({
     where: { id },
     data: { status: "OPEN" },
+  });
+
+  await createActivityLog({
+    organizationId: ticket.organizationId,
+    userId: user.id,
+    action: "ticket.approved",
+    metadata: { ticketTitle: ticket.title },
   });
 
   updateTag("tickets");

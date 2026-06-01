@@ -7,6 +7,7 @@ import { getAuth } from "@/features/auth/queries/get-auth";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import getActiveOrganization from "@/features/organizations/queries/get-active-organization";
 import TicketList from "@/features/ticket/components/ticket-list";
+import TicketPoller from "@/features/ticket/components/ticket-poller";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
 import { searchParamsCache } from "@/features/ticket/search-params";
 import { homePath } from "@/path";
@@ -56,6 +57,7 @@ const TicketsPage = async ({ searchParams }: TicketsPageProps) => {
 
   return (
     <div className="flex flex-col flex-1 gap-y-8">
+      <TicketPoller />
       <Heading
         title="My tickets"
         description="All your tickets in one place"

@@ -88,6 +88,7 @@ model User {
 
   members     Member[]
   invitations Invitation[]
+  activityLogs ActivityLog[]
 
   @@unique([email])
   @@map("user")
@@ -109,6 +110,21 @@ model Session {
   @@unique([token])
   @@index([userId])
   @@map("session")
+}
+
+model ActivityLog {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  organizationId String
+  userId         String
+  action         String   // "ticket.created", "comment.deleted", etc.
+  metadata       Json?    // { ticketId, ticketTitle, ... }
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([createdAt])
 }
 
 model Account {
@@ -153,6 +169,7 @@ model Organization {
   members     Member[]
   invitations Invitation[]
   tickets     Ticket[]
+  activityLogs ActivityLog[]
 
   @@unique([slug])
   @@map("organization")

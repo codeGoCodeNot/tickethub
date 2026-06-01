@@ -1,6 +1,7 @@
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
 import TicketList from "@/features/ticket/components/ticket-list";
+import TicketPoller from "@/features/ticket/components/ticket-poller";
 import getActiveOrganization from "@/features/organizations/queries/get-active-organization";
 import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
@@ -27,6 +28,7 @@ const TicketsByOrganizationPage = async ({
 
   return (
     <div className="flex flex-col flex-1 gap-y-8">
+      <TicketPoller />
       <Heading
         title="Our tickets"
         description="All tickets related to organization"
