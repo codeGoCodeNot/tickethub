@@ -11,6 +11,7 @@ import { ticketPath } from "@/path";
 import { revalidatePath } from "next/cache";
 import { generateS3Key } from "../utils/generate-s3-key";
 import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
+import { ActivityAction } from "@/generated/prisma/enums";
 
 const deleteAttachment = async (id: string) => {
   const user = await getAuth();
@@ -89,7 +90,7 @@ const deleteAttachment = async (id: string) => {
   await createActivityLog({
     organizationId,
     userId: user!.id,
-    action: "attachment.deleted",
+    action: ActivityAction.attachment_deleted,
     metadata: { filename: attachment.filename, ticketId },
   });
 

@@ -7,6 +7,7 @@ import fromErrorToActionState, {
 import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
+import { ActivityAction } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { updateTag } from "next/cache";
 import z from "zod";
@@ -53,7 +54,7 @@ const updateComment = async (
   await createActivityLog({
     organizationId,
     userId: user.id,
-    action: "comment.updated",
+    action: ActivityAction.comment_updated,
     metadata: { ticketId: existingComment.ticketId },
   });
 

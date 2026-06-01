@@ -38,10 +38,10 @@ enum TicketStatus {
 model Attachment {
   id       String   @id @default(cuid())
   filename    String
+  userId    String // future use: track who uploaded the attachment
   // size   Int // Size in bytes
   // createdAt DateTime @default(now())
   // mimetype String // MIME type of the file
-  // userId    String // The user who uploaded the attachment
   entity AttachmentEntity
   ticketId  String?
   ticket    Ticket?   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
@@ -117,7 +117,7 @@ model ActivityLog {
   createdAt      DateTime @default(now())
   organizationId String
   userId         String
-  action         String   // "ticket.created", "comment.deleted", etc.
+  action         ActivityAction 
   metadata       Json?    // { ticketId, ticketTitle, ... }
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -125,6 +125,20 @@ model ActivityLog {
 
   @@index([organizationId])
   @@index([createdAt])
+}
+
+enum ActivityAction {
+  ticket_created        @map("ticket.created")
+  ticket_updated        @map("ticket.updated")
+  ticket_status_changed @map("ticket.status_changed")
+  ticket_approved       @map("ticket.approved")
+  ticket_rejected       @map("ticket.rejected")
+  ticket_removed        @map("ticket.removed")
+  comment_created       @map("comment.created")
+  comment_updated       @map("comment.updated")
+  comment_deleted       @map("comment.deleted")
+  attachment_uploaded   @map("attachment.uploaded")
+  attachment_deleted    @map("attachment.deleted")
 }
 
 model Account {

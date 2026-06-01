@@ -1286,6 +1286,7 @@ export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof 
 export const AttachmentScalarFieldEnum = {
   id: 'id',
   filename: 'filename',
+  userId: 'userId',
   entity: 'entity',
   ticketId: 'ticketId',
   commentId: 'commentId'
@@ -1535,6 +1536,20 @@ export type ListEnumAttachmentEntityFieldRefInput<$PrismaModel> = FieldRefInputT
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'ActivityAction'
+ */
+export type EnumActivityActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityAction'>
+    
+
+
+/**
+ * Reference to a field of type 'ActivityAction[]'
+ */
+export type ListEnumActivityActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityAction[]'>
     
 
 

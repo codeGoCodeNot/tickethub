@@ -1,10 +1,11 @@
+import { ActivityAction } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { updateTag } from "next/cache";
 
 type CreateActivityLogInput = {
   organizationId: string;
   userId: string;
-  action: string;
+  action: ActivityAction;
   metadata?: Record<string, any>;
 };
 

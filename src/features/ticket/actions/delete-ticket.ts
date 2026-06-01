@@ -8,6 +8,7 @@ import createActivityLog from "@/features/activity-logs/actions/create-activity-
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
+import { ActivityAction } from "@/generated/prisma/enums";
 import { inngest } from "@/lib/inngest";
 import prisma from "@/lib/prisma";
 import { ticketsPath } from "@/path";
@@ -75,7 +76,7 @@ const deleteTicket = async (
     await createActivityLog({
       organizationId: ticketData.organizationId,
       userId: user.id,
-      action: type === "rejected" ? "ticket.rejected" : "ticket.removed",
+      action: type === "rejected" ? ActivityAction.ticket_rejected : ActivityAction.ticket_removed,
       metadata: {
         ticketTitle: ticketData.title,
         ...(reason ? { reason } : {}),

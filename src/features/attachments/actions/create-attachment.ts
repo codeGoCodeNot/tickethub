@@ -6,7 +6,7 @@ import fromErrorToActionState, {
 import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import isOwner from "@/features/auth/utils/is-owner";
-import { AttachmentEntity } from "@/generated/prisma/enums";
+import { ActivityAction, AttachmentEntity } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { ticketPath } from "@/path";
 import { revalidatePath } from "next/cache";
@@ -45,6 +45,7 @@ const createAttachment = async ({
           filename,
           entity,
           ticketId: entityId,
+          userId: user!.id,
         },
       });
       ticketId = entityId;
@@ -63,6 +64,7 @@ const createAttachment = async ({
           filename,
           entity,
           commentId: entityId,
+          userId: user!.id,
         },
       });
       ticketId = comment.ticketId;
@@ -77,7 +79,7 @@ const createAttachment = async ({
   await createActivityLog({
     organizationId,
     userId: user!.id,
-    action: "attachment.uploaded",
+    action: ActivityAction.attachment_uploaded,
     metadata: { filename, ticketId },
   });
 

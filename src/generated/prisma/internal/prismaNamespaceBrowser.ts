@@ -99,6 +99,7 @@ export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof 
 export const AttachmentScalarFieldEnum = {
   id: 'id',
   filename: 'filename',
+  userId: 'userId',
   entity: 'entity',
   ticketId: 'ticketId',
   commentId: 'commentId'

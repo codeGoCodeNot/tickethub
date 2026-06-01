@@ -3,6 +3,7 @@
 import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
+import { ActivityAction } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { updateTag } from "next/cache";
 import { forbidden } from "next/navigation";
@@ -24,7 +25,7 @@ const approveTicket = async (id: string) => {
   await createActivityLog({
     organizationId: ticket.organizationId,
     userId: user.id,
-    action: "ticket.approved",
+    action: ActivityAction.ticket_approved,
     metadata: { ticketTitle: ticket.title },
   });
 

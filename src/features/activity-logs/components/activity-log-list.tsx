@@ -43,7 +43,11 @@ const formatDetails = (
   return "—";
 };
 
-const ActivityLogList = async ({ organizationId, page, size }: ActivityLogListProps) => {
+const ActivityLogList = async ({
+  organizationId,
+  page,
+  size,
+}: ActivityLogListProps) => {
   const { list, metadata } = await getActivityLogs(organizationId, page, size);
 
   if (!list.length)
@@ -68,7 +72,9 @@ const ActivityLogList = async ({ organizationId, page, size }: ActivityLogListPr
                 <TableCell>{log.user.name ?? "Unknown"}</TableCell>
                 <TableCell>{log.action}</TableCell>
                 <TableCell>{formatDetails(log.action, meta)}</TableCell>
-                <TableCell>{format(log.createdAt, "MMM d, yyyy h:mm a")}</TableCell>
+                <TableCell>
+                  {format(log.createdAt, "MMM d, yyyy h:mm a")}
+                </TableCell>
               </TableRow>
             );
           })}
@@ -79,11 +85,20 @@ const ActivityLogList = async ({ organizationId, page, size }: ActivityLogListPr
         {list.map((log) => {
           const meta = log.metadata as Record<string, string> | null;
           return (
-            <div key={log.id} className="p-4 border rounded-md flex flex-col gap-y-1">
-              <span className="text-sm font-semibold">{log.user.name ?? "Unknown"}</span>
-              <span className="text-sm text-muted-foreground">{log.action}</span>
+            <div
+              key={log.id}
+              className="p-4 border rounded-md flex flex-col gap-y-1"
+            >
+              <span className="text-sm font-semibold">
+                {log.user.name ?? "Unknown"}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {log.action}
+              </span>
               <span className="text-sm">{formatDetails(log.action, meta)}</span>
-              <span className="text-xs text-muted-foreground">{format(log.createdAt, "MMM d, yyyy h:mm a")}</span>
+              <span className="text-xs text-muted-foreground">
+                {format(log.createdAt, "MMM d, yyyy h:mm a")}
+              </span>
             </div>
           );
         })}

@@ -25,3 +25,20 @@ export const AttachmentEntity = {
 } as const
 
 export type AttachmentEntity = (typeof AttachmentEntity)[keyof typeof AttachmentEntity]
+
+
+export const ActivityAction = {
+  ticket_created: 'ticket_created',
+  ticket_updated: 'ticket_updated',
+  ticket_status_changed: 'ticket_status_changed',
+  ticket_approved: 'ticket_approved',
+  ticket_rejected: 'ticket_rejected',
+  ticket_removed: 'ticket_removed',
+  comment_created: 'comment_created',
+  comment_updated: 'comment_updated',
+  comment_deleted: 'comment_deleted',
+  attachment_uploaded: 'attachment_uploaded',
+  attachment_deleted: 'attachment_deleted'
+} as const
+
+export type ActivityAction = (typeof ActivityAction)[keyof typeof ActivityAction]

@@ -6,7 +6,7 @@ import fromErrorToActionState, {
 import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
-import { TicketStatus } from "@/generated/prisma/enums";
+import { ActivityAction, TicketStatus } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { updateTag } from "next/cache";
 
@@ -40,7 +40,7 @@ const updateTicketStatus = async (id: string, status: TicketStatus) => {
   await createActivityLog({
     organizationId: ticketData.organizationId,
     userId: user.id,
-    action: "ticket.status_changed",
+    action: ActivityAction.ticket_status_changed,
     metadata: {
       ticketTitle: ticketData.title,
       from: ticketData.status,

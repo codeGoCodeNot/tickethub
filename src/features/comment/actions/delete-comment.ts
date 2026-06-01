@@ -5,6 +5,7 @@ import fromErrorToActionState, {
 } from "@/components/form/utils/to-action-state";
 import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
+import { ActivityAction } from "@/generated/prisma/enums";
 import { inngest } from "@/lib/inngest";
 import prisma from "@/lib/prisma";
 import { updateTag } from "next/cache";
@@ -42,7 +43,7 @@ const deleteComment = async (id: string) => {
   await createActivityLog({
     organizationId,
     userId: user.id,
-    action: "comment.deleted",
+    action: ActivityAction.comment_deleted,
     metadata: { ticketId },
   });
 

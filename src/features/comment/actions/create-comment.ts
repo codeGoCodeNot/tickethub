@@ -6,6 +6,7 @@ import fromErrorToActionState, {
 } from "@/components/form/utils/to-action-state";
 import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
+import { ActivityAction } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { updateTag } from "next/cache";
 import z from "zod";
@@ -53,7 +54,7 @@ const createComment = async (
     await createActivityLog({
       organizationId,
       userId: user.id,
-      action: "comment.created",
+      action: ActivityAction.comment_created,
       metadata: { ticketId },
     });
     updateTag(`activity-log-${organizationId}`);

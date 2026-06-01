@@ -9,6 +9,7 @@ import createActivityLog from "@/features/activity-logs/actions/create-activity-
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import isOwner from "@/features/auth/utils/is-owner";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
+import { ActivityAction } from "@/generated/prisma/enums";
 import getActiveOrganization from "@/features/organizations/queries/get-active-organization";
 import prisma from "@/lib/prisma";
 import { ticketPath } from "@/path";
@@ -87,7 +88,7 @@ const upsertTicket = async (
   await createActivityLog({
     organizationId,
     userId: user.id,
-    action: id ? "ticket.updated" : "ticket.created",
+    action: id ? ActivityAction.ticket_updated : ActivityAction.ticket_created,
     metadata: {
       ticketTitle,
       ...(id ? {} : { status: adminOrOwner ? "OPEN" : "PENDING" }),
