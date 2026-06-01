@@ -3,13 +3,12 @@
 import fromErrorToActionState, {
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { fileSchema } from "@/features/attachments/schema";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import isOwner from "@/features/auth/utils/is-owner";
 import { AttachmentEntity } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
-import { updateTag } from "next/cache";
-import z from "zod";
+import { ticketPath } from "@/path";
+import { revalidatePath } from "next/cache";
 
 type Input = {
   entityId: string;
@@ -25,6 +24,7 @@ const createAttachment = async ({
   filename,
 }: Input) => {
   const user = await getAuth();
+  let ticketId: string;
 
   try {
     if (entity === "TICKET") {
@@ -44,7 +44,7 @@ const createAttachment = async ({
           ticketId: entityId,
         },
       });
-      updateTag(`ticket-${entityId}-attachments`);
+      ticketId = entityId;
     } else if (entity === "COMMENT") {
       const comment = await prisma.comment.findUnique({
         where: { id: entityId },
@@ -60,7 +60,7 @@ const createAttachment = async ({
           commentId: entityId,
         },
       });
-      updateTag(`comment-${entityId}-attachments`);
+      ticketId = comment.ticketId;
     } else {
       return toActionState("ERROR", "Invalid entity type");
     }
@@ -68,6 +68,7 @@ const createAttachment = async ({
     return fromErrorToActionState(error);
   }
 
+  revalidatePath(ticketPath(ticketId));
   return toActionState("SUCCESS", "Attachment is uploaded");
 };
 

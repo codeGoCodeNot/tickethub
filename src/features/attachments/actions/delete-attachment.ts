@@ -7,12 +7,15 @@ import { getAuth } from "@/features/auth/queries/get-auth";
 import isOwner from "@/features/auth/utils/is-owner";
 import { inngest } from "@/lib/inngest";
 import prisma from "@/lib/prisma";
+import { ticketPath } from "@/path";
+import { revalidatePath } from "next/cache";
 import { generateS3Key } from "../utils/generate-s3-key";
 
 const deleteAttachment = async (id: string) => {
   const user = await getAuth();
   let entityId: string;
   let organizationId: string;
+  let ticketId: string;
 
   const attachment = await prisma.attachment.findUnique({
     where: { id },
@@ -35,6 +38,7 @@ const deleteAttachment = async (id: string) => {
     }
     entityId = attachment.ticketId;
     organizationId = attachment.ticket.organizationId;
+    ticketId = attachment.ticketId;
   } else if (attachment.entity === "COMMENT") {
     if (
       !attachment.comment ||
@@ -54,6 +58,7 @@ const deleteAttachment = async (id: string) => {
     }
     entityId = attachment.commentId;
     organizationId = attachment.comment.ticket.organizationId;
+    ticketId = attachment.comment.ticket.id;
   } else {
     return toActionState("ERROR", "Invalid attachment entity.");
   }
@@ -80,6 +85,7 @@ const deleteAttachment = async (id: string) => {
     return fromErrorToActionState(error);
   }
 
+  revalidatePath(ticketPath(ticketId));
   return toActionState("SUCCESS", "Attachment deleted.");
 };
 

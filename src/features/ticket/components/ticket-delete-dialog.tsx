@@ -1,20 +1,20 @@
 "use client";
 
-import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import deleteTicket from "../actions/delete-ticket";
-import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
+import deleteTicket from "../actions/delete-ticket";
 
 type TicketDeleteDialogProps = {
   ticketId: string;
