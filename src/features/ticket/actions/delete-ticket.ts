@@ -42,6 +42,13 @@ const deleteTicket = async (
 
     await prisma.ticket.delete({ where: { id } });
 
+    await inngest.send({
+      name: "app/attachment.deleted",
+      data: {
+        prefix: `${ticket.organizationId}/TICKET/${id}/`,
+      },
+    });
+
     if (adminOrOwner && !isOwner(user, ticket) && reason) {
       await inngest.send({
         name: "app/ticket-deleted",

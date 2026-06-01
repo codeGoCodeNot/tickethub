@@ -250,10 +250,30 @@ const AppSidebar = () => {
               <SidebarMenuButton size="lg">
                 <UserAvatar name={user?.name} image={user?.image} />
                 <div className="flex flex-col gap-0.5 leading-none overflow-hidden">
-                  <span className="font-semibold truncate">{user?.name}</span>
-                  <span className="text-xs text-muted-foreground truncate">
-                    {user?.email}
-                  </span>
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={user?.name ?? "noname"}
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.2 }}
+                      className="font-semibold truncate"
+                    >
+                      {user?.name}
+                    </motion.span>
+                  </AnimatePresence>
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={user?.email ?? "noemail"}
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-xs text-muted-foreground truncate"
+                    >
+                      {user?.email}
+                    </motion.span>
+                  </AnimatePresence>
                 </div>
                 <LucideChevronsUpDown className="ml-auto size-4 opacity-50" />
               </SidebarMenuButton>

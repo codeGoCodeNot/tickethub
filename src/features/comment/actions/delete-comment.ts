@@ -4,6 +4,7 @@ import fromErrorToActionState, {
   toActionState,
 } from "@/components/form/utils/to-action-state";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
+import { inngest } from "@/lib/inngest";
 import prisma from "@/lib/prisma";
 import { updateTag } from "next/cache";
 
@@ -24,6 +25,12 @@ const deleteComment = async (id: string) => {
   try {
     await prisma.comment.delete({
       where: { id },
+    });
+    await inngest.send({
+      name: "app/attachment.deleted",
+      data: {
+        prefix: `${existingComment.ticket.organizationId}/COMMENT/${id}/`,
+      },
     });
   } catch (error) {
     return fromErrorToActionState(error);

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +15,7 @@ import UserAvatar from "../../components/user-avatar";
 import Link from "next/link";
 import { passwordPath, profilePath } from "@/path";
 import { LucideLock, LucideUser } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 type AccountDropdownProps = {
   user: User;
@@ -31,8 +34,20 @@ const AccountDropdown = ({ user }: AccountDropdownProps) => {
         className="w-56 rounded-md"
       >
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="truncate">
-            {user.email}
+          <DropdownMenuLabel className="truncate" asChild>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={user.email}
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 6 }}
+                transition={{ duration: 0.2 }}
+              >
+                <span className="text-xs text-muted-foreground">
+                  {user.email}
+                </span>
+              </motion.div>
+            </AnimatePresence>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
 
