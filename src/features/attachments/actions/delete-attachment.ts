@@ -7,14 +7,12 @@ import { getAuth } from "@/features/auth/queries/get-auth";
 import isOwner from "@/features/auth/utils/is-owner";
 import { inngest } from "@/lib/inngest";
 import prisma from "@/lib/prisma";
-import { updateTag } from "next/cache";
 import { generateS3Key } from "../utils/generate-s3-key";
 
 const deleteAttachment = async (id: string) => {
   const user = await getAuth();
   let entityId: string;
   let organizationId: string;
-  let tag: string;
 
   const attachment = await prisma.attachment.findUnique({
     where: { id },
@@ -37,7 +35,6 @@ const deleteAttachment = async (id: string) => {
     }
     entityId = attachment.ticketId;
     organizationId = attachment.ticket.organizationId;
-    tag = `ticket-${attachment.ticketId}-attachments`;
   } else if (attachment.entity === "COMMENT") {
     if (
       !attachment.comment ||
@@ -57,7 +54,6 @@ const deleteAttachment = async (id: string) => {
     }
     entityId = attachment.commentId;
     organizationId = attachment.comment.ticket.organizationId;
-    tag = `comment-${attachment.commentId}-attachments`;
   } else {
     return toActionState("ERROR", "Invalid attachment entity.");
   }
@@ -84,7 +80,6 @@ const deleteAttachment = async (id: string) => {
     return fromErrorToActionState(error);
   }
 
-  updateTag(`ticket-${attachment?.ticketId}-attachments`);
   return toActionState("SUCCESS", "Attachment deleted.");
 };
 
