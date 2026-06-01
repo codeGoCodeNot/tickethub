@@ -3,6 +3,7 @@
 import fromErrorToActionState, {
   toActionState,
 } from "@/components/form/utils/to-action-state";
+import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
 import { inngest } from "@/lib/inngest";
 import prisma from "@/lib/prisma";
@@ -35,6 +36,15 @@ const deleteComment = async (id: string) => {
   } catch (error) {
     return fromErrorToActionState(error);
   }
+
+  const { organizationId, id: ticketId } = existingComment.ticket;
+
+  await createActivityLog({
+    organizationId,
+    userId: user.id,
+    action: "comment.deleted",
+    metadata: { ticketId },
+  });
 
   updateTag(`comment-${id}-attachments`);
   updateTag(`ticket-${existingComment.ticketId}-comments`);

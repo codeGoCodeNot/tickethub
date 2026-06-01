@@ -18,6 +18,13 @@ const formatDetails = (
   action: string,
   metadata: Record<string, string> | null,
 ) => {
+  if (action === "comment.updated") return `edited a comment on ticket`;
+  if (action === "comment.deleted") return `deleted a comment on ticket`;
+  if (action === "comment.created") return `commented on ticket`;
+  if (action === "ticket.rejected")
+    return `"${metadata?.ticketTitle}" rejected${metadata?.reason ? ` — ${metadata.reason}` : ""}`;
+  if (action === "ticket.removed")
+    return `"${metadata?.ticketTitle}" removed${metadata?.reason ? ` — ${metadata.reason}` : ""}`;
   if (action === "ticket.approved")
     return `"${metadata?.ticketTitle}" approved`;
   if (!metadata) return "—";
@@ -37,7 +44,7 @@ const ActivityLogList = async ({ organizationId }: ActivityLogListProps) => {
 
   return (
     <div className="flex flex-col gap-y-2 px-8">
-      <Table>
+      <Table className="hidden md:table">
         <TableHeader>
           <TableRow>
             <TableHead>User</TableHead>
@@ -62,6 +69,30 @@ const ActivityLogList = async ({ organizationId }: ActivityLogListProps) => {
           })}
         </TableBody>
       </Table>
+      <div className="md:hidden flex flex-col gap-y-2">
+        {activityLogs.map((log) => {
+          const metadata = log.metadata as Record<string, string> | null;
+          return (
+            <div
+              key={log.id}
+              className="p-4 border rounded-md flex flex-col gap-y-1"
+            >
+              <span className="text-sm font-semibold">
+                {log.user.name ?? "Unknown"}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {log.action}
+              </span>
+              <span className="text-sm">
+                {formatDetails(log.action, metadata)}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {format(log.createdAt, "MMM d, yyyy h:mm a")}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

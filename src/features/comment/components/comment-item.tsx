@@ -72,7 +72,7 @@ const CommentItem = ({
           <LucideCalendar className="size-3" />
           <span>
             {comment.createdAt
-              ? format(new Date(comment.createdAt), "MMM d, yyyy")
+              ? format(new Date(comment.createdAt), "MMM d, yyyy h:mm a")
               : "—"}
           </span>
         </div>

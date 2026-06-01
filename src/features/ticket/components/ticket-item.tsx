@@ -136,7 +136,7 @@ const TicketItem = ({
               Deadline:
               <LucideCalendar className="size-3" />
               {ticket.deadline
-                ? format(new Date(ticket.deadline), "MMM d, yyyy")
+                ? format(new Date(ticket.deadline), "MMM d, yyyy h:mm a")
                 : "—"}
             </span>
             <span className="text-xs font-semibold text-foreground">
