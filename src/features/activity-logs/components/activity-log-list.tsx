@@ -9,9 +9,12 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 import getActivityLogs from "../queries/get-activity-logs";
+import ActivityLogPagination from "./activity-log-pagination";
 
 type ActivityLogListProps = {
   organizationId: string;
+  page: number;
+  size: number;
 };
 
 const formatDetails = (
@@ -40,14 +43,14 @@ const formatDetails = (
   return "—";
 };
 
-const ActivityLogList = async ({ organizationId }: ActivityLogListProps) => {
-  const activityLogs = await getActivityLogs(organizationId);
+const ActivityLogList = async ({ organizationId, page, size }: ActivityLogListProps) => {
+  const { list, metadata } = await getActivityLogs(organizationId, page, size);
 
-  if (!activityLogs.length)
+  if (!list.length)
     return <Placeholder label="No activity logs found" icon={null} />;
 
   return (
-    <div className="flex flex-col gap-y-2 px-8">
+    <div className="flex flex-col gap-y-4 px-8">
       <Table className="hidden md:table">
         <TableHeader>
           <TableRow>
@@ -58,45 +61,35 @@ const ActivityLogList = async ({ organizationId }: ActivityLogListProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {activityLogs.map((log) => {
-            const metadata = log.metadata as Record<string, string> | null;
+          {list.map((log) => {
+            const meta = log.metadata as Record<string, string> | null;
             return (
               <TableRow key={log.id}>
                 <TableCell>{log.user.name ?? "Unknown"}</TableCell>
                 <TableCell>{log.action}</TableCell>
-                <TableCell>{formatDetails(log.action, metadata)}</TableCell>
-                <TableCell>
-                  {format(log.createdAt, "MMM d, yyyy h:mm a")}
-                </TableCell>
+                <TableCell>{formatDetails(log.action, meta)}</TableCell>
+                <TableCell>{format(log.createdAt, "MMM d, yyyy h:mm a")}</TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
+
       <div className="md:hidden flex flex-col gap-y-2">
-        {activityLogs.map((log) => {
-          const metadata = log.metadata as Record<string, string> | null;
+        {list.map((log) => {
+          const meta = log.metadata as Record<string, string> | null;
           return (
-            <div
-              key={log.id}
-              className="p-4 border rounded-md flex flex-col gap-y-1"
-            >
-              <span className="text-sm font-semibold">
-                {log.user.name ?? "Unknown"}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                {log.action}
-              </span>
-              <span className="text-sm">
-                {formatDetails(log.action, metadata)}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {format(log.createdAt, "MMM d, yyyy h:mm a")}
-              </span>
+            <div key={log.id} className="p-4 border rounded-md flex flex-col gap-y-1">
+              <span className="text-sm font-semibold">{log.user.name ?? "Unknown"}</span>
+              <span className="text-sm text-muted-foreground">{log.action}</span>
+              <span className="text-sm">{formatDetails(log.action, meta)}</span>
+              <span className="text-xs text-muted-foreground">{format(log.createdAt, "MMM d, yyyy h:mm a")}</span>
             </div>
           );
         })}
       </div>
+
+      <ActivityLogPagination paginatedMetadata={metadata} />
     </div>
   );
 };

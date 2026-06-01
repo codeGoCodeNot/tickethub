@@ -1,16 +1,22 @@
 import Heading from "@/components/heading";
 import Spinner from "@/components/spinner";
 import ActivityLogList from "@/features/activity-logs/components/activity-log-list";
+import { activityLogSearchParamsCache } from "@/features/activity-logs/search-params";
 import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
+import { connection } from "next/server";
+import { SearchParams } from "nuqs/server";
 import { Suspense } from "react";
 
 type ActivityLogPageProps = {
   params: Promise<{ organizationId: string }>;
+  searchParams: Promise<SearchParams>;
 };
 
-const ActivityLogPage = async ({ params }: ActivityLogPageProps) => {
+const ActivityLogPage = async ({ params, searchParams }: ActivityLogPageProps) => {
+  await connection();
   const { organizationId } = await params;
   await getAuthOrRedirect();
+  const { page, size } = activityLogSearchParamsCache.parse(await searchParams);
 
   return (
     <div className="flex flex-col flex-1 gap-y-8">
@@ -18,8 +24,8 @@ const ActivityLogPage = async ({ params }: ActivityLogPageProps) => {
         title="Activity Log"
         description="View activity logs for your organization"
       />
-      <Suspense fallback={<Spinner />}>
-        <ActivityLogList organizationId={organizationId} />
+      <Suspense key={`${page}-${size}`} fallback={<Spinner />}>
+        <ActivityLogList organizationId={organizationId} page={page} size={size} />
       </Suspense>
     </div>
   );
