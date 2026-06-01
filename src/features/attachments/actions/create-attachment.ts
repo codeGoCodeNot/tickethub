@@ -3,6 +3,7 @@
 import fromErrorToActionState, {
   toActionState,
 } from "@/components/form/utils/to-action-state";
+import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import isOwner from "@/features/auth/utils/is-owner";
 import { AttachmentEntity } from "@/generated/prisma/enums";
@@ -24,6 +25,8 @@ const createAttachment = async ({
   filename,
 }: Input) => {
   const user = await getAuth();
+
+  let organizationId: string;
   let ticketId: string;
 
   try {
@@ -45,9 +48,11 @@ const createAttachment = async ({
         },
       });
       ticketId = entityId;
+      organizationId = ticket.organizationId;
     } else if (entity === "COMMENT") {
       const comment = await prisma.comment.findUnique({
         where: { id: entityId },
+        include: { ticket: { select: { organizationId: true } } },
       });
       if (!comment || comment.userId !== user?.id) {
         return toActionState("ERROR", "Not authorized");
@@ -61,12 +66,20 @@ const createAttachment = async ({
         },
       });
       ticketId = comment.ticketId;
+      organizationId = comment.ticket.organizationId;
     } else {
       return toActionState("ERROR", "Invalid entity type");
     }
   } catch (error) {
     return fromErrorToActionState(error);
   }
+
+  await createActivityLog({
+    organizationId,
+    userId: user!.id,
+    action: "attachment.uploaded",
+    metadata: { filename, ticketId },
+  });
 
   revalidatePath(ticketPath(ticketId));
   return toActionState("SUCCESS", "Attachment is uploaded");

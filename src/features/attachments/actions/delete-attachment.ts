@@ -10,6 +10,7 @@ import prisma from "@/lib/prisma";
 import { ticketPath } from "@/path";
 import { revalidatePath } from "next/cache";
 import { generateS3Key } from "../utils/generate-s3-key";
+import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
 
 const deleteAttachment = async (id: string) => {
   const user = await getAuth();
@@ -84,6 +85,13 @@ const deleteAttachment = async (id: string) => {
   } catch (error) {
     return fromErrorToActionState(error);
   }
+
+  await createActivityLog({
+    organizationId,
+    userId: user!.id,
+    action: "attachment.deleted",
+    metadata: { filename: attachment.filename, ticketId },
+  });
 
   revalidatePath(ticketPath(ticketId));
   return toActionState("SUCCESS", "Attachment deleted.");

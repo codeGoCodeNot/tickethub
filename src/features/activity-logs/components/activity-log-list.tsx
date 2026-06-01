@@ -18,6 +18,10 @@ const formatDetails = (
   action: string,
   metadata: Record<string, string> | null,
 ) => {
+  if (action === "attachment.uploaded")
+    return `uploaded "${metadata?.filename}"`;
+  if (action === "attachment.deleted")
+    return `deleted attachment "${metadata?.filename}"`;
   if (action === "comment.updated") return `edited a comment on ticket`;
   if (action === "comment.deleted") return `deleted a comment on ticket`;
   if (action === "comment.created") return `commented on ticket`;
