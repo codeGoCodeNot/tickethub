@@ -6,11 +6,13 @@ import {
   organization,
   useActiveOrganization,
   useListOrganizations,
+  useSession,
 } from "@/lib/auth-client";
 import { LucideLoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import triggerOrgCreated from "../actions/trigger-org-created";
 
 type OrganizationCreateFormProps = {
   onSuccess: () => void;
@@ -27,6 +29,7 @@ const OrganizationCreateForm = ({
   const { refetch: refetchActive } = useActiveOrganization();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const { data: session } = useSession();
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,6 +64,8 @@ const OrganizationCreateForm = ({
         setIsPending(false);
         return;
       }
+
+      await triggerOrgCreated(org.id, session?.user.email ?? "");
       await organization.setActive({ organizationId: org.id });
       await Promise.all([refetchOrgs(), refetchActive()]);
       formRef.current?.reset();

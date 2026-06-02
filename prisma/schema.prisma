@@ -35,6 +35,13 @@ enum TicketStatus {
   DONE
 }
 
+model StripeCustomer {
+  id            String   @id @default(cuid())
+  organizationId String @unique
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customerId     String @unique
+}
+
 model Attachment {
   id       String   @id @default(cuid())
   filename    String
@@ -184,6 +191,7 @@ model Organization {
   invitations Invitation[]
   tickets     Ticket[]
   activityLogs ActivityLog[]
+  stripeCustomer StripeCustomer?
 
   @@unique([slug])
   @@map("organization")

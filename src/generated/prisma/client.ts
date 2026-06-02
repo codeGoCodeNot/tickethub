@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Ticket = Prisma.TicketModel
 /**
+ * Model StripeCustomer
+ * 
+ */
+export type StripeCustomer = Prisma.StripeCustomerModel
+/**
  * Model Attachment
  * 
  */

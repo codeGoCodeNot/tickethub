@@ -33,6 +33,7 @@ import {
   Check,
   LucideActivity,
   LucideBuilding2,
+  LucideChevronRight,
   LucideChevronsUpDown,
   LucideClipboardCheck,
   LucideMail,
@@ -48,7 +49,18 @@ import {
   organizationNavItems,
   ticketNavItems,
 } from "./constants";
-import { activityLogPath, invitationsPath, membershipsPath, ticketApprovePath } from "@/path";
+import {
+  activityLogPath,
+  invitationsPath,
+  membershipsPath,
+  ticketApprovePath,
+} from "@/path";
+
+import {
+  CollapsibleContent,
+  CollapsibleTrigger,
+  Collapsible,
+} from "@/components/ui/collapsible";
 
 const AppSidebar = () => {
   const { open, setOpen, isMobile } = useSidebar();
@@ -133,130 +145,163 @@ const AppSidebar = () => {
         </SidebarHeader>
 
         <SidebarContent className="px-2 mt-2">
-          {displayOrg && (
-            <SidebarGroup>
-              <SidebarGroupLabel>Tickets</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {ticketNavItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={pathname === item.href}
-                      >
-                        <Link href={item.href as Route}>
-                          {item.icon}
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                  {isOwnerOrAdmin && (
-                    <SidebarMenuItem>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={pathname === ticketApprovePath()}
-                      >
-                        <Link href={ticketApprovePath() as Route}>
-                          <LucideClipboardCheck />
-                          <span>Approvals</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+          <SidebarGroup>
+            <Collapsible defaultOpen className="group/collapsible">
+              <SidebarGroupLabel asChild>
+                <CollapsibleTrigger className="flex w-full items-center">
+                  Tickets
+                  <LucideChevronRight className="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                </CollapsibleTrigger>
+              </SidebarGroupLabel>
+              <CollapsibleContent>
+                <SidebarGroupContent>
+                  {displayOrg && (
+                    <SidebarMenu>
+                      {ticketNavItems.map((item) => (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={pathname === item.href}
+                          >
+                            <Link href={item.href as Route}>
+                              {item.icon}
+                              <span>{item.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                      {isOwnerOrAdmin && (
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={pathname === ticketApprovePath()}
+                          >
+                            <Link href={ticketApprovePath() as Route}>
+                              <LucideClipboardCheck />
+                              <span>Approvals</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      )}
+                    </SidebarMenu>
                   )}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          )}
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarGroup>
+          <SidebarGroup>
+            <Collapsible defaultOpen className="group/collapsible">
+              <SidebarGroupLabel asChild>
+                <CollapsibleTrigger className="flex w-full items-center">
+                  Account
+                  <LucideChevronRight className="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                </CollapsibleTrigger>
+              </SidebarGroupLabel>
+              <CollapsibleContent>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {accountNavItems.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === item.href}
+                        >
+                          <Link href={item.href as Route}>
+                            {item.icon}
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarGroup>
 
           <SidebarGroup>
-            <SidebarGroupLabel>Account</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {accountNavItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === item.href}
-                    >
-                      <Link href={item.href as Route}>
-                        {item.icon}
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
+            <Collapsible defaultOpen className="group/collapsible">
+              <SidebarGroupLabel asChild>
+                <CollapsibleTrigger className="flex w-full items-center">
+                  Organization
+                  <LucideChevronRight className="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                </CollapsibleTrigger>
+              </SidebarGroupLabel>
+              <CollapsibleContent>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {organizationNavItems.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === item.href}
+                        >
+                          <Link href={item.href as Route}>
+                            {item.icon}
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                    {displayOrg && isOwnerOrAdmin && (
+                      <>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={
+                              pathname === membershipsPath(displayOrg.id)
+                            }
+                          >
+                            <Link href={membershipsPath(displayOrg.id)}>
+                              <LucideUsers />
+                              <span>Members</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={
+                              pathname === invitationsPath(displayOrg.id)
+                            }
+                          >
+                            <Link href={invitationsPath(displayOrg.id)}>
+                              <LucideMail />
+                              <span>Invitations</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      </>
+                    )}
+                    {displayOrg && (
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === activityLogPath(displayOrg.id)}
+                        >
+                          <Link href={activityLogPath(displayOrg.id)}>
+                            <LucideActivity />
+                            <span>Activity Log</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )}
+                    <SidebarMenuItem>
+                      <OrganizationDialog
+                        trigger={
+                          <SidebarMenuButton>
+                            <LucidePlus />
+                            <span>Create</span>
+                          </SidebarMenuButton>
+                        }
+                      />
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </Collapsible>
           </SidebarGroup>
         </SidebarContent>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Organization</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {organizationNavItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={pathname === item.href}>
-                    <Link href={item.href as Route}>
-                      {item.icon}
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-              {displayOrg && isOwnerOrAdmin && (
-                <>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === membershipsPath(displayOrg.id)}
-                    >
-                      <Link href={membershipsPath(displayOrg.id)}>
-                        <LucideUsers />
-                        <span>Members</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === invitationsPath(displayOrg.id)}
-                    >
-                      <Link href={invitationsPath(displayOrg.id)}>
-                        <LucideMail />
-                        <span>Invitations</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </>
-              )}
-              {displayOrg && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === activityLogPath(displayOrg.id)}
-                  >
-                    <Link href={activityLogPath(displayOrg.id)}>
-                      <LucideActivity />
-                      <span>Activity Log</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
-              <SidebarMenuItem>
-                <OrganizationDialog
-                  trigger={
-                    <SidebarMenuButton>
-                      <LucidePlus />
-                      <span>Create</span>
-                    </SidebarMenuButton>
-                  }
-                />
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
 
         <SidebarFooter className="border-t">
           <SidebarMenu>
