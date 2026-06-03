@@ -40,7 +40,12 @@ export const invitationsPath = (organizationId: string): Route =>
   `/organization/${organizationId}/invitations` as Route;
 export const activityLogPath = (organizationId: string): Route =>
   `/organization/${organizationId}/activity-log` as Route;
+export const subscriptionPath = (organizationId: string): Route =>
+  `/organization/${organizationId}/subscription` as Route;
 
 // attachments
 export const attachmentDownloadPath = (attachmentId: string): Route =>
   `/api/aws/s3/attachments/${attachmentId}` as Route;
+
+// pricing
+export const pricingPath = (): Route => "/pricing" as Route;

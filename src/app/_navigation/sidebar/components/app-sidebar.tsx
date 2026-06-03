@@ -36,6 +36,7 @@ import {
   LucideChevronRight,
   LucideChevronsUpDown,
   LucideClipboardCheck,
+  LucideCreditCard,
   LucideMail,
   LucidePlus,
   LucideUsers,
@@ -53,6 +54,7 @@ import {
   activityLogPath,
   invitationsPath,
   membershipsPath,
+  subscriptionPath,
   ticketApprovePath,
 } from "@/path";
 
@@ -243,49 +245,68 @@ const AppSidebar = () => {
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
-                    {displayOrg && isOwnerOrAdmin && (
+
+                    {displayOrg && (
                       <>
+                        {isOwnerOrAdmin && (
+                          <>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                isActive={
+                                  pathname === subscriptionPath(displayOrg.id)
+                                }
+                              >
+                                <Link href={subscriptionPath(displayOrg.id)}>
+                                  <LucideCreditCard />
+                                  <span>Subscription</span>
+                                </Link>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                isActive={
+                                  pathname === membershipsPath(displayOrg.id)
+                                }
+                              >
+                                <Link href={membershipsPath(displayOrg.id)}>
+                                  <LucideUsers />
+                                  <span>Members</span>
+                                </Link>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                isActive={
+                                  pathname === invitationsPath(displayOrg.id)
+                                }
+                              >
+                                <Link href={invitationsPath(displayOrg.id)}>
+                                  <LucideMail />
+                                  <span>Invitations</span>
+                                </Link>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          </>
+                        )}
                         <SidebarMenuItem>
                           <SidebarMenuButton
                             asChild
                             isActive={
-                              pathname === membershipsPath(displayOrg.id)
+                              pathname === activityLogPath(displayOrg.id)
                             }
                           >
-                            <Link href={membershipsPath(displayOrg.id)}>
-                              <LucideUsers />
-                              <span>Members</span>
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                        <SidebarMenuItem>
-                          <SidebarMenuButton
-                            asChild
-                            isActive={
-                              pathname === invitationsPath(displayOrg.id)
-                            }
-                          >
-                            <Link href={invitationsPath(displayOrg.id)}>
-                              <LucideMail />
-                              <span>Invitations</span>
+                            <Link href={activityLogPath(displayOrg.id)}>
+                              <LucideActivity />
+                              <span>Activity Log</span>
                             </Link>
                           </SidebarMenuButton>
                         </SidebarMenuItem>
                       </>
                     )}
-                    {displayOrg && (
-                      <SidebarMenuItem>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={pathname === activityLogPath(displayOrg.id)}
-                        >
-                          <Link href={activityLogPath(displayOrg.id)}>
-                            <LucideActivity />
-                            <span>Activity Log</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    )}
+
                     <SidebarMenuItem>
                       <OrganizationDialog
                         trigger={

@@ -19,7 +19,7 @@ const Placeholder = ({
           <h2 className="text-lg text-center text-foreground font-medium">
             {label}
           </h2>
-          <div>{button}</div>
+          <div className="mx-auto">{button}</div>
         </div>
       </div>
     </div>

@@ -49,8 +49,7 @@ const seed = async () => {
 
   const businessPlan = await stripe.products.create({
     name: "Business Plan",
-    description:
-      "The Business Plan is perfect for small to big teams and businesses.",
+    description: "The Business Plan",
     marketing_features: [
       {
         name: "Cancel anytime",
@@ -60,8 +59,7 @@ const seed = async () => {
 
   const startUpPlan = await stripe.products.create({
     name: "Start-Up Plan",
-    description:
-      "The Start-Up Plan is ideal for individuals and small projects.",
+    description: "The Start-Up Plan",
     marketing_features: [
       {
         name: "Cancel anytime",

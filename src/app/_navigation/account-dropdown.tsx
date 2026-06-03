@@ -13,8 +13,8 @@ import SignOutItem from "@/features/auth/components/sign-out-item";
 import { User } from "better-auth/types";
 import UserAvatar from "../../components/user-avatar";
 import Link from "next/link";
-import { passwordPath, profilePath } from "@/path";
-import { LucideLock, LucideUser } from "lucide-react";
+import { passwordPath, pricingPath, profilePath } from "@/path";
+import { LucideDollarSign, LucideLock, LucideUser } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 type AccountDropdownProps = {
@@ -69,6 +69,17 @@ const AccountDropdown = ({ user }: AccountDropdownProps) => {
             <Link href={passwordPath()}>
               <LucideLock />
               <span className="text-xs text-muted-foreground">Password</span>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        {/* Pricing */}
+        <DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href={pricingPath()}>
+              <LucideDollarSign />
+              <span className="text-xs text-muted-foreground">Pricing</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
