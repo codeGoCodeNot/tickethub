@@ -15,12 +15,19 @@ import InvitationCreateForm from "./invitation-create-form";
 type InvitationDialogProps = {
   trigger?: React.ReactNode;
   organizationId: string;
+  allowedTeamMembers: number;
+  currentTeamMembers: number;
 };
 
 const InvitationDialog = ({
   trigger,
   organizationId,
-}: InvitationDialogProps) => {
+  allowedTeamMembers,
+  currentTeamMembers,
+}: InvitationDialogProps & {
+  allowedTeamMembers: number;
+  currentTeamMembers: number;
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -38,6 +45,8 @@ const InvitationDialog = ({
         <InvitationCreateForm
           organizationId={organizationId}
           onSuccess={() => setOpen(false)}
+          allowedTeamMembers={allowedTeamMembers}
+          currentTeamMembers={currentTeamMembers}
         />
       </DialogContent>
     </Dialog>

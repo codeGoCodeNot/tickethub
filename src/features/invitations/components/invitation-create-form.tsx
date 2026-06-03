@@ -18,11 +18,15 @@ import { toast } from "sonner";
 type InvitationCreateFormProps = {
   organizationId: string;
   onSuccess: () => void;
+  allowedTeamMembers: number;
+  currentTeamMembers: number;
 };
 
 const InvitationCreateForm = ({
   organizationId,
   onSuccess,
+  allowedTeamMembers,
+  currentTeamMembers,
 }: InvitationCreateFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -32,6 +36,12 @@ const InvitationCreateForm = ({
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (currentTeamMembers >= allowedTeamMembers) {
+      setError("Team member limit reached. Upgrade your plan to invite more.");
+      return;
+    }
+
     const email = new FormData(e.currentTarget).get("email") as string;
     if (!email) {
       setError("Email is required");
