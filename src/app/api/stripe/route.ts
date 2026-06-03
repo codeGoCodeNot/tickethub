@@ -32,6 +32,20 @@ const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
   });
 };
 
+const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
+  await prisma.stripeCustomer.update({
+    where: {
+      customerId: subscription.customer as string,
+    },
+    data: {
+      subscriptionId: null,
+      subscriptionStatus: null,
+      priceId: null,
+      productId: null,
+    },
+  });
+};
+
 export const POST = async (request: NextRequest) => {
   const body = await request.text();
   const signature = (await headers()).get("Stripe-Signature");
@@ -56,6 +70,11 @@ export const POST = async (request: NextRequest) => {
         break;
       case "customer.subscription.updated":
         await handleSubscriptionUpdated(
+          event.data.object as Stripe.Subscription,
+        );
+        break;
+      case "customer.subscription.deleted":
+        await handleSubscriptionDeleted(
           event.data.object as Stripe.Subscription,
         );
         break;
