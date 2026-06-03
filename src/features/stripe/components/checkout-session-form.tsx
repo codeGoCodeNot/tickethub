@@ -11,6 +11,7 @@ type CheckoutSessionFormProps = {
   organizationId: string;
   children: React.ReactNode;
   activePriceId: string | undefined | null;
+  interval: string;
 };
 
 const CheckoutSessionForm = ({
@@ -18,6 +19,7 @@ const CheckoutSessionForm = ({
   organizationId,
   children,
   activePriceId,
+  interval,
 }: CheckoutSessionFormProps) => {
   const [actionState, action] = useActionState(
     createCheckoutSession.bind(null, organizationId, priceId),
@@ -32,10 +34,13 @@ const CheckoutSessionForm = ({
         <Button
           type="submit"
           disabled={isActivePrice}
-          className="w-full h-16 flex flex-col"
+          variant="outline"
+          className="w-full h-auto flex flex-col items-center py-2.5"
         >
-          {isActivePrice ? <span>Current Plan</span> : <span>Other Plan</span>}
-          <div>{children}</div>
+          <span className="text-xs text-muted-foreground">
+            {isActivePrice ? `Current · ${interval}` : interval}
+          </span>
+          <div className="text-base font-semibold">{children}</div>
         </Button>
       </Form>
     </div>
