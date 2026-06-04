@@ -157,7 +157,7 @@ export const POST = async (request: NextRequest) => {
         );
         break;
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        break;
     }
 
     return new NextResponse("OK", { status: 200 });

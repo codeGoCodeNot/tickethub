@@ -40,19 +40,12 @@ export const auth = betterAuth({
     emailOTP({
       changeEmail: { enabled: true },
       async sendVerificationOTP({ email, otp, type }) {
-        console.log(`[DEBUG] sendVerificationOTP called:`, {
-          email,
-          type,
-          otp,
-        }); // Should log for all types
-
         if (type === "email-verification") {
           await inngest.send({
             name: "app/verify-email",
             data: { email, otp, type },
           });
         } else if (type === "change-email") {
-          console.log(`[DEBUG] Sending change-email via Inngest to:`, email);
           await inngest.send({
             name: "app/change-email",
             data: { email, otp, type },
