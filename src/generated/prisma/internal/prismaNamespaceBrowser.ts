@@ -99,6 +99,7 @@ export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof 
 
 export const StripeCustomerScalarFieldEnum = {
   id: 'id',
+  eventAt: 'eventAt',
   organizationId: 'organizationId',
   customerId: 'customerId',
   subscriptionId: 'subscriptionId',

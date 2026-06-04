@@ -8,7 +8,17 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const handleSubscriptionCreated = async (subscription: Stripe.Subscription) => {
+const handleSubscriptionCreated = async (
+  subscription: Stripe.Subscription,
+  eventAt: number, // timestamp of when the event was created in Stripe, used to prevent out of order events from causing issues
+) => {
+  // only update if the event is newer than the last processed event for this customer to prevent out of order events from causing issues
+  const existing = await prisma.stripeCustomer.findUnique({
+    where: { customerId: subscription.customer as string },
+  });
+
+  if (existing?.eventAt && existing.eventAt >= eventAt) return;
+
   const stripeCustomer = await prisma.stripeCustomer.update({
     where: {
       customerId: subscription.customer as string,
@@ -18,6 +28,7 @@ const handleSubscriptionCreated = async (subscription: Stripe.Subscription) => {
       subscriptionId: subscription.id,
       priceId: subscription.items.data[0].price.id,
       productId: subscription.items.data[0].price.product as string,
+      eventAt,
     },
   });
   await createActivityLog({
@@ -30,7 +41,16 @@ const handleSubscriptionCreated = async (subscription: Stripe.Subscription) => {
   revalidateTag(`activity-log-${stripeCustomer.organizationId}`, { expire: 0 });
 };
 
-const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
+const handleSubscriptionUpdated = async (
+  subscription: Stripe.Subscription,
+  eventAt: number,
+) => {
+  const existing = await prisma.stripeCustomer.findUnique({
+    where: { customerId: subscription.customer as string },
+  });
+
+  if (existing?.eventAt && existing.eventAt >= eventAt) return;
+
   const stripeCustomer = await prisma.stripeCustomer.update({
     where: {
       customerId: subscription.customer as string,
@@ -40,6 +60,7 @@ const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
       subscriptionStatus: subscription.status,
       priceId: subscription.items.data[0].price.id,
       productId: subscription.items.data[0].price.product as string,
+      eventAt,
     },
   });
 
@@ -65,7 +86,16 @@ const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
   revalidateTag(`activity-log-${stripeCustomer.organizationId}`, { expire: 0 });
 };
 
-const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
+const handleSubscriptionDeleted = async (
+  subscription: Stripe.Subscription,
+  eventAt: number,
+) => {
+  const existing = await prisma.stripeCustomer.findUnique({
+    where: { customerId: subscription.customer as string },
+  });
+
+  if (existing?.eventAt && existing.eventAt >= eventAt) return;
+
   const stripeCustomer = await prisma.stripeCustomer.update({
     where: {
       customerId: subscription.customer as string,
@@ -75,6 +105,7 @@ const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
       subscriptionStatus: null,
       priceId: null,
       productId: null,
+      eventAt,
     },
   });
 
@@ -110,16 +141,19 @@ export const POST = async (request: NextRequest) => {
       case "customer.subscription.created":
         await handleSubscriptionCreated(
           event.data.object as Stripe.Subscription,
+          event.created,
         );
         break;
       case "customer.subscription.updated":
         await handleSubscriptionUpdated(
           event.data.object as Stripe.Subscription,
+          event.created,
         );
         break;
       case "customer.subscription.deleted":
         await handleSubscriptionDeleted(
           event.data.object as Stripe.Subscription,
+          event.created,
         );
         break;
       default:

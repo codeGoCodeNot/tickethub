@@ -37,6 +37,7 @@ enum TicketStatus {
 
 model StripeCustomer {
   id            String   @id @default(cuid())
+  eventAt Int?
   organizationId String @unique
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   customerId     String @unique

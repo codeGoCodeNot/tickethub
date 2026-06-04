@@ -20,12 +20,23 @@ export type StripeCustomerModel = runtime.Types.Result.DefaultSelection<Prisma.$
 
 export type AggregateStripeCustomer = {
   _count: StripeCustomerCountAggregateOutputType | null
+  _avg: StripeCustomerAvgAggregateOutputType | null
+  _sum: StripeCustomerSumAggregateOutputType | null
   _min: StripeCustomerMinAggregateOutputType | null
   _max: StripeCustomerMaxAggregateOutputType | null
 }
 
+export type StripeCustomerAvgAggregateOutputType = {
+  eventAt: number | null
+}
+
+export type StripeCustomerSumAggregateOutputType = {
+  eventAt: number | null
+}
+
 export type StripeCustomerMinAggregateOutputType = {
   id: string | null
+  eventAt: number | null
   organizationId: string | null
   customerId: string | null
   subscriptionId: string | null
@@ -36,6 +47,7 @@ export type StripeCustomerMinAggregateOutputType = {
 
 export type StripeCustomerMaxAggregateOutputType = {
   id: string | null
+  eventAt: number | null
   organizationId: string | null
   customerId: string | null
   subscriptionId: string | null
@@ -46,6 +58,7 @@ export type StripeCustomerMaxAggregateOutputType = {
 
 export type StripeCustomerCountAggregateOutputType = {
   id: number
+  eventAt: number
   organizationId: number
   customerId: number
   subscriptionId: number
@@ -56,8 +69,17 @@ export type StripeCustomerCountAggregateOutputType = {
 }
 
 
+export type StripeCustomerAvgAggregateInputType = {
+  eventAt?: true
+}
+
+export type StripeCustomerSumAggregateInputType = {
+  eventAt?: true
+}
+
 export type StripeCustomerMinAggregateInputType = {
   id?: true
+  eventAt?: true
   organizationId?: true
   customerId?: true
   subscriptionId?: true
@@ -68,6 +90,7 @@ export type StripeCustomerMinAggregateInputType = {
 
 export type StripeCustomerMaxAggregateInputType = {
   id?: true
+  eventAt?: true
   organizationId?: true
   customerId?: true
   subscriptionId?: true
@@ -78,6 +101,7 @@ export type StripeCustomerMaxAggregateInputType = {
 
 export type StripeCustomerCountAggregateInputType = {
   id?: true
+  eventAt?: true
   organizationId?: true
   customerId?: true
   subscriptionId?: true
@@ -125,6 +149,18 @@ export type StripeCustomerAggregateArgs<ExtArgs extends runtime.Types.Extensions
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: StripeCustomerAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: StripeCustomerSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: StripeCustomerMinAggregateInputType
@@ -155,12 +191,15 @@ export type StripeCustomerGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   _count?: StripeCustomerCountAggregateInputType | true
+  _avg?: StripeCustomerAvgAggregateInputType
+  _sum?: StripeCustomerSumAggregateInputType
   _min?: StripeCustomerMinAggregateInputType
   _max?: StripeCustomerMaxAggregateInputType
 }
 
 export type StripeCustomerGroupByOutputType = {
   id: string
+  eventAt: number | null
   organizationId: string
   customerId: string
   subscriptionId: string | null
@@ -168,6 +207,8 @@ export type StripeCustomerGroupByOutputType = {
   productId: string | null
   priceId: string | null
   _count: StripeCustomerCountAggregateOutputType | null
+  _avg: StripeCustomerAvgAggregateOutputType | null
+  _sum: StripeCustomerSumAggregateOutputType | null
   _min: StripeCustomerMinAggregateOutputType | null
   _max: StripeCustomerMaxAggregateOutputType | null
 }
@@ -192,6 +233,7 @@ export type StripeCustomerWhereInput = {
   OR?: Prisma.StripeCustomerWhereInput[]
   NOT?: Prisma.StripeCustomerWhereInput | Prisma.StripeCustomerWhereInput[]
   id?: Prisma.StringFilter<"StripeCustomer"> | string
+  eventAt?: Prisma.IntNullableFilter<"StripeCustomer"> | number | null
   organizationId?: Prisma.StringFilter<"StripeCustomer"> | string
   customerId?: Prisma.StringFilter<"StripeCustomer"> | string
   subscriptionId?: Prisma.StringNullableFilter<"StripeCustomer"> | string | null
@@ -203,6 +245,7 @@ export type StripeCustomerWhereInput = {
 
 export type StripeCustomerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  eventAt?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -219,6 +262,7 @@ export type StripeCustomerWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.StripeCustomerWhereInput | Prisma.StripeCustomerWhereInput[]
   OR?: Prisma.StripeCustomerWhereInput[]
   NOT?: Prisma.StripeCustomerWhereInput | Prisma.StripeCustomerWhereInput[]
+  eventAt?: Prisma.IntNullableFilter<"StripeCustomer"> | number | null
   subscriptionId?: Prisma.StringNullableFilter<"StripeCustomer"> | string | null
   subscriptionStatus?: Prisma.EnumStripeSubscriptionStatusNullableFilter<"StripeCustomer"> | $Enums.StripeSubscriptionStatus | null
   productId?: Prisma.StringNullableFilter<"StripeCustomer"> | string | null
@@ -228,6 +272,7 @@ export type StripeCustomerWhereUniqueInput = Prisma.AtLeast<{
 
 export type StripeCustomerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  eventAt?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -235,8 +280,10 @@ export type StripeCustomerOrderByWithAggregationInput = {
   productId?: Prisma.SortOrderInput | Prisma.SortOrder
   priceId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.StripeCustomerCountOrderByAggregateInput
+  _avg?: Prisma.StripeCustomerAvgOrderByAggregateInput
   _max?: Prisma.StripeCustomerMaxOrderByAggregateInput
   _min?: Prisma.StripeCustomerMinOrderByAggregateInput
+  _sum?: Prisma.StripeCustomerSumOrderByAggregateInput
 }
 
 export type StripeCustomerScalarWhereWithAggregatesInput = {
@@ -244,6 +291,7 @@ export type StripeCustomerScalarWhereWithAggregatesInput = {
   OR?: Prisma.StripeCustomerScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StripeCustomerScalarWhereWithAggregatesInput | Prisma.StripeCustomerScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StripeCustomer"> | string
+  eventAt?: Prisma.IntNullableWithAggregatesFilter<"StripeCustomer"> | number | null
   organizationId?: Prisma.StringWithAggregatesFilter<"StripeCustomer"> | string
   customerId?: Prisma.StringWithAggregatesFilter<"StripeCustomer"> | string
   subscriptionId?: Prisma.StringNullableWithAggregatesFilter<"StripeCustomer"> | string | null
@@ -254,6 +302,7 @@ export type StripeCustomerScalarWhereWithAggregatesInput = {
 
 export type StripeCustomerCreateInput = {
   id?: string
+  eventAt?: number | null
   customerId: string
   subscriptionId?: string | null
   subscriptionStatus?: $Enums.StripeSubscriptionStatus | null
@@ -264,6 +313,7 @@ export type StripeCustomerCreateInput = {
 
 export type StripeCustomerUncheckedCreateInput = {
   id?: string
+  eventAt?: number | null
   organizationId: string
   customerId: string
   subscriptionId?: string | null
@@ -274,6 +324,7 @@ export type StripeCustomerUncheckedCreateInput = {
 
 export type StripeCustomerUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableEnumStripeSubscriptionStatusFieldUpdateOperationsInput | $Enums.StripeSubscriptionStatus | null
@@ -284,6 +335,7 @@ export type StripeCustomerUpdateInput = {
 
 export type StripeCustomerUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -294,6 +346,7 @@ export type StripeCustomerUncheckedUpdateInput = {
 
 export type StripeCustomerCreateManyInput = {
   id?: string
+  eventAt?: number | null
   organizationId: string
   customerId: string
   subscriptionId?: string | null
@@ -304,6 +357,7 @@ export type StripeCustomerCreateManyInput = {
 
 export type StripeCustomerUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableEnumStripeSubscriptionStatusFieldUpdateOperationsInput | $Enums.StripeSubscriptionStatus | null
@@ -313,6 +367,7 @@ export type StripeCustomerUpdateManyMutationInput = {
 
 export type StripeCustomerUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -323,6 +378,7 @@ export type StripeCustomerUncheckedUpdateManyInput = {
 
 export type StripeCustomerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  eventAt?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
@@ -331,8 +387,13 @@ export type StripeCustomerCountOrderByAggregateInput = {
   priceId?: Prisma.SortOrder
 }
 
+export type StripeCustomerAvgOrderByAggregateInput = {
+  eventAt?: Prisma.SortOrder
+}
+
 export type StripeCustomerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  eventAt?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
@@ -343,6 +404,7 @@ export type StripeCustomerMaxOrderByAggregateInput = {
 
 export type StripeCustomerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  eventAt?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
@@ -351,9 +413,21 @@ export type StripeCustomerMinOrderByAggregateInput = {
   priceId?: Prisma.SortOrder
 }
 
+export type StripeCustomerSumOrderByAggregateInput = {
+  eventAt?: Prisma.SortOrder
+}
+
 export type StripeCustomerNullableScalarRelationFilter = {
   is?: Prisma.StripeCustomerWhereInput | null
   isNot?: Prisma.StripeCustomerWhereInput | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -398,6 +472,7 @@ export type StripeCustomerUncheckedUpdateOneWithoutOrganizationNestedInput = {
 
 export type StripeCustomerCreateWithoutOrganizationInput = {
   id?: string
+  eventAt?: number | null
   customerId: string
   subscriptionId?: string | null
   subscriptionStatus?: $Enums.StripeSubscriptionStatus | null
@@ -407,6 +482,7 @@ export type StripeCustomerCreateWithoutOrganizationInput = {
 
 export type StripeCustomerUncheckedCreateWithoutOrganizationInput = {
   id?: string
+  eventAt?: number | null
   customerId: string
   subscriptionId?: string | null
   subscriptionStatus?: $Enums.StripeSubscriptionStatus | null
@@ -432,6 +508,7 @@ export type StripeCustomerUpdateToOneWithWhereWithoutOrganizationInput = {
 
 export type StripeCustomerUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableEnumStripeSubscriptionStatusFieldUpdateOperationsInput | $Enums.StripeSubscriptionStatus | null
@@ -441,6 +518,7 @@ export type StripeCustomerUpdateWithoutOrganizationInput = {
 
 export type StripeCustomerUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  eventAt?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   customerId?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subscriptionStatus?: Prisma.NullableEnumStripeSubscriptionStatusFieldUpdateOperationsInput | $Enums.StripeSubscriptionStatus | null
@@ -452,6 +530,7 @@ export type StripeCustomerUncheckedUpdateWithoutOrganizationInput = {
 
 export type StripeCustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  eventAt?: boolean
   organizationId?: boolean
   customerId?: boolean
   subscriptionId?: boolean
@@ -463,6 +542,7 @@ export type StripeCustomerSelect<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type StripeCustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  eventAt?: boolean
   organizationId?: boolean
   customerId?: boolean
   subscriptionId?: boolean
@@ -474,6 +554,7 @@ export type StripeCustomerSelectCreateManyAndReturn<ExtArgs extends runtime.Type
 
 export type StripeCustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  eventAt?: boolean
   organizationId?: boolean
   customerId?: boolean
   subscriptionId?: boolean
@@ -485,6 +566,7 @@ export type StripeCustomerSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
 
 export type StripeCustomerSelectScalar = {
   id?: boolean
+  eventAt?: boolean
   organizationId?: boolean
   customerId?: boolean
   subscriptionId?: boolean
@@ -493,7 +575,7 @@ export type StripeCustomerSelectScalar = {
   priceId?: boolean
 }
 
-export type StripeCustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "customerId" | "subscriptionId" | "subscriptionStatus" | "productId" | "priceId", ExtArgs["result"]["stripeCustomer"]>
+export type StripeCustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventAt" | "organizationId" | "customerId" | "subscriptionId" | "subscriptionStatus" | "productId" | "priceId", ExtArgs["result"]["stripeCustomer"]>
 export type StripeCustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
@@ -511,6 +593,7 @@ export type $StripeCustomerPayload<ExtArgs extends runtime.Types.Extensions.Inte
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    eventAt: number | null
     organizationId: string
     customerId: string
     subscriptionId: string | null
@@ -942,6 +1025,7 @@ export interface Prisma__StripeCustomerClient<T, Null = never, ExtArgs extends r
  */
 export interface StripeCustomerFieldRefs {
   readonly id: Prisma.FieldRef<"StripeCustomer", 'String'>
+  readonly eventAt: Prisma.FieldRef<"StripeCustomer", 'Int'>
   readonly organizationId: Prisma.FieldRef<"StripeCustomer", 'String'>
   readonly customerId: Prisma.FieldRef<"StripeCustomer", 'String'>
   readonly subscriptionId: Prisma.FieldRef<"StripeCustomer", 'String'>
