@@ -8,7 +8,7 @@ import getActiveOrganization from "@/features/organizations/queries/get-active-o
 import getStripeProvisioning from "@/features/stripe/queries/get-stripe-provisioning";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
 import getTicket from "@/features/ticket/queries/get-ticket";
-import { homePath, ticketPath, ticketsPath } from "@/path";
+import { homePath, ticketsPath } from "@/path";
 import { forbidden, notFound } from "next/navigation";
 
 import { Suspense } from "react";
@@ -20,8 +20,12 @@ type TicketEditPageProps = {
 const TicketEditFetcher = async ({ params }: TicketEditPageProps) => {
   const { ticketId } = await params;
   const organizationId = await getActiveOrganization();
-  const ticket = await getTicket(ticketId, organizationId ?? undefined);
   const user = await getAuth();
+  const ticket = await getTicket(
+    ticketId,
+    organizationId ?? undefined,
+    user?.id,
+  );
 
   if (!ticket) return notFound();
 

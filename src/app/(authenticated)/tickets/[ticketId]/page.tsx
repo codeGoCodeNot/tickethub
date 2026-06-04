@@ -20,9 +20,9 @@ type TicketPageProps = {
 const TicketDetail = async ({ params }: TicketPageProps) => {
   const { ticketId } = await params;
   const organizationId = await getActiveOrganization();
-  const [ticket, user, comments] = await Promise.all([
-    getTicket(ticketId, organizationId ?? undefined),
-    getAuth(),
+  const user = await getAuth();
+  const [ticket, comments] = await Promise.all([
+    getTicket(ticketId, organizationId ?? undefined, user?.id),
     getComments(ticketId),
   ]);
 

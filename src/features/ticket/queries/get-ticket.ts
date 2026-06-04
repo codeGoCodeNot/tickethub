@@ -1,7 +1,11 @@
 import prisma from "@/lib/prisma";
 import { cacheTag } from "next/cache";
 
-const getTicket = async (id: string, organizationId?: string) => {
+const getTicket = async (
+  id: string,
+  organizationId?: string,
+  userId?: string,
+) => {
   "use cache";
   cacheTag("tickets", `ticket-${id}`);
   return await prisma.ticket.findFirst({
@@ -10,6 +14,7 @@ const getTicket = async (id: string, organizationId?: string) => {
       OR: [
         { private: false },
         ...(organizationId ? [{ private: true, organizationId }] : []),
+        ...(userId ? [{ private: true, userId }] : []),
       ],
     },
     include: {

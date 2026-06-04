@@ -23,6 +23,7 @@ const getTickets = async (
     OR: [
       { private: false },
       ...(organizationId ? [{ private: true, organizationId }] : []),
+      ...(userId ? [{ private: true, userId }] : []),
     ],
   };
 
