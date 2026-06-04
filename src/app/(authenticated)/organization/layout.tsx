@@ -1,17 +1,17 @@
 import AiChatBot from "@/features/ai/components/ai-chat-bot";
 import getAiChatMessages from "@/features/ai/queries/get-ai-chat-messages";
-import getAuthOrRedirect from "@/features/auth/queries/get-auth-or-redirect";
-import { Suspense } from "react";
+import { getAuth } from "@/features/auth/queries/get-auth";
 
-const AccountLayout = async ({ children }: { children: React.ReactNode }) => {
-  const user = await getAuthOrRedirect();
+const TicketsLayout = async ({ children }: { children: React.ReactNode }) => {
+  const user = await getAuth();
   const chatHistory = await getAiChatMessages();
+
   return (
-    <Suspense>
+    <>
       {children}
       {user && <AiChatBot initialMessages={chatHistory} userName={user.name} />}
-    </Suspense>
+    </>
   );
 };
 
-export default AccountLayout;
+export default TicketsLayout;

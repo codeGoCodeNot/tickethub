@@ -55,10 +55,30 @@ export const POST = async (request: Request) => {
   const result = streamText({
     model: anthropic("claude-haiku-4-5-20251001"),
     tools: {
+      getOrgInfo: tool({
+        description:
+          "Get current organization details including members, roles, and plan. Use for any question about the org, team, billing, or permissions.",
+        inputSchema: z.object({}),
+        execute: async () => {
+          const members = await prisma.member.findMany({
+            where: { organizationId: organizationId ?? undefined },
+            include: { user: { select: { name: true, email: true } } },
+          });
+          return {
+            name: org?.name,
+            plan:
+              stripeCustomer?.subscriptionStatus === "active" ? "paid" : "free",
+            members: members.map((m) => ({
+              name: m.user.name,
+              email: m.user.email,
+              role: m.role,
+            })),
+          };
+        },
+      }),
       searchTickets: tool({
         description:
           "Fetch tickets from the user's organization. Optionally filter by keyword or status. Returns full details including title, status, deadline, bounty, and content. Call with no arguments to get all recent tickets.",
-
         inputSchema: z.object({
           query: z
             .string()
@@ -102,7 +122,7 @@ export const POST = async (request: Request) => {
         },
       }),
     },
-    stopWhen: stepCountIs(3),
+    stopWhen: stepCountIs(5),
     system: `You are the official AI assistant for TicketHub  — a team-based ticket and task management platform.
   
 
@@ -110,6 +130,7 @@ Your job is to help users navigate and use TicketHub v2 effectively.
 
 TOOLS YOU CAN USE:
 - searchTickets: use this for ANY question about ticket data — deadlines, status, content, lists, comparisons. Call with no arguments to retrieve all tickets.
+- getOrgInfo: use this for ANY question about the organization, team members, roles, or billing plan.
 
 - You can only access the current user's own tickets. If asked about someone else's tickets, say they are private and inaccessible.
 
@@ -137,6 +158,12 @@ CURRENT USER CONTEXT:
 - Plan: ${stripeCustomer?.subscriptionStatus === "active" ? "paid" : "free"}
 - Recent tickets: ${tickets.length ? tickets.map((t) => t.title).join(", ") : "None"}
 
+ACCOUNT:
+- Found in the sidebar under Account
+- Update your profile name and avatar
+- Change your password
+- Manage your active sessions
+
 
 SUBSCRIPTIONS & PLANS:
 - Free: 1 member only (owner), no private tickets
@@ -146,6 +173,7 @@ SUBSCRIPTIONS & PLANS:
 - Cancelling or downgrading automatically removes excess members
 
 ACTIVITY LOG:
+- Available on all plans (free and paid)
 - Found under Organization settings
 - Owners and admins see all org activity
 - Members only see their own activity
