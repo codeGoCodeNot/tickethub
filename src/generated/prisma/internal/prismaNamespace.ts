@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Ticket: 'Ticket',
+  AiChat: 'AiChat',
   StripeCustomer: 'StripeCustomer',
   Attachment: 'Attachment',
   Comment: 'Comment',
@@ -411,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "ticket" | "stripeCustomer" | "attachment" | "comment" | "user" | "session" | "activityLog" | "account" | "verification" | "organization" | "member" | "invitation"
+    modelProps: "ticket" | "aiChat" | "stripeCustomer" | "attachment" | "comment" | "user" | "session" | "activityLog" | "account" | "verification" | "organization" | "member" | "invitation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -486,6 +487,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TicketCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TicketCountAggregateOutputType> | number
+        }
+      }
+    }
+    AiChat: {
+      payload: Prisma.$AiChatPayload<ExtArgs>
+      fields: Prisma.AiChatFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiChatFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiChatFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>
+        }
+        findFirst: {
+          args: Prisma.AiChatFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiChatFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>
+        }
+        findMany: {
+          args: Prisma.AiChatFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>[]
+        }
+        create: {
+          args: Prisma.AiChatCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>
+        }
+        createMany: {
+          args: Prisma.AiChatCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AiChatCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>[]
+        }
+        delete: {
+          args: Prisma.AiChatDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>
+        }
+        update: {
+          args: Prisma.AiChatUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiChatDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiChatUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AiChatUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>[]
+        }
+        upsert: {
+          args: Prisma.AiChatUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiChatPayload>
+        }
+        aggregate: {
+          args: Prisma.AiChatAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiChat>
+        }
+        groupBy: {
+          args: Prisma.AiChatGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiChatGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiChatCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiChatCountAggregateOutputType> | number
         }
       }
     }
@@ -1359,6 +1434,17 @@ export const TicketScalarFieldEnum = {
 export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
 
 
+export const AiChatScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  role: 'role',
+  content: 'content',
+  userId: 'userId'
+} as const
+
+export type AiChatScalarFieldEnum = (typeof AiChatScalarFieldEnum)[keyof typeof AiChatScalarFieldEnum]
+
+
 export const StripeCustomerScalarFieldEnum = {
   id: 'id',
   eventAt: 'eventAt',
@@ -1795,6 +1881,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   ticket?: Prisma.TicketOmit
+  aiChat?: Prisma.AiChatOmit
   stripeCustomer?: Prisma.StripeCustomerOmit
   attachment?: Prisma.AttachmentOmit
   comment?: Prisma.CommentOmit

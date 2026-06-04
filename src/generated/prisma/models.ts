@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Ticket'
+export type * from './models/AiChat'
 export type * from './models/StripeCustomer'
 export type * from './models/Attachment'
 export type * from './models/Comment'

@@ -36,6 +36,17 @@ enum TicketStatus {
   DONE
 }
 
+model AiChat {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  role String
+  content String
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 model StripeCustomer {
   id            String   @id @default(cuid())
   eventAt Int?
@@ -109,6 +120,7 @@ model User {
   accounts      Account[]
   tickets       Ticket[]
   comments      Comment[]
+  aiChats       AiChat[]
 
   members     Member[]
   invitations Invitation[]

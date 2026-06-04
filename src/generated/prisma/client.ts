@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Ticket = Prisma.TicketModel
 /**
+ * Model AiChat
+ * 
+ */
+export type AiChat = Prisma.AiChatModel
+/**
  * Model StripeCustomer
  * 
  */
