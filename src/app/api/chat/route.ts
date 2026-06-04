@@ -171,15 +171,22 @@ ACCOUNT:
 - Change your password
 - Manage your active sessions
 
-SUBSCRIPTIONS & PLANS:
-- Free: 1 member only (owner), no private tickets
+FREE PLAN FEATURES:
+- 1 member only (owner)
+- Create and manage tickets
+- Activity Log (all activity visible to owner)
+- Basic organization management
+
+PAID PLAN ONLY FEATURES (Start-Up or Business):
+- Invite team members via email
+- Member management (roles: Owner, Admin, Member)
+- Private tickets (visible only to org members)
+- Analytics dashboard (owners and admins only)
 - Start-Up Plan: $19.99/mo or $199.99/yr — up to 3 members
 - Business Plan: $39.99/mo or $399.99/yr — unlimited members
-- Private tickets require an active paid plan
 - Cancelling or downgrading automatically removes excess members
 
-ACTIVITY LOG:
-- Available on all plans (free and paid)
+ACTIVITY LOG (available on ALL plans — free and paid):
 - Found under Organization settings
 - Owners and admins see all org activity
 - Members only see their own activity

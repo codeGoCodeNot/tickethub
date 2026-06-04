@@ -67,7 +67,9 @@ import {
   Collapsible,
 } from "@/components/ui/collapsible";
 
-const AppSidebar = () => {
+type AppSidebarProps = { paidOrgIds: string[] };
+
+const AppSidebar = ({ paidOrgIds }: AppSidebarProps) => {
   const { open, setOpen, isMobile } = useSidebar();
   const pathname = usePathname();
   const { data: session } = useSession();
@@ -84,6 +86,7 @@ const AppSidebar = () => {
   )?.role;
   const isOwnerOrAdmin = ["owner", "admin"].includes(currentUserRole ?? "");
   const router = useRouter();
+  const isPaidPlan = paidOrgIds.includes(displayOrg?.id ?? "");
 
   return (
     <>
@@ -134,7 +137,16 @@ const AppSidebar = () => {
                         await organization.setActive({
                           organizationId: org.id,
                         });
-                        router.refresh();
+                        if (
+                          displayOrg?.id &&
+                          pathname.includes(displayOrg.id)
+                        ) {
+                          router.push(
+                            pathname.replace(displayOrg.id, org.id) as never,
+                          );
+                        } else {
+                          router.refresh();
+                        }
                       }}
                     >
                       {org.name}
@@ -266,45 +278,59 @@ const AppSidebar = () => {
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>
-                            <SidebarMenuItem>
-                              <SidebarMenuButton
-                                asChild
-                                isActive={
-                                  pathname === membershipsPath(displayOrg.id)
-                                }
-                              >
-                                <Link href={membershipsPath(displayOrg.id)}>
-                                  <LucideUsers />
-                                  <span>Members</span>
-                                </Link>
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                              <SidebarMenuButton
-                                asChild
-                                isActive={
-                                  pathname === invitationsPath(displayOrg.id)
-                                }
-                              >
-                                <Link href={invitationsPath(displayOrg.id)}>
-                                  <LucideMail />
-                                  <span>Invitations</span>
-                                </Link>
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                              <SidebarMenuButton
-                                asChild
-                                isActive={
-                                  pathname === analyticsPath(displayOrg.id)
-                                }
-                              >
-                                <Link href={analyticsPath(displayOrg.id)}>
-                                  <LucideChartArea />
-                                  <span>Analytics</span>
-                                </Link>
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
+
+                            {/* paid features */}
+
+                            {isPaidPlan && (
+                              <>
+                                {/* Members */}
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    asChild
+                                    isActive={
+                                      pathname ===
+                                      membershipsPath(displayOrg.id)
+                                    }
+                                  >
+                                    <Link href={membershipsPath(displayOrg.id)}>
+                                      <LucideUsers />
+                                      <span>Members</span>
+                                    </Link>
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+
+                                {/* Invitations */}
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    asChild
+                                    isActive={
+                                      pathname ===
+                                      invitationsPath(displayOrg.id)
+                                    }
+                                  >
+                                    <Link href={invitationsPath(displayOrg.id)}>
+                                      <LucideMail />
+                                      <span>Invitations</span>
+                                    </Link>
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+
+                                {/* Analytics */}
+                                <SidebarMenuItem>
+                                  <SidebarMenuButton
+                                    asChild
+                                    isActive={
+                                      pathname === analyticsPath(displayOrg.id)
+                                    }
+                                  >
+                                    <Link href={analyticsPath(displayOrg.id)}>
+                                      <LucideChartArea />
+                                      <span>Analytics</span>
+                                    </Link>
+                                  </SidebarMenuButton>
+                                </SidebarMenuItem>
+                              </>
+                            )}
                           </>
                         )}
                         <SidebarMenuItem>
