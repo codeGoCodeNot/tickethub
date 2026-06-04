@@ -90,6 +90,7 @@ export const TicketScalarFieldEnum = {
   status: 'status',
   deadline: 'deadline',
   bounty: 'bounty',
+  private: 'private',
   userId: 'userId',
   organizationId: 'organizationId'
 } as const

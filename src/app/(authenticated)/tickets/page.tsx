@@ -6,8 +6,8 @@ import TicketOrgFilter from "@/components/ticket-org-filter";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import isOwnerOrAdmin from "@/features/auth/utils/is-owner-or-admin";
 import getActiveOrganization from "@/features/organizations/queries/get-active-organization";
+import getStripeProvisioning from "@/features/stripe/queries/get-stripe-provisioning";
 import TicketList from "@/features/ticket/components/ticket-list";
-import TicketPoller from "@/features/ticket/components/ticket-poller";
 import TicketUpsertForm from "@/features/ticket/components/ticket-upsert-form";
 import { searchParamsCache } from "@/features/ticket/search-params";
 import { homePath } from "@/path";
@@ -54,10 +54,10 @@ type TicketsPageProps = {
 const TicketsPage = async ({ searchParams }: TicketsPageProps) => {
   const { orgOnly } = searchParamsCache.parse(await searchParams);
   const organizationId = await getActiveOrganization();
+  const { hasActivePlan } = await getStripeProvisioning(organizationId);
 
   return (
     <div className="flex flex-col flex-1 gap-y-8">
-      <TicketPoller />
       <Heading
         title="My tickets"
         description="All your tickets in one place"
@@ -74,7 +74,7 @@ const TicketsPage = async ({ searchParams }: TicketsPageProps) => {
       <CardCompact
         title="Create Ticket"
         description="Fill out the form below to create a new ticket."
-        content={<TicketUpsertForm />}
+        content={<TicketUpsertForm hasActivePlan={hasActivePlan} />}
       />
 
       <TicketOrgFilter />

@@ -17,6 +17,7 @@ model Ticket {
   status    TicketStatus @default(PENDING)
   deadline  String
   bounty    Int
+  private  Boolean      @default(false)
   userId    String
   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments  Comment[]

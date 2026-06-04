@@ -1351,6 +1351,7 @@ export const TicketScalarFieldEnum = {
   status: 'status',
   deadline: 'deadline',
   bounty: 'bounty',
+  private: 'private',
   userId: 'userId',
   organizationId: 'organizationId'
 } as const
@@ -1608,6 +1609,13 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'StripeSubscriptionStatus'
  */
 export type EnumStripeSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StripeSubscriptionStatus'>
@@ -1632,13 +1640,6 @@ export type EnumAttachmentEntityFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'AttachmentEntity[]'
  */
 export type ListEnumAttachmentEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttachmentEntity[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

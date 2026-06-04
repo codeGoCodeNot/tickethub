@@ -12,12 +12,14 @@ import { useActionState, Suspense } from "react";
 import upsertTicket from "../actions/upsert-ticket";
 import { fromCent } from "@/utils/currency";
 import DatePicker from "@/components/date-picker";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type TicketUpsertProps = {
   ticket?: Ticket;
+  hasActivePlan?: boolean;
 };
 
-const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
+const TicketUpsertForm = ({ ticket, hasActivePlan }: TicketUpsertProps) => {
   const [actionState, action, isPending] = useActionState(
     upsertTicket.bind(null, ticket?.id ?? ""),
     EMPTY_ACTION_STATE,
@@ -97,7 +99,21 @@ const TicketUpsertForm = ({ ticket }: TicketUpsertProps) => {
           }
         </div>
       </div>
-
+      {hasActivePlan ? (
+        <div className="flex items-center gap-x-2">
+          <Checkbox
+            id="private"
+            name="private"
+            value="true"
+            defaultChecked={ticket?.private ?? false}
+          />
+          <Label htmlFor="private">Private ticket</Label>
+        </div>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          🔒 Upgrade to a paid plan to create private tickets.
+        </p>
+      )}
       <Button type="submit" disabled={isPending}>
         {isPending && <LucideLoader2 className="animate-spin" />}
         {ticket ? "Update" : "Create"}

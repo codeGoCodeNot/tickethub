@@ -20,6 +20,10 @@ const getTickets = async (
       title: { contains: search, mode: "insensitive" as const },
     }),
     ...(!isOwnerOrAdmin && { status: { not: "PENDING" as const } }),
+    OR: [
+      { private: false },
+      ...(organizationId ? [{ private: true, organizationId }] : []),
+    ],
   };
 
   const skip = page * size;

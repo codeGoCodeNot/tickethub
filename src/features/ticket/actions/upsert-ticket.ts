@@ -18,6 +18,7 @@ import { toCent } from "@/utils/currency";
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import getStripeProvisioning from "@/features/stripe/queries/get-stripe-provisioning";
 
 const upsertTicketSchema = z.object({
   title: z
@@ -28,6 +29,7 @@ const upsertTicketSchema = z.object({
   content: z.string().trim().min(1, "Content is required"),
   deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Is required"),
   bounty: z.coerce.number().min(0.1, "Bounty must be a positive number"),
+  private: z.coerce.boolean().default(false),
 });
 
 const upsertTicket = async (
@@ -47,6 +49,7 @@ const upsertTicket = async (
     );
   }
   const adminOrOwner = await isOwnerOrAdmin(user.id, organizationId);
+  const { hasActivePlan } = await getStripeProvisioning(organizationId);
 
   try {
     if (id) {
@@ -70,6 +73,7 @@ const upsertTicket = async (
       ...data,
       userId: user.id,
       bounty: toCent(data.bounty),
+      private: data.private && hasActivePlan ? true : false,
     };
 
     await prisma.ticket.upsert({
