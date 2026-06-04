@@ -32,7 +32,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
   LucideActivity,
+  LucideAntenna,
   LucideBuilding2,
+  LucideChartArea,
   LucideChevronRight,
   LucideChevronsUpDown,
   LucideClipboardCheck,
@@ -52,6 +54,7 @@ import {
 } from "./constants";
 import {
   activityLogPath,
+  analyticsPath,
   invitationsPath,
   membershipsPath,
   subscriptionPath,
@@ -286,6 +289,19 @@ const AppSidebar = () => {
                                 <Link href={invitationsPath(displayOrg.id)}>
                                   <LucideMail />
                                   <span>Invitations</span>
+                                </Link>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                              <SidebarMenuButton
+                                asChild
+                                isActive={
+                                  pathname === analyticsPath(displayOrg.id)
+                                }
+                              >
+                                <Link href={analyticsPath(displayOrg.id)}>
+                                  <LucideChartArea />
+                                  <span>Analytics</span>
                                 </Link>
                               </SidebarMenuButton>
                             </SidebarMenuItem>

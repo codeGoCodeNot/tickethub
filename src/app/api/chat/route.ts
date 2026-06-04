@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { tool } from "ai";
 import { z } from "zod";
+import getAnalytics from "@/features/analytics/queries/get-analytics";
 
 export const POST = async (request: Request) => {
   const { messages }: { messages: UIMessage[] } = await request.json();
@@ -25,7 +26,7 @@ export const POST = async (request: Request) => {
     orderBy: { createdAt: "desc" },
   });
   const organizationId = activeSession?.activeOrganizationId;
-  const [org, stripeCustomer, tickets] = await Promise.all([
+  const [org, stripeCustomer, tickets, analytics] = await Promise.all([
     organizationId
       ? prisma.organization.findUnique({ where: { id: organizationId } })
       : null,
@@ -39,6 +40,7 @@ export const POST = async (request: Request) => {
           orderBy: { createdAt: "desc" },
         })
       : [],
+    organizationId ? getAnalytics(organizationId) : null,
   ]);
 
   // get last message and create a cache key based on its text content
@@ -124,7 +126,6 @@ export const POST = async (request: Request) => {
     },
     stopWhen: stepCountIs(5),
     system: `You are the official AI assistant for TicketHub  — a team-based ticket and task management platform.
-  
 
 Your job is to help users navigate and use TicketHub v2 effectively.
 
@@ -133,8 +134,6 @@ TOOLS YOU CAN USE:
 - getOrgInfo: use this for ANY question about the organization, team members, roles, or billing plan.
 
 - You can only access the current user's own tickets. If asked about someone else's tickets, say they are private and inaccessible.
-
-
 
 TICKETS:
 - Create tickets with a title, content, bounty reward ($), deadline, and status
@@ -152,18 +151,25 @@ ORGANIZATIONS:
   - Member: can create tickets and comments
 - Switch between organizations from the sidebar
 
-
 CURRENT USER CONTEXT:
 - Organization: ${org?.name ?? "None"}
 - Plan: ${stripeCustomer?.subscriptionStatus === "active" ? "paid" : "free"}
 - Recent tickets: ${tickets.length ? tickets.map((t) => t.title).join(", ") : "None"}
+
+ANALYTICS (organization stats):
+- Total tickets: ${analytics?.totalTickets ?? 0}
+- Completed tickets: ${analytics?.completedTickets ?? 0}
+- Total bounty earned: $${analytics?.bountyEarned ?? 0}
+- Tickets by status: ${analytics?.statusData.map((s) => `${s.status}: ${s.count}`).join(", ") ?? "None"}
+- Found in the sidebar under Organization → Analytics
+- Shows area chart (last 6 months) and bar chart by status
+- Only accessible to owners and admins
 
 ACCOUNT:
 - Found in the sidebar under Account
 - Update your profile name and avatar
 - Change your password
 - Manage your active sessions
-
 
 SUBSCRIPTIONS & PLANS:
 - Free: 1 member only (owner), no private tickets

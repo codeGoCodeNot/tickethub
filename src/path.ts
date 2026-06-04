@@ -42,6 +42,8 @@ export const activityLogPath = (organizationId: string): Route =>
   `/organization/${organizationId}/activity-log` as Route;
 export const subscriptionPath = (organizationId: string): Route =>
   `/organization/${organizationId}/subscription` as Route;
+export const analyticsPath = (organizationId: string): Route =>
+  `/organization/${organizationId}/analytics` as Route;
 
 // attachments
 export const attachmentDownloadPath = (attachmentId: string): Route =>
