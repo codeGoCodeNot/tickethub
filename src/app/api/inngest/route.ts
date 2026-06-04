@@ -1,4 +1,5 @@
 import { eventAttachmentDeleted } from "@/features/inngest/events/event-attachment-deleted";
+import eventDeprovisionedOrganization from "@/features/inngest/events/event-deprovisioned-organization";
 import { eventEmailChange } from "@/features/inngest/events/event-email-change";
 import eventOrgInvitation from "@/features/inngest/events/event-org-invitation";
 import { eventOrganizationCreated } from "@/features/inngest/events/event-organization-created";
@@ -22,5 +23,6 @@ export const { GET, POST, PUT } = serve({
     eventAttachmentDeleted,
     eventOrganizationDeleted,
     eventOrganizationCreated,
+    eventDeprovisionedOrganization,
   ],
 });

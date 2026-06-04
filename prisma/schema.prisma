@@ -138,12 +138,12 @@ model ActivityLog {
   id             String   @id @default(cuid())
   createdAt      DateTime @default(now())
   organizationId String
-  userId         String
+  userId         String?
   action         ActivityAction 
   metadata       Json?    // { ticketId, ticketTitle, ... }
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([organizationId])
   @@index([createdAt])
@@ -161,6 +161,11 @@ enum ActivityAction {
   comment_deleted       @map("comment.deleted")
   attachment_uploaded   @map("attachment.uploaded")
   attachment_deleted    @map("attachment.deleted")
+  subscription_created  @map("subscription.created")
+  subscription_updated  @map("subscription.updated")
+  subscription_deleted  @map("subscription.deleted")
+  stripe_provision      @map("stripe.provision")
+  stripe_deprovision    @map("stripe.deprovision")
 }
 
 model Account {

@@ -4,7 +4,7 @@ import { updateTag } from "next/cache";
 
 type CreateActivityLogInput = {
   organizationId: string;
-  userId: string;
+  userId?: string;
   action: ActivityAction;
   metadata?: Record<string, any>;
 };

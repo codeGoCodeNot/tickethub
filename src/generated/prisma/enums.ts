@@ -52,7 +52,12 @@ export const ActivityAction = {
   comment_updated: 'comment_updated',
   comment_deleted: 'comment_deleted',
   attachment_uploaded: 'attachment_uploaded',
-  attachment_deleted: 'attachment_deleted'
+  attachment_deleted: 'attachment_deleted',
+  subscription_created: 'subscription_created',
+  subscription_updated: 'subscription_updated',
+  subscription_deleted: 'subscription_deleted',
+  stripe_provision: 'stripe_provision',
+  stripe_deprovision: 'stripe_deprovision'
 } as const
 
 export type ActivityAction = (typeof ActivityAction)[keyof typeof ActivityAction]

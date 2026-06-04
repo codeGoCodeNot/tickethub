@@ -1,39 +1,72 @@
+import createActivityLog from "@/features/activity-logs/actions/create-activity-log";
+import deprovisionOrganization from "@/features/stripe/actions/deprovision-organization";
+import { ActivityAction } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import stripe from "@/lib/stripe/stripe";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const handleSubscriptionCreated = async (subscription: Stripe.Subscription) => {
-  await prisma.stripeCustomer.update({
+  const stripeCustomer = await prisma.stripeCustomer.update({
     where: {
       customerId: subscription.customer as string,
     },
     data: {
-      subscriptionId: subscription.id,
       subscriptionStatus: subscription.status,
+      subscriptionId: subscription.id,
       priceId: subscription.items.data[0].price.id,
       productId: subscription.items.data[0].price.product as string,
     },
   });
+  await createActivityLog({
+    organizationId: stripeCustomer.organizationId,
+    action: ActivityAction.subscription_created,
+    metadata: {
+      subscriptionId: subscription.id,
+    },
+  });
+  revalidateTag(`activity-log-${stripeCustomer.organizationId}`, { expire: 0 });
 };
 
 const handleSubscriptionUpdated = async (subscription: Stripe.Subscription) => {
-  await prisma.stripeCustomer.update({
+  const stripeCustomer = await prisma.stripeCustomer.update({
     where: {
       customerId: subscription.customer as string,
     },
     data: {
-      subscriptionStatus: subscription.status,
       subscriptionId: subscription.id,
+      subscriptionStatus: subscription.status,
       priceId: subscription.items.data[0].price.id,
       productId: subscription.items.data[0].price.product as string,
     },
   });
+
+  // if subscription is paused or cancelled, deprovision organization if they exceed team member limits
+  const product = await stripe.products.retrieve(
+    subscription.items.data[0].price.product as string,
+  );
+
+  // only deprovision on cancelled, paused subscriptions will be handled on stripe dashboard or by customer support, so we don't want to automatically deprovision on pause_incomplete or other non-final states
+  const allowedTeamMembers = parseInt(product.metadata.allowedTeamMembers);
+  await deprovisionOrganization(
+    stripeCustomer.organizationId,
+    allowedTeamMembers,
+  );
+
+  await createActivityLog({
+    organizationId: stripeCustomer.organizationId,
+    action: ActivityAction.subscription_updated,
+    metadata: {
+      subscriptionId: subscription.id,
+    },
+  });
+  revalidateTag(`activity-log-${stripeCustomer.organizationId}`, { expire: 0 });
 };
 
 const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
-  await prisma.stripeCustomer.update({
+  const stripeCustomer = await prisma.stripeCustomer.update({
     where: {
       customerId: subscription.customer as string,
     },
@@ -44,6 +77,17 @@ const handleSubscriptionDeleted = async (subscription: Stripe.Subscription) => {
       productId: null,
     },
   });
+
+  // if subscription is deleted, deprovision organization immediately
+  await deprovisionOrganization(stripeCustomer.organizationId, 1);
+  await createActivityLog({
+    organizationId: stripeCustomer.organizationId,
+    action: ActivityAction.subscription_deleted,
+    metadata: {
+      subscriptionId: subscription.id,
+    },
+  });
+  revalidateTag(`activity-log-${stripeCustomer.organizationId}`, { expire: 0 });
 };
 
 export const POST = async (request: NextRequest) => {

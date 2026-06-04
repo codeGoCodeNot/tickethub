@@ -21,13 +21,26 @@ const formatDetails = (
   action: string,
   metadata: Record<string, string> | null,
 ) => {
+  // stripe
+  if (action === "stripe.deprovision")
+    return `${metadata?.removedCount} member(s)/invitation(s) removed — limit: ${metadata?.allowedTeamMembers}`;
+  if (action === "stripe.provision") return `Organization provisioned`;
+  if (action === "subscription.created") return `Subscription created`;
+  if (action === "subscription.updated") return `Subscription updated`;
+  if (action === "subscription.deleted") return `Subscription cancelled`;
+
+  // attachments
   if (action === "attachment.uploaded")
     return `uploaded "${metadata?.filename}"`;
   if (action === "attachment.deleted")
     return `deleted attachment "${metadata?.filename}"`;
+
+  // comments
   if (action === "comment.updated") return `edited a comment on ticket`;
   if (action === "comment.deleted") return `deleted a comment on ticket`;
   if (action === "comment.created") return `commented on ticket`;
+
+  // tickets
   if (action === "ticket.rejected")
     return `"${metadata?.ticketTitle}" rejected${metadata?.reason ? ` — ${metadata.reason}` : ""}`;
   if (action === "ticket.removed")
@@ -69,7 +82,7 @@ const ActivityLogList = async ({
             const meta = log.metadata as Record<string, string> | null;
             return (
               <TableRow key={log.id}>
-                <TableCell>{log.user.name ?? "Unknown"}</TableCell>
+                <TableCell>{log.user?.name ?? "System"}</TableCell>
                 <TableCell>{log.action}</TableCell>
                 <TableCell>{formatDetails(log.action, meta)}</TableCell>
                 <TableCell>
@@ -90,7 +103,7 @@ const ActivityLogList = async ({
               className="p-4 border rounded-md flex flex-col gap-y-1"
             >
               <span className="text-sm font-semibold">
-                {log.user.name ?? "Unknown"}
+                {log.user?.name ?? "System"}
               </span>
               <span className="text-sm text-muted-foreground">
                 {log.action}

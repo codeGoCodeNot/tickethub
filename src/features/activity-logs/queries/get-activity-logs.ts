@@ -1,11 +1,7 @@
 import prisma from "@/lib/prisma";
 import { cacheTag } from "next/cache";
 
-const getActivityLogs = async (
-  organizationId: string,
-  page = 0,
-  size = 10,
-) => {
+const getActivityLogs = async (organizationId: string, page = 0, size = 10) => {
   "use cache";
   cacheTag(`activity-log-${organizationId}`);
 
