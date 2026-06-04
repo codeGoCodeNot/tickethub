@@ -39,7 +39,7 @@ const AiChatBot = ({ initialMessages, userName }: AiChatBotProps) => {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {open && (
-        <div className="w-[360px] shadow-2xl border bg-background rounded-2xl flex flex-col overflow-hidden">
+        <div className="w-[min(360px,calc(100vw-3rem))] shadow-2xl border bg-background rounded-2xl flex flex-col overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 bg-primary text-primary-foreground">
             <div className="flex items-center gap-2">
               <LucideSparkles className="size-4" />
