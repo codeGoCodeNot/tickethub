@@ -23,7 +23,9 @@ const TicketOrgFilter = () => {
         <TabsList>
           <TabsTrigger value="all">All My Tickets</TabsTrigger>
           <TabsTrigger value="Organization">
-            {activeOrg?.name ?? "Active Organization"}
+            <span suppressHydrationWarning>
+              {activeOrg?.name ?? "Active Organization"}
+            </span>
           </TabsTrigger>
         </TabsList>
       </Tabs>
