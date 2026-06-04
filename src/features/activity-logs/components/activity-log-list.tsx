@@ -15,6 +15,8 @@ type ActivityLogListProps = {
   organizationId: string;
   page: number;
   size: number;
+  isOwnerOrAdmin: boolean;
+  userId?: string;
 };
 
 const formatDetails = (
@@ -60,8 +62,16 @@ const ActivityLogList = async ({
   organizationId,
   page,
   size,
+  isOwnerOrAdmin,
+  userId,
 }: ActivityLogListProps) => {
-  const { list, metadata } = await getActivityLogs(organizationId, page, size);
+  const { list, metadata } = await getActivityLogs(
+    organizationId,
+    page,
+    size,
+    isOwnerOrAdmin,
+    userId,
+  );
 
   if (!list.length)
     return <Placeholder label="No activity logs found" icon={null} />;
